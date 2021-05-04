@@ -51,7 +51,7 @@ preprocessDiscoveries <-function(discoveriesDF, targetsListDF) {
 # expected input dir struct: <data dir>/<dataset>/<indiv|joint>/<level>/<view>/<year>[.total]
 #
 
-loadData <- function(dataDir='data/18-contrast-method-experiments/data', datasets=c('KD','PTC'),probTypes=c('indiv','joint','total'),views=c('abstracts+articles','pmc-articles','unfiltered-medline'),levels=c('by-doc','by-sent'), minYear=0, maxYear=9999,removePTCTypes=TRUE) {
+loadData <- function(dataDir='data', datasets=c('KD','PTC'),probTypes=c('indiv','joint','total'),views=c('abstracts+articles','pmc-articles','unfiltered-medline'),levels=c('by-doc','by-sent'), minYear=0, maxYear=9999,removePTCTypes=TRUE) {
   l<-llply(probTypes, function(probType) {
     ldply(datasets, function(dataset) {
 #    ldply(c('indiv', 'joint'), function(probType) {

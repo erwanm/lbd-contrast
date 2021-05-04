@@ -58,7 +58,7 @@ The [full replication](#full-replication) requires massive resources for computi
 
 # Preparing data
 
-- Note 1: in some commands below we use `system.time()` in order to show how long the execution takes. This is optional of course.
+- Note 1: some of the commands below are run with `system.time()` in order to show how long they take to execute. This is optional, of course.
 - Note 2: in the following we present the simplest way to reproduce the experiments. Most of the functions accept optional arguments which may be useful for alternative tasks or data.
  
 ## Raw frequency data
@@ -73,8 +73,8 @@ The R code expects the data directory structure as: `<data dir>/<dataset>/<indiv
 - `<dataset>` is the id of the data, e.g. `PTC` or `KD`.
 - subdirectories `indiv` and `joint` contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by [TDC Tools code](https://github.com/erwanm/tdc-tools)).
 
-```
-system.time(full<-loadData())
+```{r}
+system.time(raw<-loadData())
 ```
 
 - Note: the PTC concepts are expected to be read as `<id>@<type>`; the `@<type>` suffix is removed by default.
@@ -116,7 +116,7 @@ kable(targetPairs)
 ### Filtering the raw data
 
 ```{r}
-targetPairsJointData <- filterJointPairs(p,full$joint)
+targetPairsJointData <- filterJointPairs(targetPairs,raw$joint)
 kable(targetPairsJointData[sample(1:nrow(targetPairsJointData), 6),])
 ```
 
