@@ -1,0 +1,11 @@
+short_name	umls_concept_name	cui	mesh_name	mesh
+ALS	Amyotrophic Lateral Sclerosis	C0002736	Amyotrophic Lateral Sclerosis	D000690
+Ataxia	Ataxia	C0004134	Ataxia	D001259
+Autism	Autistic Disorder	C0004352	Autistic Disorder	D001321
+Bipolar	Bipolar Disorder	C0005586	Bipolar Disorder	D001714
+Extrapyramidal	Extrapyramidal Disorders	C0015371	Basal Ganglia Diseases	D001480
+FTD	Frontotemporal dementia	C0338451	Frontotemporal Dementia	D057180
+Myopathy	Myopathy	C0026848	Muscular Diseases	D009135
+Parkinson	Parkinson Disease	C0030567	Parkinson Disease	D010300
+Psychosis	Psychotic Disorders	C0033975	Psychotic Disorders	D011618
+Spinocerebellar	Ataxia, Spinocerebellar	C0087012	Spinocerebellar Ataxias	D020754

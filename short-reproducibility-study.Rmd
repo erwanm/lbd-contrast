@@ -1,5 +1,5 @@
 ---
-title: "Experiments related to the Contrast Method for Literature-Based Discovery"
+title: "Contrast Method for Literature-Based Discovery: Short Reproducibility Study"
 author: "Erwan Moreau"
 date: "May 2021"
 output: html_document
@@ -21,22 +21,15 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 
 ## Data Requirements
 
-Two options are possible: the "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper, whereas the "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended).
+Two options are possible: the present "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper, whereas the "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended).
 
 ### Short Reproducility Study
 
-For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. The user should be able to reproduce the results presented in the paper by following the instructions below starting from the step **TODO**.
+For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. The user should be able to reproduce the results presented in the paper by following the instructions below.
 
 ### Full Replication
 
-In this option it is possible to apply the contrast method to different source data and/or different target relations. However this requires (much) more effort and computational resources:
-
-- This study uses two source for the biomedical literature:
-    - [PubTatorCentral](https://www.ncbi.nlm.nih.gov/research/pubtator/) conveniently provides Medline/PMC data after annotation and disambiguation. This data still needs to be converted to TDC format and pre-processed using The [TDC Tools code](https://github.com/erwanm/tdc-tools).
-    - The raw Medline/PMC data can be converted to TDC and disambiguated using the following tools:
-        - [This fork of the Knowedge Discovery (KD) repository](https://github.com/erwanm/knowledgediscovery) (The [original code](https://github.com/jakelever/knowledgediscovery) was made by Jake Lever)
-        - The in-house disambiguation code ["KD Data Tools"](https://github.com/erwanm/kd-data-tools)
-        - The [TDC Tools code](https://github.com/erwanm/tdc-tools).
+In this option it is possible to apply the contrast method to different source data and/or different target relations, however this requires (much) more effort and computational resources. This option is described in a different document, the see [documentation for "full replication"](full-replication.html).
 
 ## Software Requirements
 
@@ -49,12 +42,12 @@ The code can be loaded in the R interpreter with:
 
 ```{r}
 source('contrast-experiments.R')
-
 ```
 
 ## Hardware Requirements
 
-Only reproducing the study](#simple-reproducibility) should work on any recent computer. However the [full replication](#full-replication) requires massive resources for computing the source data (see documentation of the required repositories), and at least 32 GB RAM for processing the data from scratch with the R code. 
+*TODO* memory?
+
 
 # Preparing data
 

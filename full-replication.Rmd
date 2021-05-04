@@ -1,11 +1,12 @@
 ---
-title: "Experiments related to the Contrast Method for Literature-Based Discovery"
+title: "Contrast Method for Literature-Based Discovery: Full Replication"
 author: "Erwan Moreau"
 date: "May 2021"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -20,9 +21,11 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 
 ## Data Requirements
 
+Two options are possible: the "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper, whereas the "full replication" described in this document offers more flexibility but requires much more computing resources (access to a cluster is recommended).
+
 ### Short Reproducility Study
 
-For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. The user should be able to reproduce the results presented in the paper by following the instructions below starting from the step **TODO**.
+For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. Please follow the instructions in **TODO** for reproducing the results in the paper with the exact same data and method.
 
 ### Full Replication
 
@@ -33,6 +36,7 @@ In this option it is possible to apply the contrast method to different source d
     - The raw Medline/PMC data can be converted to TDC and disambiguated using the following tools:
         - [This fork of the Knowedge Discovery (KD) repository](https://github.com/erwanm/knowledgediscovery) (The [original code](https://github.com/jakelever/knowledgediscovery) was made by Jake Lever)
         - The in-house disambiguation code ["KD Data Tools"](https://github.com/erwanm/kd-data-tools)
+        - The [TDC Tools code](https://github.com/erwanm/tdc-tools).
 
 ## Software Requirements
 
@@ -40,31 +44,87 @@ In this option it is possible to apply the contrast method to different source d
     - `reshape2`
     - `ggplot2`
     - `plyr`
+    
+The code can be loaded in the R interpreter with:
+
+```{r}
+source('contrast-experiments.R')
+
+```
 
 ## Hardware Requirements
 
-Only reproducing the study](#simple-reproducibility) should work on any recent computer. However the [full replication](#full-replication) requires massive resources for computing the source data, and at least 32 GB RAM for processing the data from scratch with the R code. 
+The [full replication](#full-replication) requires massive resources for computing the source data (see documentation of the required repositories), and at least 32 GB RAM for processing the data from scratch with the R code. 
 
-# R Markdown
+# Preparing data
 
-## R Markdown 2
+- Note 1: in some commands below we use `system.time()` in order to show how long the execution takes. This is optional of course.
+- Note 2: in the following we present the simplest way to reproduce the experiments. Most of the functions accept optional arguments which may be useful for alternative tasks or data.
+ 
+## Raw frequency data
 
-### R Markdown 3
+The input data is made of at least one of the two sources:
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+- PubTator Central (PTC), obtained with [TDC Tools code](https://github.com/erwanm/tdc-tools). 
+- Knowedge Discovery (KD), obtained with [my fork of the Knowedge Discovery (KD) repository](https://github.com/erwanm/knowledgediscovery), [KD Data Tools](https://github.com/erwanm/kd-data-tools) and [TDC Tools code](https://github.com/erwanm/tdc-tools).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+The R code expects the data directory structure as: `<data dir>/<dataset>/<indiv|joint>/<level>/<view>/<year>[.total]` where:
 
-```{r cars}
-summary(cars)
+- `<dataset>` is the id of the data, e.g. `PTC` or `KD`.
+- subdirectories `indiv` and `joint` contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by [TDC Tools code](https://github.com/erwanm/tdc-tools)).
+
+```
+#system.time(full<-loadData())
 ```
 
-## Including Plots
+- Note: the PTC concepts are expected to be read as `<id>@<type>`; the `@<type>` suffix is removed by default.
 
-You can also embed plots, for example:
+## Target Concepts and Discoveries
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+### Target Concepts
+
+By default individual target concepts are provided in the file `data/targets.list` which can be loaded as:
+
+```{r}
+targets <- loadTargetsList()
+kable(targets)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The content should contain for every target the corresponding Mesh descriptor and UMLS concept id (CUI).
+
+
+
+### Target Discoveries
+
+By default the pairs of concepts representing the target discoveries are provided in the file `data/discoveries.tsv` which can be loaded as:
+
+```{r}
+discoveries <- loadDiscoveries()
+kable(discoveries)
+```
+
+### Preparing Target Pairs
+
+The individual target ids and discovery relations are combined in a dataframe which provides the relevant id (Mesh or UMLS) depending on the source dataset:
+
+```{r}
+targetPairs <- preprocessDiscoveries(discoveries,targets)
+kable(targetPairs)
+```
+
+
+### Filtering the raw data
+
+```{r}
+targetPairsJointData <- filterJointPairs(p,full$joint)
+kable(targetPairsJointData[sample(1:nrow(targetPairsJointData), 6),])
+```
+
+### Calculating the Range of Years Before Discovery
+
+The function below calculates the first year of the consecutive sequence where the two concepts have at least one occurrence every year (assumed to represent the "discovery"). It returns for every relation the range of years *before* this "discovery year": by default the start year is arbitrarily set to 1950, and the end year is the year just before the "discovery year".
+
+```{r}
+targetRanges <- selectYearRange(targetPairsJointData)
+```
+

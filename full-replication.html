@@ -204,8 +204,9 @@ summary {
 </ul>
 <div id="data-requirements" class="section level2">
 <h2>Data Requirements</h2>
-<div id="simple-reproducility-study" class="section level3">
-<h3>Simple Reproducility Study</h3>
+<p>Two options are possible: the &quot;short reproducibility study&quot; proposes to use the exact same preprocessed dataset as described in the paper, whereas the &quot;full replication&quot; offers more flexibility but requires much more computing resources (access to a cluster is recommended).</p>
+<div id="short-reproducility-study" class="section level3">
+<h3>Short Reproducility Study</h3>
 <p>For convenience the fully preprocessed dataset used in the paper is provided here <strong>TODO</strong>. The user should be able to reproduce the results presented in the paper by following the instructions below starting from the step <strong>TODO</strong>.</p>
 </div>
 <div id="full-replication" class="section level3">
@@ -217,8 +218,9 @@ summary {
 <li><a href="https://www.ncbi.nlm.nih.gov/research/pubtator/">PubTatorCentral</a> conveniently provides Medline/PMC data after annotation and disambiguation. This data still needs to be converted to TDC format and pre-processed using The <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>.</li>
 <li>The raw Medline/PMC data can be converted to TDC and disambiguated using the following tools:
 <ul>
-<li><a href="https://github.com/erwanm/knowledgediscovery">This fork of the Knowedge Discovery (KD) repository</a> (The <a href="https://github.com/jakelever/knowledgediscovery">original code</a> was made by Jake Lever])</li>
+<li><a href="https://github.com/erwanm/knowledgediscovery">This fork of the Knowedge Discovery (KD) repository</a> (The <a href="https://github.com/jakelever/knowledgediscovery">original code</a> was made by Jake Lever)</li>
 <li>The in-house disambiguation code <a href="https://github.com/erwanm/kd-data-tools">&quot;KD Data Tools&quot;</a></li>
+<li>The <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>.</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -234,10 +236,308 @@ summary {
 <li><code>plyr</code></li>
 </ul></li>
 </ul>
+<p>The code can be loaded in the R interpreter with:</p>
+<pre class="r"><code>source('contrast-experiments.R')</code></pre>
 </div>
 <div id="hardware-requirements" class="section level2">
 <h2>Hardware Requirements</h2>
-<p>Only reproducing the study](#simple-reproducibility) should work on any recent computer. However the <a href="#full-replication">full replication</a> requires massive resources for computing the source data, and at least 32 GB RAM for processing the data from scratch with the R code.</p>
+<p>Only reproducing the study](#simple-reproducibility) should work on any recent computer. However the <a href="#full-replication">full replication</a> requires massive resources for computing the source data (see documentation of the required repositories), and at least 32 GB RAM for processing the data from scratch with the R code.</p>
+</div>
+</div>
+<div id="preparing-data" class="section level1">
+<h1>Preparing data</h1>
+<p>Note: in some commands below we use <code>system.time()</code> in order to show how long the execution takes. This is optional of course.</p>
+<div id="raw-frequency-data" class="section level2">
+<h2>Raw frequency data</h2>
+<p>The input data is made of at least one of the two sources:</p>
+<ul>
+<li>PubTator Central (PTC), obtained with <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>.</li>
+<li>Knowedge Discovery (KD), obtained with <a href="https://github.com/erwanm/knowledgediscovery">my fork of the Knowedge Discovery (KD) repository</a>, <a href="https://github.com/erwanm/kd-data-tools">KD Data Tools</a> and <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>.</li>
+</ul>
+<p>The R code expects the data directory structure as: <code>&lt;data dir&gt;/&lt;dataset&gt;/&lt;indiv|joint&gt;/&lt;level&gt;/&lt;view&gt;/&lt;year&gt;[.total]</code> where:</p>
+<ul>
+<li><code>&lt;dataset&gt;</code> is the id of the data, e.g. <code>PTC</code> or <code>KD</code>.</li>
+<li>subdirectories <code>indiv</code> and <code>joint</code> contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>).</li>
+</ul>
+<pre><code>#system.time(full&lt;-loadData())</code></pre>
+</div>
+<div id="target-concepts-and-discoveries" class="section level2">
+<h2>Target Concepts and Discoveries</h2>
+<div id="target-concepts" class="section level3">
+<h3>Target Concepts</h3>
+<p>By default individual target concepts are provided in the file <code>data/targets.list</code> which can be loaded as:</p>
+<pre class="r"><code>targets &lt;- loadTargetsList()
+kable(targets)</code></pre>
+<table>
+<colgroup>
+<col width="17%"></col>
+<col width="31%"></col>
+<col width="10%"></col>
+<col width="31%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">short_name</th>
+<th align="left">umls_concept_name</th>
+<th align="left">cui</th>
+<th align="left">mesh_name</th>
+<th align="left">mesh</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Amyotrophic Lateral Sclerosis</td>
+<td align="left">C0002736</td>
+<td align="left">Amyotrophic Lateral Sclerosis</td>
+<td align="left">D000690</td>
+</tr>
+<tr class="even">
+<td align="left">Ataxia</td>
+<td align="left">Ataxia</td>
+<td align="left">C0004134</td>
+<td align="left">Ataxia</td>
+<td align="left">D001259</td>
+</tr>
+<tr class="odd">
+<td align="left">Autism</td>
+<td align="left">Autistic Disorder</td>
+<td align="left">C0004352</td>
+<td align="left">Autistic Disorder</td>
+<td align="left">D001321</td>
+</tr>
+<tr class="even">
+<td align="left">Bipolar</td>
+<td align="left">Bipolar Disorder</td>
+<td align="left">C0005586</td>
+<td align="left">Bipolar Disorder</td>
+<td align="left">D001714</td>
+</tr>
+<tr class="odd">
+<td align="left">Extrapyramidal</td>
+<td align="left">Extrapyramidal Disorders</td>
+<td align="left">C0015371</td>
+<td align="left">Basal Ganglia Diseases</td>
+<td align="left">D001480</td>
+</tr>
+<tr class="even">
+<td align="left">FTD</td>
+<td align="left">Frontotemporal dementia</td>
+<td align="left">C0338451</td>
+<td align="left">Frontotemporal Dementia</td>
+<td align="left">D057180</td>
+</tr>
+<tr class="odd">
+<td align="left">Myopathy</td>
+<td align="left">Myopathy</td>
+<td align="left">C0026848</td>
+<td align="left">Muscular Diseases</td>
+<td align="left">D009135</td>
+</tr>
+<tr class="even">
+<td align="left">Parkinson</td>
+<td align="left">Parkinson Disease</td>
+<td align="left">C0030567</td>
+<td align="left">Parkinson Disease</td>
+<td align="left">D010300</td>
+</tr>
+<tr class="odd">
+<td align="left">Psychosis</td>
+<td align="left">Psychotic Disorders</td>
+<td align="left">C0033975</td>
+<td align="left">Psychotic Disorders</td>
+<td align="left">D011618</td>
+</tr>
+<tr class="even">
+<td align="left">Spinocerebellar</td>
+<td align="left">Ataxia, Spinocerebellar</td>
+<td align="left">C0087012</td>
+<td align="left">Spinocerebellar Ataxias</td>
+<td align="left">D020754</td>
+</tr>
+</tbody>
+</table>
+<p>The content should contain for every target the corresponding Mesh descriptor and UMLS concept id (CUI).</p>
+</div>
+<div id="target-discoveries" class="section level3">
+<h3>Target Discoveries</h3>
+<p>By dfault the pairs of concepts representing the target discoveries are provided in the file <code>data/discoveries.tsv</code> which can be loaded as:</p>
+<pre class="r"><code>discoveries &lt;- loadDiscoveries()
+kable(discoveries)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">concept1</th>
+<th align="left">concept2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Autism</td>
+</tr>
+<tr class="even">
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+</tr>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Spinocerebellar</td>
+</tr>
+<tr class="even">
+<td align="left">Ataxia</td>
+<td align="left">ALS</td>
+</tr>
+<tr class="odd">
+<td align="left">FTD</td>
+<td align="left">Bipolar</td>
+</tr>
+<tr class="even">
+<td align="left">Myopathy</td>
+<td align="left">ALS</td>
+</tr>
+<tr class="odd">
+<td align="left">Parkinson</td>
+<td align="left">ALS</td>
+</tr>
+<tr class="even">
+<td align="left">Psychosis</td>
+<td align="left">ALS</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="preparing-target-pairs" class="section level3">
+<h3>Preparing Target Pairs</h3>
+<pre class="r"><code>targetPairs &lt;- preprocessDiscoveries(discoveries,targets)
+kable(targetPairs)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">concept1</th>
+<th align="left">concept2</th>
+<th align="left">dataset</th>
+<th align="left">id1</th>
+<th align="left">id2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Autism</td>
+<td align="left">KD</td>
+<td align="left">C0002736</td>
+<td align="left">C0004352</td>
+</tr>
+<tr class="even">
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">KD</td>
+<td align="left">C0002736</td>
+<td align="left">C0015371</td>
+</tr>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Spinocerebellar</td>
+<td align="left">KD</td>
+<td align="left">C0002736</td>
+<td align="left">C0087012</td>
+</tr>
+<tr class="even">
+<td align="left">Ataxia</td>
+<td align="left">ALS</td>
+<td align="left">KD</td>
+<td align="left">C0004134</td>
+<td align="left">C0002736</td>
+</tr>
+<tr class="odd">
+<td align="left">FTD</td>
+<td align="left">Bipolar</td>
+<td align="left">KD</td>
+<td align="left">C0338451</td>
+<td align="left">C0005586</td>
+</tr>
+<tr class="even">
+<td align="left">Myopathy</td>
+<td align="left">ALS</td>
+<td align="left">KD</td>
+<td align="left">C0026848</td>
+<td align="left">C0002736</td>
+</tr>
+<tr class="odd">
+<td align="left">Parkinson</td>
+<td align="left">ALS</td>
+<td align="left">KD</td>
+<td align="left">C0030567</td>
+<td align="left">C0002736</td>
+</tr>
+<tr class="even">
+<td align="left">Psychosis</td>
+<td align="left">ALS</td>
+<td align="left">KD</td>
+<td align="left">C0033975</td>
+<td align="left">C0002736</td>
+</tr>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Autism</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001321</td>
+</tr>
+<tr class="even">
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001480</td>
+</tr>
+<tr class="odd">
+<td align="left">ALS</td>
+<td align="left">Spinocerebellar</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D020754</td>
+</tr>
+<tr class="even">
+<td align="left">Ataxia</td>
+<td align="left">ALS</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D001259</td>
+<td align="left">MESH:D000690</td>
+</tr>
+<tr class="odd">
+<td align="left">FTD</td>
+<td align="left">Bipolar</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D057180</td>
+<td align="left">MESH:D001714</td>
+</tr>
+<tr class="even">
+<td align="left">Myopathy</td>
+<td align="left">ALS</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D009135</td>
+<td align="left">MESH:D000690</td>
+</tr>
+<tr class="odd">
+<td align="left">Parkinson</td>
+<td align="left">ALS</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D010300</td>
+<td align="left">MESH:D000690</td>
+</tr>
+<tr class="even">
+<td align="left">Psychosis</td>
+<td align="left">ALS</td>
+<td align="left">PTC</td>
+<td align="left">MESH:D011618</td>
+<td align="left">MESH:D000690</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="r-markdown" class="section level1">

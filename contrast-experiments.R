@@ -2,21 +2,19 @@ library(reshape2)
 library(ggplot2)
 library(plyr)
 
-library(doMC)
-doMC::registerDoMC(cores=40)
 
 
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
 measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3')
 
-loadDiscoveries <- function(f='data/18-contrast-method-experiments/discoveries.tsv') {
+loadDiscoveries <- function(f='data/discoveries.tsv') {
   d<-read.table(f,sep='\t')
   colnames(d) <- c('concept1','concept2')
   d
 }
 
-loadTargetsList <- function(f='data/18-contrast-method-experiments/targets.list') {
+loadTargetsList <- function(f='data/targets.list') {
   d<-read.table(f,sep='\t', header=TRUE)
   d
 }
