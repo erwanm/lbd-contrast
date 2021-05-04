@@ -51,14 +51,16 @@ preprocessDiscoveries <-function(discoveriesDF, targetsListDF) {
 # expected input dir struct: <data dir>/<dataset>/<indiv|joint>/<level>/<view>/<year>[.total]
 #
 
-loadData <- function(dataDir='data', datasets=c('KD','PTC'),probTypes=c('indiv','joint','total'),views=c('abstracts+articles','pmc-articles','unfiltered-medline'),levels=c('by-doc','by-sent'), minYear=0, maxYear=9999,removePTCTypes=TRUE) {
+loadData <- function(dataDir='data', datasets=c('KD','PTC'),probTypes=c('indiv','joint','total'),views=c('abstracts+articles','pmc-articles','unfiltered-medline'),levels=c('by-doc','by-sent'), minYear=0, maxYear=9999,removePTCTypes=TRUE,verbose=TRUE) {
   l<-llply(probTypes, function(probType) {
     ldply(datasets, function(dataset) {
 #    ldply(c('indiv', 'joint'), function(probType) {
       ldply(levels, function(level) {
         ldply(views, function(view) {
-          d<-loadDataDir(dataDir, dataset, probType, level, view, minYear, maxYear)
-          print(paste('loaded', nrow(d),'rows'))
+          d<-loadDataDir(dataDir, dataset, probType, level, view, minYear, maxYear, verbose=verbose)
+          if (verbose) {
+            print(paste('loaded', nrow(d),'rows'))
+          }
           if (dataset == 'PTC' & removePTCTypes) {
             if (probType == 'indiv') {
               d<-removeTypePTC(d, 'concept')
@@ -82,7 +84,7 @@ loadData <- function(dataDir='data', datasets=c('KD','PTC'),probTypes=c('indiv',
 #
 # input: <dir>/year
 #
-loadDataDir <- function(dataDir, dataset, probType, level, view, minYear=0, maxYear=9999) {
+loadDataDir <- function(dataDir, dataset, probType, level, view, minYear=0, maxYear=9999,verbose=TRUE) {
   probTypeDir <- probType
   globPattern='????'
   if (probType == 'total') {
@@ -91,7 +93,9 @@ loadDataDir <- function(dataDir, dataset, probType, level, view, minYear=0, maxY
   }
   dir = paste(dataDir,dataset,probTypeDir,level,view,sep='/')
   if (dir.exists(dir)) {
-    print(paste("loading from",dir))
+    if (verbose) {
+      print(paste("loading from",dir))
+    }
     files = Sys.glob(paste(dir,globPattern,sep='/'))
     ldply(files, function(filename) {
       if (file.size(filename) > 0) {
