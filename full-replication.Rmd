@@ -74,7 +74,7 @@ The R code expects the data directory structure as: `<data dir>/<dataset>/<indiv
 - subdirectories `indiv` and `joint` contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by [TDC Tools code](https://github.com/erwanm/tdc-tools)).
 
 ```
-#system.time(full<-loadData())
+system.time(full<-loadData())
 ```
 
 - Note: the PTC concepts are expected to be read as `<id>@<type>`; the `@<type>` suffix is removed by default.
