@@ -507,7 +507,7 @@ summary {
 </ul>
 <pre class="r"><code>system.time(raw&lt;-loadData(verbose=FALSE))</code></pre>
 <pre><code>##    user  system elapsed 
-## 622.342  16.664 672.372</code></pre>
+## 553.684  13.819 583.404</code></pre>
 <ul>
 <li>Note: the PTC concepts are expected to be read as <code>&lt;id&gt;@&lt;type&gt;</code>; the <code>@&lt;type&gt;</code> suffix is removed by default.</li>
 </ul>
@@ -844,76 +844,76 @@ kable(targetPairs)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>786</td>
-<td align="left">ALS</td>
-<td align="left">Parkinson</td>
-<td align="left">KD</td>
-<td align="left">by-doc</td>
-<td align="left">pmc-articles</td>
-<td align="right">2017</td>
-<td align="left">C0002736</td>
-<td align="left">C0030567</td>
-<td align="right">421</td>
-</tr>
-<tr class="even">
-<td>593</td>
+<td>646</td>
 <td align="left">ALS</td>
 <td align="left">Myopathy</td>
 <td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">abstracts+articles</td>
+<td align="right">1999</td>
+<td align="left">C0002736</td>
+<td align="left">C0026848</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td>1725</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">PTC</td>
+<td align="left">by-sent</td>
+<td align="left">pmc-articles</td>
+<td align="right">2001</td>
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D010300</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>486</td>
+<td align="left">Bipolar</td>
+<td align="left">FTD</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">abstracts+articles</td>
+<td align="right">2011</td>
+<td align="left">C0005586</td>
+<td align="left">C0338451</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td>111</td>
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">KD</td>
 <td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="right">2009</td>
+<td align="left">C0002736</td>
+<td align="left">C0015371</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>711</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
 <td align="left">unfiltered-medline</td>
-<td align="right">1985</td>
+<td align="right">2011</td>
 <td align="left">C0002736</td>
 <td align="left">C0026848</td>
 <td align="right">2</td>
 </tr>
-<tr class="odd">
-<td>915</td>
-<td align="left">ALS</td>
-<td align="left">Parkinson</td>
-<td align="left">KD</td>
-<td align="left">by-sent</td>
-<td align="left">unfiltered-medline</td>
-<td align="right">1986</td>
-<td align="left">C0002736</td>
-<td align="left">C0030567</td>
-<td align="right">1</td>
-</tr>
 <tr class="even">
-<td>1141</td>
-<td align="left">ALS</td>
-<td align="left">Extrapyramidal</td>
-<td align="left">PTC</td>
-<td align="left">by-doc</td>
-<td align="left">abstracts+articles</td>
-<td align="right">1995</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D001480</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td>350</td>
+<td>418</td>
 <td align="left">ALS</td>
 <td align="left">Ataxia</td>
 <td align="left">KD</td>
-<td align="left">by-doc</td>
+<td align="left">by-sent</td>
 <td align="left">unfiltered-medline</td>
-<td align="right">1981</td>
+<td align="right">2003</td>
 <td align="left">C0002736</td>
 <td align="left">C0004134</td>
 <td align="right">1</td>
-</tr>
-<tr class="even">
-<td>925</td>
-<td align="left">ALS</td>
-<td align="left">Parkinson</td>
-<td align="left">KD</td>
-<td align="left">by-sent</td>
-<td align="left">unfiltered-medline</td>
-<td align="right">1996</td>
-<td align="left">C0002736</td>
-<td align="left">C0030567</td>
-<td align="right">20</td>
 </tr>
 </tbody>
 </table>
@@ -1126,10 +1126,8 @@ kable(targetRanges)</code></pre>
 <h3>Aggregating frequencies across years</h3>
 <p>This step sums the individual, joint and total frequencies in the <code>raw</code> list across the years specified by <code>targetRanges</code> for every required range of years.</p>
 <pre class="r"><code>system.time(aggregated&lt;-aggregateFullDataAcrossYears(raw, targetRanges))</code></pre>
-<pre><code>## [1] &quot;aggregating indiv...&quot;</code></pre>
-<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
-<pre><code>## Warning: executing %dopar% sequentially: no parallel backend registered</code></pre>
-<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+<pre><code>## [1] &quot;aggregating indiv...&quot;
+## [1] &quot;  processing range 1950 - 1983 ...&quot;
 ## [1] &quot;  processing range 1950 - 1984 ...&quot;
 ## [1] &quot;  processing range 1950 - 1986 ...&quot;
 ## [1] &quot;  processing range 1950 - 2003 ...&quot;
@@ -1140,9 +1138,8 @@ kable(targetRanges)</code></pre>
 ## [1] &quot;  processing range 1950 - 2011 ...&quot;
 ## [1] &quot;  processing range 1950 - 2014 ...&quot;
 ## [1] &quot;  processing range 1950 - 2016 ...&quot;
-## [1] &quot;aggregating joint...&quot;</code></pre>
-<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
-<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+## [1] &quot;aggregating joint...&quot;
+## [1] &quot;  processing range 1950 - 1983 ...&quot;
 ## [1] &quot;  processing range 1950 - 1984 ...&quot;
 ## [1] &quot;  processing range 1950 - 1986 ...&quot;
 ## [1] &quot;  processing range 1950 - 2003 ...&quot;
@@ -1153,9 +1150,8 @@ kable(targetRanges)</code></pre>
 ## [1] &quot;  processing range 1950 - 2011 ...&quot;
 ## [1] &quot;  processing range 1950 - 2014 ...&quot;
 ## [1] &quot;  processing range 1950 - 2016 ...&quot;
-## [1] &quot;aggregating total...&quot;</code></pre>
-<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
-<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+## [1] &quot;aggregating total...&quot;
+## [1] &quot;  processing range 1950 - 1983 ...&quot;
 ## [1] &quot;  processing range 1950 - 1984 ...&quot;
 ## [1] &quot;  processing range 1950 - 1986 ...&quot;
 ## [1] &quot;  processing range 1950 - 2003 ...&quot;
@@ -1167,7 +1163,7 @@ kable(targetRanges)</code></pre>
 ## [1] &quot;  processing range 1950 - 2014 ...&quot;
 ## [1] &quot;  processing range 1950 - 2016 ...&quot;</code></pre>
 <pre><code>##     user   system  elapsed 
-##  999.986   26.428 1027.119</code></pre>
+##  998.480   27.064 1025.809</code></pre>
 <p><code>aggregated</code> is a list made of 3 dataframes <code>indiv</code>, <code>joint</code> and <code>total</code>.</p>
 </div>
 </div>
@@ -1176,7 +1172,7 @@ kable(targetRanges)</code></pre>
 <p>The following step integrates the 3 dataframes together so that each row contains all the relevant frequencies for the corresponding pair of concepts.</p>
 <pre class="r"><code>system.time(integrated&lt;-integratePairsDataByYearRange(aggregated))</code></pre>
 <pre><code>##    user  system elapsed 
-## 690.398  13.463 704.271</code></pre>
+## 654.590  12.710 667.432</code></pre>
 <pre class="r"><code>kable(integrated[sample(1:nrow(integrated),6),])</code></pre>
 <table>
 <thead>
@@ -1197,88 +1193,88 @@ kable(targetRanges)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>9053175</td>
+<td>9459370</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D001321</td>
+<td align="left">6787</td>
+<td align="right">5</td>
+<td align="right">69</td>
+<td align="right">38232</td>
+<td align="right">24023297</td>
+</tr>
+<tr class="even">
+<td>8138145</td>
 <td align="right">1950</td>
 <td align="right">2014</td>
 <td align="left">KD</td>
-<td align="left">pmc-articles</td>
+<td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">C5239119</td>
-<td align="left">C0030567</td>
+<td align="left">C0541777</td>
+<td align="left">C0026848</td>
 <td align="right">1</td>
-<td align="right">11803</td>
-<td align="right">120</td>
-<td align="right">1061449</td>
-</tr>
-<tr class="even">
-<td>7582306</td>
-<td align="right">1950</td>
-<td align="right">2011</td>
-<td align="left">PTC</td>
-<td align="left">pmc-articles</td>
-<td align="left">by-doc</td>
-<td align="left">MESH:D010300</td>
-<td align="left">13819</td>
-<td align="right">8</td>
-<td align="right">253</td>
-<td align="right">21103</td>
-<td align="right">630630</td>
+<td align="right">18546</td>
+<td align="right">234</td>
+<td align="right">24127857</td>
 </tr>
 <tr class="odd">
-<td>7555926</td>
+<td>5265453</td>
 <td align="right">1950</td>
-<td align="right">2011</td>
+<td align="right">2010</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D010300</td>
+<td align="left">84844</td>
+<td align="right">1</td>
+<td align="right">117</td>
+<td align="right">56497</td>
+<td align="right">20169046</td>
+</tr>
+<tr class="even">
+<td>3285715</td>
+<td align="right">1950</td>
+<td align="right">2009</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C1521759</td>
+<td align="left">C0002736</td>
+<td align="right">3</td>
+<td align="right">1226</td>
+<td align="right">344</td>
+<td align="right">303399</td>
+</tr>
+<tr class="odd">
+<td>5604255</td>
+<td align="right">1950</td>
+<td align="right">2010</td>
 <td align="left">PTC</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
 <td align="left">MESH:D009135</td>
-<td align="left">3458;7040</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">11061</td>
-<td align="right">630630</td>
+<td align="left">MESH:D006470</td>
+<td align="right">554</td>
+<td align="right">20899</td>
+<td align="right">7633</td>
+<td align="right">469103</td>
 </tr>
 <tr class="even">
-<td>524561</td>
+<td>13611458</td>
 <td align="right">1950</td>
-<td align="right">2003</td>
-<td align="left">KD</td>
-<td align="left">pmc-articles</td>
-<td align="left">by-doc</td>
-<td align="left">C0017429</td>
-<td align="left">C0002736</td>
-<td align="right">6</td>
-<td align="right">121</td>
-<td align="right">627</td>
-<td align="right">114625</td>
-</tr>
-<tr class="odd">
-<td>3500886</td>
-<td align="right">1950</td>
-<td align="right">2009</td>
-<td align="left">KD</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-sent</td>
-<td align="left">C0149843</td>
-<td align="left">C0030567</td>
-<td align="right">5</td>
-<td align="right">68352</td>
-<td align="right">94</td>
-<td align="right">87092620</td>
-</tr>
-<tr class="even">
-<td>10624176</td>
-<td align="right">1950</td>
-<td align="right">2014</td>
+<td align="right">2016</td>
 <td align="left">PTC</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">p.A10H</td>
-<td align="left">MESH:D010300</td>
+<td align="left">MESH:D000690</td>
+<td align="left">33916</td>
 <td align="right">1</td>
-<td align="right">51497</td>
-<td align="right">3</td>
-<td align="right">1330856</td>
+<td align="right">261</td>
+<td align="right">8752</td>
+<td align="right">1952252</td>
 </tr>
 </tbody>
 </table>
@@ -1309,118 +1305,118 @@ kable(measured[sample(1:nrow(measured),6),])</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>12716290</td>
+<td>10659430</td>
 <td align="right">1950</td>
-<td align="right">2016</td>
+<td align="right">2014</td>
 <td align="left">PTC</td>
-<td align="left">abstracts+articles</td>
+<td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">MESH:D001259</td>
-<td align="left">14791</td>
+<td align="left">p.R428R</td>
+<td align="left">MESH:D009135</td>
 <td align="right">1</td>
-<td align="right">19</td>
-<td align="right">47242</td>
-<td align="right">26226878</td>
-<td align="right">4.8688328</td>
-<td align="right">0.1975623</td>
-<td align="right">1.0e-07</td>
-<td align="right">-19.77571</td>
-<td align="right">-44.42025</td>
+<td align="right">26797</td>
+<td align="right">1</td>
+<td align="right">1330856</td>
+<td align="right">5.6341392</td>
+<td align="right">0.2769446</td>
+<td align="right">4.2e-06</td>
+<td align="right">-14.70978</td>
+<td align="right">-35.05371</td>
 </tr>
 <tr class="even">
-<td>13455942</td>
-<td align="right">1950</td>
-<td align="right">2016</td>
-<td align="left">PTC</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
-<td align="left">MESH:D001259</td>
-<td align="left">20289</td>
-<td align="right">3</td>
-<td align="right">3085</td>
-<td align="right">80585</td>
-<td align="right">267658816</td>
-<td align="right">1.6915040</td>
-<td align="right">0.0640458</td>
-<td align="right">0.0e+00</td>
-<td align="right">-24.71935</td>
-<td align="right">-51.13021</td>
-</tr>
-<tr class="odd">
-<td>10992213</td>
+<td>11187556</td>
 <td align="right">1950</td>
 <td align="right">2016</td>
 <td align="left">KD</td>
 <td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">C0022346</td>
+<td align="left">C0386726</td>
 <td align="left">C0005586</td>
-<td align="right">61</td>
+<td align="right">1</td>
 <td align="right">34006</td>
-<td align="right">33246</td>
+<td align="right">349</td>
 <td align="right">26380623</td>
-<td align="right">0.5093178</td>
-<td align="right">0.0272039</td>
-<td align="right">2.0e-07</td>
-<td align="right">-18.21292</td>
-<td align="right">-36.93516</td>
+<td align="right">1.1523904</td>
+<td align="right">0.0467445</td>
+<td align="right">0.0e+00</td>
+<td align="right">-23.50058</td>
+<td align="right">-48.15356</td>
+</tr>
+<tr class="odd">
+<td>7560798</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D009135</td>
+<td align="left">MESH:C549541</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">11061</td>
+<td align="right">630630</td>
+<td align="right">2.5113120</td>
+<td align="right">0.1303465</td>
+<td align="right">2.2e-06</td>
+<td align="right">-16.75512</td>
+<td align="right">-36.02156</td>
 </tr>
 <tr class="even">
-<td>1547830</td>
+<td>834375</td>
 <td align="right">1950</td>
-<td align="right">2005</td>
+<td align="right">2003</td>
 <td align="left">PTC</td>
 <td align="left">unfiltered-medline</td>
 <td align="left">by-doc</td>
-<td align="left">MESH:D009135</td>
-<td align="left">6252</td>
-<td align="right">3</td>
-<td align="right">1922</td>
-<td align="right">24245</td>
-<td align="right">16414155</td>
-<td align="right">0.0796074</td>
-<td align="right">0.0035565</td>
-<td align="right">0.0e+00</td>
-<td align="right">-22.30387</td>
-<td align="right">-44.68734</td>
+<td align="left">MESH:D001480</td>
+<td align="left">117059</td>
+<td align="right">2</td>
+<td align="right">331</td>
+<td align="right">9912</td>
+<td align="right">15136941</td>
+<td align="right">3.2059225</td>
+<td align="right">0.1402933</td>
+<td align="right">3.0e-07</td>
+<td align="right">-19.64565</td>
+<td align="right">-42.49722</td>
 </tr>
 <tr class="odd">
-<td>13833616</td>
+<td>2179528</td>
 <td align="right">1950</td>
-<td align="right">2016</td>
-<td align="left">PTC</td>
-<td align="left">pmc-articles</td>
+<td align="right">2008</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
 <td align="left">by-doc</td>
-<td align="left">MESH:D001714</td>
-<td align="left">48701</td>
-<td align="right">1</td>
-<td align="right">53</td>
-<td align="right">32869</td>
-<td align="right">1952252</td>
-<td align="right">0.1643475</td>
-<td align="right">0.0078648</td>
+<td align="left">C0920269</td>
+<td align="left">C0026848</td>
+<td align="right">2</td>
+<td align="right">10518</td>
+<td align="right">4023</td>
+<td align="right">18561039</td>
+<td align="right">-0.1888547</td>
+<td align="right">-0.0081594</td>
 <td align="right">0.0e+00</td>
-<td align="right">-20.73236</td>
-<td align="right">-41.62907</td>
+<td align="right">-23.33463</td>
+<td align="right">-46.48040</td>
 </tr>
 <tr class="even">
-<td>14299868</td>
+<td>14156049</td>
 <td align="right">1950</td>
 <td align="right">2016</td>
 <td align="left">PTC</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">p.R133*;RS#:752374367</td>
-<td align="left">MESH:D001259</td>
+<td align="left">MESH:D020754</td>
+<td align="left">MESH:C537503</td>
 <td align="right">1</td>
-<td align="right">25440</td>
-<td align="right">1</td>
+<td align="right">150</td>
+<td align="right">6571</td>
 <td align="right">1952252</td>
-<td align="right">6.2618968</td>
-<td align="right">0.2996595</td>
-<td align="right">3.2e-06</td>
-<td align="right">-14.63481</td>
-<td align="right">-35.53152</td>
+<td align="right">0.9859919</td>
+<td align="right">0.0471841</td>
+<td align="right">1.0e-07</td>
+<td align="right">-19.91072</td>
+<td align="right">-40.80742</td>
 </tr>
 </tbody>
 </table>
@@ -1474,124 +1470,124 @@ kable(measured[sample(1:nrow(measured),6),])</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>10461794</td>
-<td align="left">Extrapyramidal</td>
-<td align="left">MESH:D001480</td>
+<td>13703997</td>
+<td align="left">Parkinson</td>
+<td align="left">MESH:D010300</td>
 <td align="right">1950</td>
 <td align="right">2016</td>
 <td align="left">PTC</td>
 <td align="left">pmc-articles</td>
-<td align="left">by-sent</td>
-<td align="left">MESH:D057092</td>
-<td align="right">1</td>
-<td align="right">35899</td>
-<td align="right">1235</td>
-<td align="right">179889564</td>
-<td align="right">2.0205849</td>
-<td align="right">0.0736834</td>
-<td align="right">0.0e+00</td>
-<td align="right">-25.40195</td>
-<td align="right">-52.82449</td>
+<td align="left">by-doc</td>
+<td align="left">256987</td>
+<td align="right">5</td>
+<td align="right">79414</td>
+<td align="right">46</td>
+<td align="right">1952252</td>
+<td align="right">1.4179683</td>
+<td align="right">0.0763384</td>
+<td align="right">1.40e-06</td>
+<td align="right">-17.15681</td>
+<td align="right">-35.73159</td>
 </tr>
 <tr class="even">
-<td>4446720</td>
-<td align="left">Myopathy</td>
-<td align="left">C0026848</td>
+<td>3961786</td>
+<td align="left">FTD</td>
+<td align="left">C0338451</td>
 <td align="right">1950</td>
-<td align="right">2010</td>
+<td align="right">2009</td>
+<td align="left">KD</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0052919</td>
+<td align="right">1</td>
+<td align="right">3172</td>
+<td align="right">851</td>
+<td align="right">19389159</td>
+<td align="right">2.8445545</td>
+<td align="right">0.1175011</td>
+<td align="right">1.00e-07</td>
+<td align="right">-21.36419</td>
+<td align="right">-45.57294</td>
+</tr>
+<tr class="odd">
+<td>6063803</td>
+<td align="left">Parkinson</td>
+<td align="left">C0030567</td>
+<td align="right">1950</td>
+<td align="right">2008</td>
 <td align="left">KD</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">C4698296</td>
-<td align="right">3</td>
-<td align="right">1429</td>
-<td align="right">500</td>
-<td align="right">385732</td>
-<td align="right">0.6956273</td>
-<td align="right">0.0409861</td>
-<td align="right">1.1e-06</td>
-<td align="right">-16.27665</td>
-<td align="right">-33.24893</td>
-</tr>
-<tr class="odd">
-<td>9244692</td>
-<td align="left">Autism</td>
-<td align="left">MESH:D001321</td>
-<td align="right">1950</td>
-<td align="right">2014</td>
-<td align="left">PTC</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">328783</td>
-<td align="right">1</td>
-<td align="right">38232</td>
-<td align="right">17</td>
-<td align="right">24023297</td>
-<td align="right">5.2079749</td>
-<td align="right">0.2124149</td>
-<td align="right">2.0e-07</td>
-<td align="right">-19.30996</td>
-<td align="right">-43.82789</td>
+<td align="left">C0010246</td>
+<td align="right">5</td>
+<td align="right">1441</td>
+<td align="right">268</td>
+<td align="right">242049</td>
+<td align="right">1.6479239</td>
+<td align="right">0.1058872</td>
+<td align="right">1.39e-05</td>
+<td align="right">-13.91509</td>
+<td align="right">-29.47810</td>
 </tr>
 <tr class="even">
-<td>500116</td>
-<td align="left">ALS</td>
-<td align="left">C0002736</td>
+<td>3791605</td>
+<td align="left">FTD</td>
+<td align="left">C0338451</td>
 <td align="right">1950</td>
 <td align="right">2011</td>
 <td align="left">KD</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">C0597601</td>
-<td align="right">7</td>
-<td align="right">2649</td>
-<td align="right">680</td>
+<td align="left">C1373183</td>
+<td align="right">1</td>
+<td align="right">732</td>
+<td align="right">9</td>
 <td align="right">498410</td>
-<td align="right">0.9537053</td>
-<td align="right">0.0591643</td>
-<td align="right">3.6e-06</td>
-<td align="right">-15.16591</td>
-<td align="right">-31.28553</td>
+<td align="right">6.2413486</td>
+<td align="right">0.3297595</td>
+<td align="right">9.80e-06</td>
+<td align="right">-12.68562</td>
+<td align="right">-31.61260</td>
 </tr>
 <tr class="odd">
-<td>246767</td>
-<td align="left">ALS</td>
-<td align="left">C0002736</td>
+<td>13178449</td>
+<td align="left">Parkinson</td>
+<td align="left">MESH:D010300</td>
 <td align="right">1950</td>
-<td align="right">2009</td>
-<td align="left">KD</td>
-<td align="left">abstracts+articles</td>
+<td align="right">2011</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
 <td align="left">by-sent</td>
-<td align="left">C1623303</td>
-<td align="right">2</td>
-<td align="right">36608</td>
-<td align="right">841</td>
-<td align="right">110969911</td>
-<td align="right">2.8497600</td>
-<td align="right">0.1107753</td>
-<td align="right">0.0e+00</td>
-<td align="right">-22.87583</td>
-<td align="right">-48.60143</td>
+<td align="left">1410</td>
+<td align="right">1</td>
+<td align="right">96733</td>
+<td align="right">649</td>
+<td align="right">53407177</td>
+<td align="right">-0.2332649</td>
+<td align="right">-0.0090869</td>
+<td align="right">0.00e+00</td>
+<td align="right">-25.90380</td>
+<td align="right">-51.57433</td>
 </tr>
 <tr class="even">
-<td>11108274</td>
+<td>11998747</td>
 <td align="left">Myopathy</td>
 <td align="left">MESH:D009135</td>
 <td align="right">1950</td>
-<td align="right">2014</td>
+<td align="right">2016</td>
 <td align="left">PTC</td>
-<td align="left">pmc-articles</td>
+<td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">c.13990T&gt;C</td>
-<td align="right">1</td>
-<td align="right">26797</td>
-<td align="right">1</td>
-<td align="right">1330856</td>
-<td align="right">5.6341392</td>
-<td align="right">0.2769446</td>
-<td align="right">4.2e-06</td>
-<td align="right">-14.70978</td>
-<td align="right">-35.05371</td>
+<td align="left">100328937</td>
+<td align="right">2</td>
+<td align="right">82371</td>
+<td align="right">94</td>
+<td align="right">26226878</td>
+<td align="right">2.7601050</td>
+<td align="right">0.1167333</td>
+<td align="right">1.00e-07</td>
+<td align="right">-20.88444</td>
+<td align="right">-44.52898</td>
 </tr>
 </tbody>
 </table>

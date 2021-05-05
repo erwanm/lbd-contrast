@@ -404,56 +404,32 @@ integratePairsDataByYear <- function(filteredJointPairsDF, fullDataAsList, yearM
 
 
 
-# BAD VERSION? - it seemed to work for indiv but there were errors for other cases with parallel=TRUE (possibly due to empty df?) and the whole thing took too much time
-#
-# sums across selected years for a dataframe 'data' which can be any of 'indiv', 'joint' or 'total'; use columns groupBy and sumCols to apply the appropriate process.
-#
-aggregateAcrossYearsBAK <- function(data, yearsRangeDF, groupBy, sumCols,parallel=TRUE) {
-  ddply(unique(yearsRangeDF[,c('start','end')]), c('start','end'), function(rangeRow) {
-    print(paste('  processing range',rangeRow$start,'-',rangeRow$end,'...'))
-    selectedYearsDF <- data[data$year>=rangeRow$start & data$year<=rangeRow$end,]
-    if (length(sumCols)==1) {
-      ddply(selectedYearsDF, groupBy, function(thisDF) {
-        s<-data.frame(x=sum(thisDF[,sumCols]))
-        colnames(s) <- sumCols
-        s
-      })      
-    } else {
-      ddply(selectedYearsDF, groupBy, function(thisDF) {
-        colSums(thisDF[,sumCols])
-      })
-   }
-  }, .parallel = parallel)
-}
-
-
 #
 # sums across selected years for a specific column (only one) in a dataframe 'data' which can be any of 'indiv', 'joint' or 'total'; use columns groupBy and sumCol to apply the appropriate process.
 #
-# this version seems faster than the previous bad one
 # there are many options to sum by group in R, following most upvoted answer from https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group#1661144
 #
-aggregateAcrossYears <- function(data, yearsRangeDF, groupBy, sumCol,parallel=TRUE) {
+aggregateAcrossYears <- function(data, yearsRangeDF, groupBy, sumCol) {
   d <- ddply(unique(yearsRangeDF[,c('start','end')]), c('start','end'), function(rangeRow) {
     print(paste('  processing range',rangeRow$start,'-',rangeRow$end,'...'))
     selectedYearsDF <- data[data$year>=rangeRow$start & data$year<=rangeRow$end,]
     aggregate(selectedYearsDF[,sumCol],by=selectedYearsDF[,groupBy],FUN=sum)
-  }, .parallel = parallel)
+  })
   colnames(d)[colnames(d)=='x'] <- sumCol
   d
 }
 
 
-aggregateFullDataAcrossYears <- function(fullDataAsList, yearsRangeDF, groupBy=c('dataset', 'level', 'view'),parallel=TRUE) {
+aggregateFullDataAcrossYears <- function(fullDataAsList, yearsRangeDF, groupBy=c('dataset', 'level', 'view')) {
     print('aggregating indiv...')
-#    indiv <- aggregateAcrossYears(fullDataAsList$indiv, yearsRangeDF, c(groupBy, 'concept'), c('docFreq', 'tokenFreq'), parallel=parallel)
-    indiv <- aggregateAcrossYears(fullDataAsList$indiv, yearsRangeDF, c(groupBy, 'concept'), 'docFreq', parallel=parallel)
+#    indiv <- aggregateAcrossYears(fullDataAsList$indiv, yearsRangeDF, c(groupBy, 'concept'), c('docFreq', 'tokenFreq'))
+    indiv <- aggregateAcrossYears(fullDataAsList$indiv, yearsRangeDF, c(groupBy, 'concept'), 'docFreq')
     print('aggregating joint...')
-    joint <- aggregateAcrossYears(fullDataAsList$joint, yearsRangeDF, c(groupBy, 'concept1', 'concept2'), 'jointFreq', parallel=parallel)
+    joint <- aggregateAcrossYears(fullDataAsList$joint, yearsRangeDF, c(groupBy, 'concept1', 'concept2'), 'jointFreq')
     # note: the column 'nbUniqueConcepts' is dropped since it doesn't make sense to aggregate it across years
     print('aggregating total...')
-#    total <- aggregateAcrossYears(fullDataAsList$total, yearsRangeDF, groupBy , c('nbDocs', 'nbTokens'), parallel=parallel)
-    total <- aggregateAcrossYears(fullDataAsList$total, yearsRangeDF, groupBy , 'nbDocs', parallel=parallel)
+#    total <- aggregateAcrossYears(fullDataAsList$total, yearsRangeDF, groupBy , c('nbDocs', 'nbTokens'))
+    total <- aggregateAcrossYears(fullDataAsList$total, yearsRangeDF, groupBy , 'nbDocs')
     list(indiv=indiv, joint=joint, total=total)
 }
 
