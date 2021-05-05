@@ -54,7 +54,7 @@ with open(semGroupsFile) as infile:
         if cols[0] in targetCoarseTypes:
             targetTypes.append(cols[2])
 
-print("info: identified %d target types" % (len(targetTypes)))
+print("info: identified %d target types" % (len(targetTypes)),file=sys.stderr)
 
 targetCuis = set()
 with open(join(umlsDir,"META","MRSTY.RRF")) as infile:
@@ -63,7 +63,7 @@ with open(join(umlsDir,"META","MRSTY.RRF")) as infile:
         if cols[1] in targetTypes:
             targetCuis.add(cols[0])
 
-print("info: identified %d target cuis" % (len(targetCuis)))
+print("info: identified %d target cuis" % (len(targetCuis)),file=sys.stderr)
 
 for cui in targetCuis:
     print(cui)

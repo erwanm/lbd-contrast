@@ -160,17 +160,12 @@ system.time(integrated<-integratePairsDataByYearRange(aggregated))
 kable(integrated[sample(1:nrow(integrated),6),])
 ```
 
-Then the association measures are calculated for every row:
+
+Finally the dataframe is reformated for convenient access by pair (target concept, related concept): for every target concept in `targetPairs` and any relation (A,B) in `aggregated`, the target (A or B) is placed as the first concept. If both A and B are targets, rows are added to represent the two cases. This way from the output dataframe a full list of relations can be selected for any specific target.
+
 
 ```{r}
-measured <- calculateAssociation(integrated)
-kable(measured[sample(1:nrow(measured),6),])
-```
-
-Finally the dataframe is reformated for convenient access by pair (target concept, related concept):
-
-```{r}
-lbd_data<-reformatRelationsByTarget(measured, targetPairs)
+lbd_data<-reformatRelationsByTarget(aggregated, targetPairs)
 kable(lbd_data[sample(1:nrow(lbd_data),6),])
 ```
 
