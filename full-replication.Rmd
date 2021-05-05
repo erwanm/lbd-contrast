@@ -49,7 +49,6 @@ The code can be loaded in the R interpreter with:
 
 ```{r}
 source('contrast-experiments.R')
-
 ```
 
 ## Hardware Requirements
@@ -74,7 +73,7 @@ The R code expects the data directory structure as: `<data dir>/<dataset>/<indiv
 - subdirectories `indiv` and `joint` contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by [TDC Tools code](https://github.com/erwanm/tdc-tools)).
 
 ```{r}
-system.time(raw<-loadData(),verbose=FALSE)
+system.time(raw<-loadData(verbose=FALSE))
 ```
 
 - Note: the PTC concepts are expected to be read as `<id>@<type>`; the `@<type>` suffix is removed by default.
@@ -178,5 +177,5 @@ kable(lbd_data[sample(1:nrow(lbd_data),6),])
 ## Saving the final dataset
 
 ```{r}
-write.table(finalData, 'lbd_data.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+write.table(lbd_data, 'lbd_data.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 ```

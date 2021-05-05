@@ -505,84 +505,22 @@ summary {
 <li><code>&lt;dataset&gt;</code> is the id of the data, e.g. <code>PTC</code> or <code>KD</code>.</li>
 <li>subdirectories <code>indiv</code> and <code>joint</code> contain respectively the individual (resp. joint) frequencies of the concepts (resp. concepts relations) depending on the view and level, as computed by <a href="https://github.com/erwanm/tdc-tools">TDC Tools code</a>).</li>
 </ul>
-<pre class="r"><code>system.time(raw&lt;-loadData())</code></pre>
-<pre><code>## [1] &quot;loading from data/KD/indiv/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 6075697 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 2893795 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 5371272 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 6075697 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 2893795 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 5371272 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 7030964 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 4774912 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 4053432 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 7030964 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 4774912 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 4053432 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 4266304 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 3903705 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 918481 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 652284 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 431192 rows&quot;
-## [1] &quot;loading from data/KD/joint/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 370601 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 3320229 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 3082239 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 531997 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 549901 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 423047 rows&quot;
-## [1] &quot;loading from data/PTC/joint/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 218799 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 242 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 240 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 241 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 242 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 240 rows&quot;
-## [1] &quot;loading from data/KD/indiv/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 241 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/abstracts+articles&quot;
-## [1] &quot;loaded 242 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/pmc-articles&quot;
-## [1] &quot;loaded 241 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-doc/unfiltered-medline&quot;
-## [1] &quot;loaded 242 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/abstracts+articles&quot;
-## [1] &quot;loaded 242 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/pmc-articles&quot;
-## [1] &quot;loaded 241 rows&quot;
-## [1] &quot;loading from data/PTC/indiv/by-sent/unfiltered-medline&quot;
-## [1] &quot;loaded 242 rows&quot;</code></pre>
+<pre class="r"><code>system.time(raw&lt;-loadData(verbose=FALSE))</code></pre>
 <pre><code>##    user  system elapsed 
-## 604.139  16.451 636.739</code></pre>
+## 622.342  16.664 672.372</code></pre>
 <ul>
 <li>Note: the PTC concepts are expected to be read as <code>&lt;id&gt;@&lt;type&gt;</code>; the <code>@&lt;type&gt;</code> suffix is removed by default.</li>
 </ul>
+<p><code>raw</code> is a list made of three dataframes <code>indiv</code>, <code>joint</code> and <code>total</code>:</p>
+<pre class="r"><code>colnames(raw$indiv)</code></pre>
+<pre><code>## [1] &quot;dataset&quot;   &quot;level&quot;     &quot;view&quot;      &quot;year&quot;      &quot;concept&quot;   &quot;docFreq&quot;  
+## [7] &quot;tokenFreq&quot;</code></pre>
+<pre class="r"><code>colnames(raw$joint)</code></pre>
+<pre><code>## [1] &quot;dataset&quot;   &quot;level&quot;     &quot;view&quot;      &quot;year&quot;      &quot;concept1&quot;  &quot;concept2&quot; 
+## [7] &quot;jointFreq&quot;</code></pre>
+<pre class="r"><code>colnames(raw$total)</code></pre>
+<pre><code>## [1] &quot;dataset&quot;          &quot;level&quot;            &quot;view&quot;             &quot;year&quot;            
+## [5] &quot;nbUniqueConcepts&quot; &quot;nbDocs&quot;           &quot;nbTokens&quot;</code></pre>
 </div>
 <div id="target-concepts-and-discoveries" class="section level2">
 <h2>Target Concepts and Discoveries</h2>
@@ -855,6 +793,12 @@ kable(targetPairs)</code></pre>
 </tbody>
 </table>
 </div>
+</div>
+<div id="determine-a-range-of-years-for-every-discovery" class="section level2">
+<h2>Determine a range of years for every discovery</h2>
+<ul>
+<li>Note: the steps below are needed only for the purpose of evaluating the method using past discoveries as gold standard. In an exploratory setting one would simply aggregate all the years for which data is available.</li>
+</ul>
 <div id="filtering-the-raw-data" class="section level3">
 <h3>Filtering the raw data</h3>
 <pre class="r"><code>targetPairsJointData &lt;- filterJointPairs(targetPairs,raw$joint)</code></pre>
@@ -900,76 +844,76 @@ kable(targetPairs)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1274</td>
+<td>786</td>
 <td align="left">ALS</td>
-<td align="left">Spinocerebellar</td>
-<td align="left">PTC</td>
+<td align="left">Parkinson</td>
+<td align="left">KD</td>
 <td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
+<td align="left">pmc-articles</td>
 <td align="right">2017</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D020754</td>
-<td align="right">3</td>
+<td align="left">C0002736</td>
+<td align="left">C0030567</td>
+<td align="right">421</td>
 </tr>
 <tr class="even">
-<td>485</td>
-<td align="left">Bipolar</td>
-<td align="left">FTD</td>
+<td>593</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
 <td align="left">KD</td>
-<td align="left">by-sent</td>
-<td align="left">abstracts+articles</td>
-<td align="right">2010</td>
-<td align="left">C0005586</td>
-<td align="left">C0338451</td>
-<td align="right">1</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="right">1985</td>
+<td align="left">C0002736</td>
+<td align="left">C0026848</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
-<td>237</td>
+<td>915</td>
 <td align="left">ALS</td>
-<td align="left">Spinocerebellar</td>
+<td align="left">Parkinson</td>
 <td align="left">KD</td>
-<td align="left">by-doc</td>
+<td align="left">by-sent</td>
 <td align="left">unfiltered-medline</td>
-<td align="right">2018</td>
+<td align="right">1986</td>
 <td align="left">C0002736</td>
-<td align="left">C0087012</td>
-<td align="right">13</td>
+<td align="left">C0030567</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
-<td>142</td>
+<td>1141</td>
 <td align="left">ALS</td>
 <td align="left">Extrapyramidal</td>
-<td align="left">KD</td>
+<td align="left">PTC</td>
 <td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
-<td align="right">2010</td>
-<td align="left">C0002736</td>
-<td align="left">C0015371</td>
+<td align="left">abstracts+articles</td>
+<td align="right">1995</td>
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001480</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td>1774</td>
+<td>350</td>
 <td align="left">ALS</td>
-<td align="left">Parkinson</td>
-<td align="left">PTC</td>
-<td align="left">by-sent</td>
-<td align="left">unfiltered-medline</td>
-<td align="right">2017</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D010300</td>
-<td align="right">59</td>
-</tr>
-<tr class="even">
-<td>1671</td>
-<td align="left">ALS</td>
-<td align="left">Parkinson</td>
-<td align="left">PTC</td>
+<td align="left">Ataxia</td>
+<td align="left">KD</td>
 <td align="left">by-doc</td>
 <td align="left">unfiltered-medline</td>
-<td align="right">2001</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D010300</td>
-<td align="right">11</td>
+<td align="right">1981</td>
+<td align="left">C0002736</td>
+<td align="left">C0004134</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>925</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="right">1996</td>
+<td align="left">C0002736</td>
+<td align="left">C0030567</td>
+<td align="right">20</td>
 </tr>
 </tbody>
 </table>
@@ -977,8 +921,684 @@ kable(targetPairs)</code></pre>
 <div id="calculating-the-range-of-years-before-discovery" class="section level3">
 <h3>Calculating the Range of Years Before Discovery</h3>
 <p>The function below calculates the first year of the consecutive sequence where the two concepts have at least one occurrence every year (assumed to represent the “discovery”). It returns for every relation the range of years <em>before</em> this “discovery year”: by default the start year is arbitrarily set to 1950, and the end year is the year just before the “discovery year”.</p>
-<pre class="r"><code>targetRanges &lt;- selectYearRange(targetPairsJointData)</code></pre>
+<pre class="r"><code>targetRanges &lt;- selectYearRange(targetPairsJointData)
+kable(targetRanges)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">id1</th>
+<th align="left">id2</th>
+<th align="left">concept1</th>
+<th align="left">concept2</th>
+<th align="left">dataset</th>
+<th align="left">view</th>
+<th align="left">level</th>
+<th align="right">propAfter</th>
+<th align="right">start</th>
+<th align="right">end</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0004352</td>
+<td align="left">ALS</td>
+<td align="left">Autism</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.8490566</td>
+<td align="right">1950</td>
+<td align="right">2009</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001321</td>
+<td align="left">ALS</td>
+<td align="left">Autism</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.8709677</td>
+<td align="right">1950</td>
+<td align="right">2009</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0015371</td>
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.1578947</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001480</td>
+<td align="left">ALS</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.3809524</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0087012</td>
+<td align="left">ALS</td>
+<td align="left">Spinocerebellar</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.8362069</td>
+<td align="right">1950</td>
+<td align="right">2003</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D020754</td>
+<td align="left">ALS</td>
+<td align="left">Spinocerebellar</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.8000000</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0004134</td>
+<td align="left">ALS</td>
+<td align="left">Ataxia</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.6184211</td>
+<td align="right">1950</td>
+<td align="right">2008</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D001259</td>
+<td align="left">ALS</td>
+<td align="left">Ataxia</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.8113208</td>
+<td align="right">1950</td>
+<td align="right">2005</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0026848</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.9366516</td>
+<td align="right">1950</td>
+<td align="right">1984</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D009135</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.4705882</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0030567</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.9929607</td>
+<td align="right">1950</td>
+<td align="right">1983</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D010300</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.9975000</td>
+<td align="right">1950</td>
+<td align="right">1986</td>
+</tr>
+<tr class="odd">
+<td align="left">C0002736</td>
+<td align="left">C0033975</td>
+<td align="left">ALS</td>
+<td align="left">Psychosis</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.7254902</td>
+<td align="right">1950</td>
+<td align="right">2010</td>
+</tr>
+<tr class="even">
+<td align="left">MESH:D000690</td>
+<td align="left">MESH:D011618</td>
+<td align="left">ALS</td>
+<td align="left">Psychosis</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.5714286</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">C0005586</td>
+<td align="left">C0338451</td>
+<td align="left">Bipolar</td>
+<td align="left">FTD</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="right">0.9807692</td>
+<td align="right">1950</td>
+<td align="right">2005</td>
+</tr>
+</tbody>
+</table>
 </div>
+<div id="aggregating-frequencies-across-years" class="section level3">
+<h3>Aggregating frequencies across years</h3>
+<p>This step sums the individual, joint and total frequencies in the <code>raw</code> list across the years specified by <code>targetRanges</code> for every required range of years.</p>
+<pre class="r"><code>system.time(aggregated&lt;-aggregateFullDataAcrossYears(raw, targetRanges))</code></pre>
+<pre><code>## [1] &quot;aggregating indiv...&quot;</code></pre>
+<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
+<pre><code>## Warning: executing %dopar% sequentially: no parallel backend registered</code></pre>
+<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+## [1] &quot;  processing range 1950 - 1984 ...&quot;
+## [1] &quot;  processing range 1950 - 1986 ...&quot;
+## [1] &quot;  processing range 1950 - 2003 ...&quot;
+## [1] &quot;  processing range 1950 - 2005 ...&quot;
+## [1] &quot;  processing range 1950 - 2008 ...&quot;
+## [1] &quot;  processing range 1950 - 2009 ...&quot;
+## [1] &quot;  processing range 1950 - 2010 ...&quot;
+## [1] &quot;  processing range 1950 - 2011 ...&quot;
+## [1] &quot;  processing range 1950 - 2014 ...&quot;
+## [1] &quot;  processing range 1950 - 2016 ...&quot;
+## [1] &quot;aggregating joint...&quot;</code></pre>
+<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
+<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+## [1] &quot;  processing range 1950 - 1984 ...&quot;
+## [1] &quot;  processing range 1950 - 1986 ...&quot;
+## [1] &quot;  processing range 1950 - 2003 ...&quot;
+## [1] &quot;  processing range 1950 - 2005 ...&quot;
+## [1] &quot;  processing range 1950 - 2008 ...&quot;
+## [1] &quot;  processing range 1950 - 2009 ...&quot;
+## [1] &quot;  processing range 1950 - 2010 ...&quot;
+## [1] &quot;  processing range 1950 - 2011 ...&quot;
+## [1] &quot;  processing range 1950 - 2014 ...&quot;
+## [1] &quot;  processing range 1950 - 2016 ...&quot;
+## [1] &quot;aggregating total...&quot;</code></pre>
+<pre><code>## Warning in setup_parallel(): No parallel backend registered</code></pre>
+<pre><code>## [1] &quot;  processing range 1950 - 1983 ...&quot;
+## [1] &quot;  processing range 1950 - 1984 ...&quot;
+## [1] &quot;  processing range 1950 - 1986 ...&quot;
+## [1] &quot;  processing range 1950 - 2003 ...&quot;
+## [1] &quot;  processing range 1950 - 2005 ...&quot;
+## [1] &quot;  processing range 1950 - 2008 ...&quot;
+## [1] &quot;  processing range 1950 - 2009 ...&quot;
+## [1] &quot;  processing range 1950 - 2010 ...&quot;
+## [1] &quot;  processing range 1950 - 2011 ...&quot;
+## [1] &quot;  processing range 1950 - 2014 ...&quot;
+## [1] &quot;  processing range 1950 - 2016 ...&quot;</code></pre>
+<pre><code>##     user   system  elapsed 
+##  999.986   26.428 1027.119</code></pre>
+<p><code>aggregated</code> is a list made of 3 dataframes <code>indiv</code>, <code>joint</code> and <code>total</code>.</p>
+</div>
+</div>
+<div id="preparing-the-final-dataset" class="section level2">
+<h2>Preparing the final dataset</h2>
+<p>The following step integrates the 3 dataframes together so that each row contains all the relevant frequencies for the corresponding pair of concepts.</p>
+<pre class="r"><code>system.time(integrated&lt;-integratePairsDataByYearRange(aggregated))</code></pre>
+<pre><code>##    user  system elapsed 
+## 690.398  13.463 704.271</code></pre>
+<pre class="r"><code>kable(integrated[sample(1:nrow(integrated),6),])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">start</th>
+<th align="right">end</th>
+<th align="left">dataset</th>
+<th align="left">view</th>
+<th align="left">level</th>
+<th align="left">concept2</th>
+<th align="left">concept1</th>
+<th align="right">jointFreq</th>
+<th align="right">docFreq1</th>
+<th align="right">docFreq2</th>
+<th align="right">nbDocs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9053175</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C5239119</td>
+<td align="left">C0030567</td>
+<td align="right">1</td>
+<td align="right">11803</td>
+<td align="right">120</td>
+<td align="right">1061449</td>
+</tr>
+<tr class="even">
+<td>7582306</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D010300</td>
+<td align="left">13819</td>
+<td align="right">8</td>
+<td align="right">253</td>
+<td align="right">21103</td>
+<td align="right">630630</td>
+</tr>
+<tr class="odd">
+<td>7555926</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D009135</td>
+<td align="left">3458;7040</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">11061</td>
+<td align="right">630630</td>
+</tr>
+<tr class="even">
+<td>524561</td>
+<td align="right">1950</td>
+<td align="right">2003</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0017429</td>
+<td align="left">C0002736</td>
+<td align="right">6</td>
+<td align="right">121</td>
+<td align="right">627</td>
+<td align="right">114625</td>
+</tr>
+<tr class="odd">
+<td>3500886</td>
+<td align="right">1950</td>
+<td align="right">2009</td>
+<td align="left">KD</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">C0149843</td>
+<td align="left">C0030567</td>
+<td align="right">5</td>
+<td align="right">68352</td>
+<td align="right">94</td>
+<td align="right">87092620</td>
+</tr>
+<tr class="even">
+<td>10624176</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">p.A10H</td>
+<td align="left">MESH:D010300</td>
+<td align="right">1</td>
+<td align="right">51497</td>
+<td align="right">3</td>
+<td align="right">1330856</td>
+</tr>
+</tbody>
+</table>
+<p>Then the association measures are calculated for every row:</p>
+<pre class="r"><code>measured &lt;- calculateAssociation(integrated)
+kable(measured[sample(1:nrow(measured),6),])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">start</th>
+<th align="right">end</th>
+<th align="left">dataset</th>
+<th align="left">view</th>
+<th align="left">level</th>
+<th align="left">concept2</th>
+<th align="left">concept1</th>
+<th align="right">jointFreq</th>
+<th align="right">docFreq1</th>
+<th align="right">docFreq2</th>
+<th align="right">nbDocs</th>
+<th align="right">pmi</th>
+<th align="right">npmi</th>
+<th align="right">mi</th>
+<th align="right">pmi2</th>
+<th align="right">pmi3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>12716290</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D001259</td>
+<td align="left">14791</td>
+<td align="right">1</td>
+<td align="right">19</td>
+<td align="right">47242</td>
+<td align="right">26226878</td>
+<td align="right">4.8688328</td>
+<td align="right">0.1975623</td>
+<td align="right">1.0e-07</td>
+<td align="right">-19.77571</td>
+<td align="right">-44.42025</td>
+</tr>
+<tr class="even">
+<td>13455942</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">MESH:D001259</td>
+<td align="left">20289</td>
+<td align="right">3</td>
+<td align="right">3085</td>
+<td align="right">80585</td>
+<td align="right">267658816</td>
+<td align="right">1.6915040</td>
+<td align="right">0.0640458</td>
+<td align="right">0.0e+00</td>
+<td align="right">-24.71935</td>
+<td align="right">-51.13021</td>
+</tr>
+<tr class="odd">
+<td>10992213</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">KD</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0022346</td>
+<td align="left">C0005586</td>
+<td align="right">61</td>
+<td align="right">34006</td>
+<td align="right">33246</td>
+<td align="right">26380623</td>
+<td align="right">0.5093178</td>
+<td align="right">0.0272039</td>
+<td align="right">2.0e-07</td>
+<td align="right">-18.21292</td>
+<td align="right">-36.93516</td>
+</tr>
+<tr class="even">
+<td>1547830</td>
+<td align="right">1950</td>
+<td align="right">2005</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D009135</td>
+<td align="left">6252</td>
+<td align="right">3</td>
+<td align="right">1922</td>
+<td align="right">24245</td>
+<td align="right">16414155</td>
+<td align="right">0.0796074</td>
+<td align="right">0.0035565</td>
+<td align="right">0.0e+00</td>
+<td align="right">-22.30387</td>
+<td align="right">-44.68734</td>
+</tr>
+<tr class="odd">
+<td>13833616</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D001714</td>
+<td align="left">48701</td>
+<td align="right">1</td>
+<td align="right">53</td>
+<td align="right">32869</td>
+<td align="right">1952252</td>
+<td align="right">0.1643475</td>
+<td align="right">0.0078648</td>
+<td align="right">0.0e+00</td>
+<td align="right">-20.73236</td>
+<td align="right">-41.62907</td>
+</tr>
+<tr class="even">
+<td>14299868</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">p.R133*;RS#:752374367</td>
+<td align="left">MESH:D001259</td>
+<td align="right">1</td>
+<td align="right">25440</td>
+<td align="right">1</td>
+<td align="right">1952252</td>
+<td align="right">6.2618968</td>
+<td align="right">0.2996595</td>
+<td align="right">3.2e-06</td>
+<td align="right">-14.63481</td>
+<td align="right">-35.53152</td>
+</tr>
+</tbody>
+</table>
+<p>Finally the dataframe is reformated for convenient access by pair (target concept, related concept):</p>
+<pre class="r"><code>lbd_data&lt;-reformatRelationsByTarget(measured, targetPairs)</code></pre>
+<pre><code>## [1] &quot;KD&quot;
+## [1] &quot;ALS&quot;
+## [1] &quot;Ataxia&quot;
+## [1] &quot;Autism&quot;
+## [1] &quot;Bipolar&quot;
+## [1] &quot;Extrapyramidal&quot;
+## [1] &quot;FTD&quot;
+## [1] &quot;Myopathy&quot;
+## [1] &quot;Parkinson&quot;
+## [1] &quot;Psychosis&quot;
+## [1] &quot;Spinocerebellar&quot;
+## [1] &quot;PTC&quot;
+## [1] &quot;ALS&quot;
+## [1] &quot;Ataxia&quot;
+## [1] &quot;Autism&quot;
+## [1] &quot;Bipolar&quot;
+## [1] &quot;Extrapyramidal&quot;
+## [1] &quot;FTD&quot;
+## [1] &quot;Myopathy&quot;
+## [1] &quot;Parkinson&quot;
+## [1] &quot;Psychosis&quot;
+## [1] &quot;Spinocerebellar&quot;</code></pre>
+<pre class="r"><code>kable(lbd_data[sample(1:nrow(lbd_data),6),])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">targetName</th>
+<th align="left">targetId</th>
+<th align="right">start</th>
+<th align="right">end</th>
+<th align="left">dataset</th>
+<th align="left">view</th>
+<th align="left">level</th>
+<th align="left">concept</th>
+<th align="right">jointFreq</th>
+<th align="right">targetFreq</th>
+<th align="right">conceptFreq</th>
+<th align="right">nbDocs</th>
+<th align="right">pmi</th>
+<th align="right">npmi</th>
+<th align="right">mi</th>
+<th align="right">pmi2</th>
+<th align="right">pmi3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10461794</td>
+<td align="left">Extrapyramidal</td>
+<td align="left">MESH:D001480</td>
+<td align="right">1950</td>
+<td align="right">2016</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-sent</td>
+<td align="left">MESH:D057092</td>
+<td align="right">1</td>
+<td align="right">35899</td>
+<td align="right">1235</td>
+<td align="right">179889564</td>
+<td align="right">2.0205849</td>
+<td align="right">0.0736834</td>
+<td align="right">0.0e+00</td>
+<td align="right">-25.40195</td>
+<td align="right">-52.82449</td>
+</tr>
+<tr class="even">
+<td>4446720</td>
+<td align="left">Myopathy</td>
+<td align="left">C0026848</td>
+<td align="right">1950</td>
+<td align="right">2010</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C4698296</td>
+<td align="right">3</td>
+<td align="right">1429</td>
+<td align="right">500</td>
+<td align="right">385732</td>
+<td align="right">0.6956273</td>
+<td align="right">0.0409861</td>
+<td align="right">1.1e-06</td>
+<td align="right">-16.27665</td>
+<td align="right">-33.24893</td>
+</tr>
+<tr class="odd">
+<td>9244692</td>
+<td align="left">Autism</td>
+<td align="left">MESH:D001321</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">328783</td>
+<td align="right">1</td>
+<td align="right">38232</td>
+<td align="right">17</td>
+<td align="right">24023297</td>
+<td align="right">5.2079749</td>
+<td align="right">0.2124149</td>
+<td align="right">2.0e-07</td>
+<td align="right">-19.30996</td>
+<td align="right">-43.82789</td>
+</tr>
+<tr class="even">
+<td>500116</td>
+<td align="left">ALS</td>
+<td align="left">C0002736</td>
+<td align="right">1950</td>
+<td align="right">2011</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0597601</td>
+<td align="right">7</td>
+<td align="right">2649</td>
+<td align="right">680</td>
+<td align="right">498410</td>
+<td align="right">0.9537053</td>
+<td align="right">0.0591643</td>
+<td align="right">3.6e-06</td>
+<td align="right">-15.16591</td>
+<td align="right">-31.28553</td>
+</tr>
+<tr class="odd">
+<td>246767</td>
+<td align="left">ALS</td>
+<td align="left">C0002736</td>
+<td align="right">1950</td>
+<td align="right">2009</td>
+<td align="left">KD</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">C1623303</td>
+<td align="right">2</td>
+<td align="right">36608</td>
+<td align="right">841</td>
+<td align="right">110969911</td>
+<td align="right">2.8497600</td>
+<td align="right">0.1107753</td>
+<td align="right">0.0e+00</td>
+<td align="right">-22.87583</td>
+<td align="right">-48.60143</td>
+</tr>
+<tr class="even">
+<td>11108274</td>
+<td align="left">Myopathy</td>
+<td align="left">MESH:D009135</td>
+<td align="right">1950</td>
+<td align="right">2014</td>
+<td align="left">PTC</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">c.13990T&gt;C</td>
+<td align="right">1</td>
+<td align="right">26797</td>
+<td align="right">1</td>
+<td align="right">1330856</td>
+<td align="right">5.6341392</td>
+<td align="right">0.2769446</td>
+<td align="right">4.2e-06</td>
+<td align="right">-14.70978</td>
+<td align="right">-35.05371</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="saving-the-final-dataset" class="section level2">
+<h2>Saving the final dataset</h2>
+<pre class="r"><code>write.table(lbd_data, &#39;lbd_data.tsv&#39;,sep=&#39;\t&#39;,quote = FALSE,row.names=FALSE)</code></pre>
 </div>
 </div>
 
