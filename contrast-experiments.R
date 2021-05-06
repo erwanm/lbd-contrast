@@ -544,7 +544,7 @@ reformatRelationsByTarget <- function(measuredDF, targetPairsDF) {
     indivTargets <- unique(data.frame(targetName=c(as.character(targetPairsDataset[,'concept1']),as.character(targetPairsDataset[,'concept2'])),
                                       targetId=c(as.character(targetPairsDataset[,'id1']),as.character(targetPairsDataset[,'id2']))))
     ddply(indivTargets, c('targetName', 'targetId'), function(targetConceptId) {
-      print(as.character(targetConceptId$targetName))
+ #     print(as.character(targetConceptId$targetName))
       relationsSingleTargetSingleDataset(targetConceptId$targetId, datasetDF)
     })
   })

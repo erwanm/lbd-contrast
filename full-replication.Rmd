@@ -165,7 +165,7 @@ Finally the dataframe is reformated for convenient access by pair (target concep
 
 
 ```{r}
-lbd_data<-reformatRelationsByTarget(aggregated, targetPairs)
+lbd_data<-reformatRelationsByTarget(integrated, targetPairs)
 kable(lbd_data[sample(1:nrow(lbd_data),6),])
 ```
 
