@@ -492,10 +492,10 @@ binaryMI <- function(pA, pB, pA_B) {
   mi
 }
 
-calculateAssociation <- function(integratedRelationsDF, filterMeasures=measures) { 
+calculateAssociation <- function(integratedRelationsDF, filterMeasures=measures,docFreq1Col='targetFreq',docFreq2Col='conceptFreq') { 
   jointProb <- integratedRelationsDF$jointFreq / integratedRelationsDF$nbDocs
-  pA <- integratedRelationsDF$docFreq1 / integratedRelationsDF$nbDocs
-  pB <- integratedRelationsDF$docFreq2 / integratedRelationsDF$nbDocs
+  pA <- integratedRelationsDF[,docFreq1Col] / integratedRelationsDF$nbDocs
+  pB <- integratedRelationsDF[,docFreq2Col] / integratedRelationsDF$nbDocs
   pmi <- log2( jointProb / (pA * pB) )
   if ('pmi' %in% filterMeasures) {
     integratedRelationsDF$pmi <- pmi
@@ -684,7 +684,7 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 #  note: methodsDF may contain the optional column 'dataset' in case the min and max are different by dataset, but this must have been filtered before this function.
 #
 #
-evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq'),
+evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardConceptsNotInMaskView'),
                                     viewKeepCols=c('concept', 'relRank', 'jointFreq')) {
   ddply(unique(methodsDF), methodCols, function(methodRow) {
    refView <- relationsDF[ as.character(relationsDF$view) == as.character(methodRow$refView) & as.character(relationsDF$level) == as.character(methodRow$refLevel), ]
@@ -725,7 +725,7 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
        refView <- refView[,viewKeepCols]
        maskView <- maskView[,viewKeepCols]
      }
-     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, orderByDiffRelRank=orderByDiffRelRank, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq')
+     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, orderByDiffRelRank=orderByDiffRelRank, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq',discardConceptsNotInMaskView=methodRow$discardConceptsNotInMaskView)
    }
   })
 }
@@ -740,7 +740,7 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
 #
 # use debugOutput=TRUE and viewKeepCols = NULL for maximum detail in the output. Important: in case of debug output there's no row if the concept is not found.
 #
-evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq'), viewKeepCols=c('concept', 'relRank', 'jointFreq'), debugOutput=FALSE) {
+evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardConceptsNotInMaskView'), viewKeepCols=c('concept', 'relRank', 'jointFreq'), debugOutput=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPairRow) {
 #    print(goldPairRow)
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
@@ -821,17 +821,21 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView) {
 # - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'associationRefData'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq
 # assign NULL to refMaskPairs in order to generate all the possible combinations (many!!)
 generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
-                   refMaskPairs=data.frame(refView=c('abstracts+articles', 'pmc-articles',       'abstracts+articles' ,'pmc-articles',       'abstracts+articles'),
-                                          refLevel=c('by-doc'           , 'by-doc',             'by-sent',            'by-sent',             'by-doc' ),
-                                          maskView=c('unfiltered-medline','unfiltered-medline', 'unfiltered-medline', 'unfiltered-medline',  'abstracts+articles'),
-                                          maskLevel=c('by-doc'          , 'by-doc',             'by-sent' ,           'by-sent',             'by-sent' )),
-                   contrastMethodsIds = c('diffRelRank', 'associationRefData')
+                   refMaskPairs=data.frame(refView=c('abstracts+articles',        'abstracts+articles' ,       'abstracts+articles'),
+                                          refLevel=c('by-doc'           ,         'by-sent',                   'by-doc' ),
+                                          maskView=c('unfiltered-medline',        'unfiltered-medline',        'abstracts+articles'),
+                                          maskLevel=c('by-doc'          ,         'by-sent' ,                  'by-sent' )),
+                   contrastMethodsIds = c('diffRelRank', 'associationRefData'),
+                   contrastDiscardRowsNotInMaskView=FALSE,
+                   minFreqThresholds=NA
                             ) {
   # baseline methods
   baselinesDF <- ldply(views, function(v) {
     ldply(levels, function(l) {
       ldply(measures, function(m) {
-        data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=NA, maxFreq=NA)
+        ldply(minFreqThresholds, function(minF) {
+          data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=NA)
+        })
       })
     })
   })
@@ -854,7 +858,11 @@ generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
   contrastDF<-ddply(refMaskPairs, c('refView', 'refLevel', 'maskView', 'maskLevel'), function(refMaskPairRow) {
     ldply(measures, function(m) {
       ldply(contrastMethodsIds, function(id) {
-        data.frame(measure=m,methodId=id, minFreq=NA, maxFreq=NA)
+        ldply(contrastDiscardRowsNotInMaskView, function(discardOpt) {
+          ldply(minFreqThresholds, function(minF) {
+            data.frame(measure=m,methodId=id, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=discardOpt)
+          })
+        })
       })
     })
   })  

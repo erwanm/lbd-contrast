@@ -1,5 +1,5 @@
 ---
-title: "Contrast Method for Literature-Based Discovery: Full Replication"
+title: "The Contrast Method for Literature-Based Discovery - Part 1: Full Replication"
 author: "Erwan Moreau"
 date: "May 2021"
 output: html_document
@@ -17,26 +17,25 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 - The paper can be found at **TODO**
 - The code is available at https://github.com/erwanm/lbd-contrast
 
+For running these experiments two options are proposed: 
+
+- The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option follow the instructions below then go to [Part 2](./short-reproducibility-study.html)
+- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option you can go directly to [Part 2](./short-reproducibility-study.html).
 
 
-## Data Requirements
+## Data Requirements for Full Replication
 
-Two options are possible: the "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper, whereas the "full replication" described in this document offers more flexibility but requires much more computing resources (access to a cluster is recommended).
+This option lets the user apply the contrast method to different source data and/or different target relations. However this requires (much) more effort and computational resources.
 
-### Short Reproducility Study
+This study uses two sources for the biomedical literature. The software needed to preprocess these sources is presented below, please follow the corresponding instructions in the links. It is not strictly necessary to use the two sources for running the contrast method, one is enough.
 
-For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. Please follow the instructions in **TODO** for reproducing the results in the paper with the exact same data and method.
+- [PubTatorCentral](https://www.ncbi.nlm.nih.gov/research/pubtator/) conveniently provides Medline/PMC data after annotation and disambiguation. This data still needs to be converted to TDC format and pre-processed using The [TDC Tools code](https://github.com/erwanm/tdc-tools).
+- The raw Medline/PMC data can be converted to TDC and disambiguated using the following tools:
+    - [This fork of the Knowedge Discovery (KD) repository](https://github.com/erwanm/knowledgediscovery) (The [original code](https://github.com/jakelever/knowledgediscovery) was made by Jake Lever)
+    - The in-house disambiguation code ["KD Data Tools"](https://github.com/erwanm/kd-data-tools)
+    - The [TDC Tools code](https://github.com/erwanm/tdc-tools).
 
-### Full Replication
-
-In this option it is possible to apply the contrast method to different source data and/or different target relations. However this requires (much) more effort and computational resources:
-
-- This study uses two source for the biomedical literature:
-    - [PubTatorCentral](https://www.ncbi.nlm.nih.gov/research/pubtator/) conveniently provides Medline/PMC data after annotation and disambiguation. This data still needs to be converted to TDC format and pre-processed using The [TDC Tools code](https://github.com/erwanm/tdc-tools).
-    - The raw Medline/PMC data can be converted to TDC and disambiguated using the following tools:
-        - [This fork of the Knowedge Discovery (KD) repository](https://github.com/erwanm/knowledgediscovery) (The [original code](https://github.com/jakelever/knowledgediscovery) was made by Jake Lever)
-        - The in-house disambiguation code ["KD Data Tools"](https://github.com/erwanm/kd-data-tools)
-        - The [TDC Tools code](https://github.com/erwanm/tdc-tools).
+Once the raw data is ready, please follow the instructions below.
 
 ## Software Requirements
 
@@ -53,11 +52,12 @@ source('contrast-experiments.R')
 
 ## Hardware Requirements
 
-The [full replication](#full-replication) requires massive resources for computing the source data (see documentation of the required repositories), and at least 32 GB RAM for processing the data from scratch with the R code. 
+The [full replication](#full-replication) requires massive resources for computing the source data (see documentation of the required repositories), and at least 32 GB RAM for processing the data from scratch with the R code below. 
 
-# Preparing data
 
-- Note 1: some of the commands below are run with `system.time()` in order to show how long they take to execute. This is optional, of course.
+# Preparing the dataset
+
+- Note 1: some of the commands below are run with `system.time()` in order to show how long they take to execute. This is optional of course.
 - Note 2: in the following we present the simplest way to reproduce the experiments. Most of the functions accept optional arguments which may be useful for alternative tasks or data.
  
 ## Raw frequency data
@@ -141,6 +141,23 @@ kable(targetRanges)
 ```
 
 
+### Obtaining the Target-Gold Pairs
+
+The function below re-organizes the above dataframe to provide a directed target-gold pair for every row.
+
+- Set the second argument `bothDirections` as `FALSE` and leave `selectTargetNames` as `NULL` if the discovery pairs are already ordered target first.
+- If not (as in the provided ND discoveries), use the following arguments where `selectTargetNames` indicates the two target ND diseases:
+
+```{r}
+targetGoldPairs <- convertTargetPairsToTargetGoldPairs(targetRanges, TRUE, c('ALS','FTD'))
+```
+
+Optionally the target-gold pairs dataframe can be saved for futher usage:
+
+```{r}
+write.table(targetGoldPairs, 'targets-gold-pairs-with-year-range.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
 ### Aggregating frequencies across years
 
 This step sums the individual, joint and total frequencies in the `raw` list across the years specified by `targetRanges` for every required range of years. 
@@ -150,6 +167,7 @@ system.time(aggregated<-aggregateFullDataAcrossYears(raw, targetRanges))
 ```
 
 `aggregated` is a list made of 3 dataframes `indiv`, `joint` and `total`.
+
 
 ## Preparing the final dataset
 
@@ -174,3 +192,48 @@ kable(lbd_data[sample(1:nrow(lbd_data),6),])
 ```{r}
 write.table(lbd_data, 'lbd_data.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 ```
+
+# Filtering Semantic Types (optional)
+
+The filtering by semantic type is done outside R using UMLS data. Requirements:
+
+- Download the [UMLS metathesaurus data](https://www.nlm.nih.gov/research/umls/index.html) 
+- Download the [UMLS "Semantic Groups" file]( https://lhncbc.nlm.nih.gov/semanticnetwork/download/SemGroups.txt)
+
+Several python scripts are provided in the `filter-sem-type` directory. In the following commands it is assumed that the [final dataset has been saved](#saving-the-final-dataset) as `lbd_data.tsv`. Below the "DISO" (disorder) concepts are selected, the same process can be used with any subset of semantic groups.
+
+## Obtain Concepts ids for A Specific Group
+
+Obtain concept ids as UMLS CUIs:
+
+```
+cd filter-sem-type
+python3 filter-umls-semantic-types.py SemGroups.txt <UMLS dir> DISO >DISO.cui
+```
+
+Convert CUIs to MeSH descriptors:
+
+```
+cat DISO.cui | python3 umls-to-mesh.py <UMLS dir> >DISO0.mesh
+cat DISO0.mesh | sed 's/^/MESH:/' >DISO.mesh
+```
+## Applying to LBD dataset
+
+Separate the KD and PTC data (because KD uses UMLS ids whereas PTC uses MeSH ids):
+
+```
+echo KD | python3 filter-column.py lbd_data.tsv 5 >kd.tsv
+echo PTC | python3 filter-column.py lbd_data.tsv 5 >ptc.tsv
+```
+Filter the two subsets separately:
+
+```
+cat DISO.cui | python3 filter-column.py kd.tsv 8 >kd.diso.tsv
+cat DISO.mesh | python3 filter-column.py ptc.tsv 8 >ptc.diso.tsv
+```
+
+```
+head -n 1 ../lbd_data.tsv >lbd_data.DISO.tsv
+cat kd.diso.tsv ptc.diso.tsv >>lbd_data.DISO.tsv
+```
+
