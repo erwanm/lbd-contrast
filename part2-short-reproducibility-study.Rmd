@@ -20,8 +20,8 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 
 For running these experiments two options are proposed: 
 
-- The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option follow the instructions below then go to [Part 2](./short-reproducibility-study.html)
-- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option you can go directly to [Part 2](./short-reproducibility-study.html).
+- The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option please follow the instructions in [Part 1](./part1-full-replication.html).
+- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option please follow the instructions in this document.
 
 
 ## Data Requirements for the Short Reproducibility Study
@@ -44,7 +44,7 @@ source('contrast-experiments.R')
 
 ## Hardware Requirements
 
-The [reproducibility study](#short-reproducility-study) only requires a recent enough computer with at least 8 GB RAM.
+A recent enough computer with at least 8 GB RAM.
 
 
 ## Preparing for The Contrasts Experiments
