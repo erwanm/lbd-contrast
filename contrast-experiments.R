@@ -623,17 +623,19 @@ filterFreqOrderAndAddRank <- function(df, minJointFreq, associationMeasure) {
 #
 # Reminder: the rank/relRank as input and output always follows low value = high association = better 
 #
-# orderByDiffRelRank indicates the ranking method used to "contrast" the views: if TRUE the difference in relative rank is used (default),
-# otherwise the rank follows the association measure in the ref dataset (note: with this option one must use the 'maxJointFreqMask' threshold
+# methodId indicates the ranking method used to "contrast" the views: if 'diffRank1' the difference in relative rank is used (default), 'diffRank2' for the difference in absolute rank,
+# otherwise if 'associationRefData' the rank follows the association measure in the ref dataset (note: with this option one must use the 'maxJointFreqMask' threshold
 # to tune the ranking, otherwise it's simply the same as the ref dataset).
 # Note: the output DF is ordered by the main criterion (defined by the method 'orderByDiffRank') and as second criterion
 #       by the diff in joint freq between the two views. This is implemented in the order of the output DF but not in the output rank/relRank column.
 # Note: in the output the final "contrast rank" column is called 'rank', in order to standardize comparisons later.
 #
-contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFreqMask=NA, discardConceptsNotInMaskView=FALSE,orderByDiffRelRank=TRUE, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq') {
+contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFreqMask=NA, dscardRowNotInMaskView=FALSE,methodId='diffRank1',mergeByCols=c('concept'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq') {
   # init columns names for later
   relRankMaskCol <- paste0(relRankCol,'.mask')
   relRankRefCol <- paste0(relRankCol,'.ref')
+  rankMaskCol <- paste0(rankCol,'.mask')
+  rankRefCol <- paste0(rankCol,'.ref')
   jointFreqMaskCol <- paste0(jointFreqCol,'.mask')
   jointFreqRefCol <- paste0(jointFreqCol,'.ref')
 
@@ -643,13 +645,14 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
   }
 
   # merge by concept, preserving all the rows in ref view
-  if (discardConceptsNotInMaskView) {
+  if (dscardRowNotInMaskView) {
     contrasted <- merge(refViewDF, maskViewDF, by=mergeByCols,suffixes=c('.ref','.mask'))
   } else {
     contrasted <- merge(refViewDF, maskViewDF, by=mergeByCols,all.x=TRUE,suffixes=c('.ref','.mask'))
   }
 
   # assign worst possible rank for concepts absent in mask view
+  contrasted[is.na(contrasted[,rankMaskCol]), rankMaskCol] <- nrow(maskViewDF)
   contrasted[is.na(contrasted[,relRankMaskCol]), relRankMaskCol] <- 1
   contrasted[is.na(contrasted[,jointFreqMaskCol]), jointFreqMaskCol] <- 0
 
@@ -660,11 +663,20 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 
   # diffRelRank: the lowest the better, i.e. a low ref relrank and a high mask relrank is the best result
   contrasted$diffRelRank <- contrasted[,relRankRefCol] - contrasted[,relRankMaskCol]
+  contrasted$diffRank <- contrasted[,rankRefCol] - contrasted[,rankMaskCol]
   contrasted$diffJointFreq <- contrasted[,jointFreqRefCol] - contrasted[,jointFreqMaskCol]
-  if (orderByDiffRelRank) {
-    contrasted$rank <- rank(contrasted$diffRelRank)
-  } else {
+  if (methodId == 'associationRefData') {
     contrasted$rank <- rank(contrasted[,relRankRefCol])
+  } else {
+    if (methodId == 'diffRank1') {
+      contrasted$rank <- rank(contrasted$diffRelRank)
+    } else {
+      if (methodId == 'diffRank2') {
+        contrasted$rank <- rank(contrasted$diffRank)
+      } else {
+        stop("Error: invalid value for orderByDiffRank")
+      }
+    }
   }
   contrasted$relRank <- contrasted$rank / nrow(contrasted)
   contrasted[order(contrasted$relRank, -contrasted$diffJointFreq),]
@@ -684,8 +696,8 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 #  note: methodsDF may contain the optional column 'dataset' in case the min and max are different by dataset, but this must have been filtered before this function.
 #
 #
-evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardConceptsNotInMaskView'),
-                                    viewKeepCols=c('concept', 'relRank', 'jointFreq')) {
+evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'),
+                                    viewKeepCols=c('concept', 'rank', 'relRank', 'jointFreq')) {
   ddply(unique(methodsDF), methodCols, function(methodRow) {
    refView <- relationsDF[ as.character(relationsDF$view) == as.character(methodRow$refView) & as.character(relationsDF$level) == as.character(methodRow$refLevel), ]
 #   print(as.character(methodRow$measure))
@@ -712,20 +724,11 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
       maskView$viewSize <- nrow(maskView)
 #     print('TEST MASK')
 #     print(maskView[maskView$concept=='C0004352',])
-     if (methodRow$methodId == 'diffRelRank') {
-       orderByDiffRelRank=TRUE
-     } else {
-       if (methodRow$methodId == 'associationRefData') {
-         orderByDiffRelRank=FALSE
-       } else {
-         stop(paste("Error: invalid method id: ",methodRow$methodId))
-       }
-     }
      if (!is.null(viewKeepCols)) {
        refView <- refView[,viewKeepCols]
        maskView <- maskView[,viewKeepCols]
      }
-     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, orderByDiffRelRank=orderByDiffRelRank, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq',discardConceptsNotInMaskView=methodRow$discardConceptsNotInMaskView)
+     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, methodId=methodRow$methodId, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq',dscardRowNotInMaskView=methodRow$discardRowsNotInMaskView)
    }
   })
 }
@@ -740,7 +743,7 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
 #
 # use debugOutput=TRUE and viewKeepCols = NULL for maximum detail in the output. Important: in case of debug output there's no row if the concept is not found.
 #
-evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardConceptsNotInMaskView'), viewKeepCols=c('concept', 'relRank', 'jointFreq'), debugOutput=FALSE) {
+evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'), viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPairRow) {
 #    print(goldPairRow)
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
@@ -825,16 +828,17 @@ generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
                                           refLevel=c('by-doc'           ,         'by-sent',                   'by-doc' ),
                                           maskView=c('unfiltered-medline',        'unfiltered-medline',        'abstracts+articles'),
                                           maskLevel=c('by-doc'          ,         'by-sent' ,                  'by-sent' )),
-                   contrastMethodsIds = c('diffRelRank', 'associationRefData'),
+                   contrastMethodsIds = c('diffRank1','diffRank2', 'associationRefData'),
                    contrastDiscardRowsNotInMaskView=FALSE,
-                   minFreqThresholds=NA
+                   minFreqThresholds=NA,
+                   withBaselines = TRUE
                             ) {
   # baseline methods
   baselinesDF <- ldply(views, function(v) {
     ldply(levels, function(l) {
       ldply(measures, function(m) {
         ldply(minFreqThresholds, function(minF) {
-          data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=NA)
+          data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=FALSE)
         })
       })
     })
@@ -867,7 +871,11 @@ generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
     })
   })  
   print(paste("Info:",nrow(contrastDF)," contrast methods"))
-  rbind(baselinesDF, contrastDF)
+  if (withBaselines) {
+    rbind(baselinesDF, contrastDF)
+  } else {
+    contrastDF
+  }
 }
 
 
@@ -1116,3 +1124,25 @@ selectBestMethod <- function(perfDF, maxRank=10000) {
   selected
 } 
 
+
+# reformats a dataframe of results to show the parmaeter of insterest as columns (allows parallel comparison)
+compareMethodParam <- function(resultsByTarget,param='methodId', methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')) {
+  d<-resultsByTarget[,!colnames(resultsByTarget) %in% c('relRank','viewSize')]
+  methodColsMinusParam <- methodCols[! methodCols %in% param]
+  f1 <- paste("dataset","targetName","goldConceptName",paste(methodColsMinusParam,collapse="+"),sep="+")
+  dcast(d, paste(f1,param,sep="~") ,value.var = 'rank'  )
+}
+
+
+#
+# this graph shows boxplots for param value1 vs param value 2 for every variant of the other parameters
+# note that it's not very "clean" because each boxplot contains the points from the different targets + from dataset (and possibly other columns)
+#
+graphMethodParam <- function(resultsByTarget,param='methodId', methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')) {
+  d<-resultsByTarget[,!colnames(resultsByTarget) %in% c('relRank','viewSize')]
+  methodColsMinusParam <- methodCols[! methodCols %in% param]
+  u <- unique(d[,methodColsMinusParam])
+  u$id <- as.factor(1:nrow(u))
+  d <- merge(d,u)
+  ggplot(d,aes_string('id','rank',fill=param))+geom_boxplot()
+}

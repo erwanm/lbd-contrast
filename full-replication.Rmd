@@ -19,7 +19,9 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 
 For running these experiments two options are proposed: 
 
-- The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option follow the instructions below then go to [Part 2](./short-reproducibility-study.html)
+- The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option:
+    - First follow the instructions in this guide,
+    - Then go to [Part 2](./short-reproducibility-study.html).
 - The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option you can go directly to [Part 2](./short-reproducibility-study.html).
 
 
