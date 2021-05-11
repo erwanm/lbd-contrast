@@ -979,7 +979,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
                                     selectBestMeasure = 'MNTR@1000',
                                     recallAtValues=c(10,100,1000),
                                     optimMinMaxThresholds=FALSE, 
-				    returnDetailByTargetGoldPairs=FALSE,
+				                            returnDetailByTargetGoldPairs=FALSE,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 
                                     paramCols=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq')

@@ -176,9 +176,17 @@ kable(perf)
 `crossValidateMethodsLOO` performs parameter tuning with Leave-One-Out (LOO) cross-validation over a set of target-gold pairs for several groups of methods. Some of the methods parameters can be fixed with `resultsGroupBy`, while any other variations in the parameters provided in `methodsDF` are used for tuning. Optionally the min/max thresholds parameters can be tuned as well by setting `optimMinMaxThresholds=TRUE`. 
 
 ```{r}
-bestByMethodId <- crossValidateMethodsLOO()
+bestByMethodId <- crossValidateMethodsLOO(lbd_data_diso,targetGoldPairs,methods1,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE)
 ```
 
+By default a dataframe is returned which contains the performance on the test set for every group of fixed parameters. If `returnDetailByTargetGoldPairs` is `TRUE`, a list is returned which contains two dataframes: 
+
+- `aggregatedPerf` is the regular performance dataframe on the test set.
+- `detailedResults` is the dataframe containing results for every target-gold pair during training. This can be used to analyze how often every method parameter is selected as the best in its group.
+
+```{r}
+kable(bestByMethodId$aggregatedPerf)
+```
 
 ## Experiments
 
