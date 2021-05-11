@@ -190,3 +190,15 @@ kable(bestByMethodId$aggregatedPerf)
 
 ## Experiments
 
+
+### Experiment 1: Evaluation of a few Simple Methods
+
+
+```{r}
+methods0 <- generateMethods(measures=c('pmi','npmi'))
+methods0 <- methods0[methods0$refView!='pmc-articles' & (methods0$refView!='unfiltered-medline' | methods0$refLevel=='by-doc'),]
+res0 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods0)
+perf0 <- evalByGroup(res0, nbTargetGoldPairs=8)
+kable(perf0)
+```
+

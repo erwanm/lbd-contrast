@@ -980,9 +980,10 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
                                     recallAtValues=c(10,100,1000),
                                     optimMinMaxThresholds=FALSE, 
 				                            returnDetailByTargetGoldPairs=FALSE,
+				                            nbTargetGoldPairs=NA,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 
-                                    paramCols=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq')
+                                    paramCols=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq','discardRowsNotInMaskView')
                                    ) {
    
    detailedResults <- ddply(targetPairsDF, targetGoldCols, function(targetGoldTest) {
@@ -1023,7 +1024,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 
       # obtain best perf method
       optimAcrossCols <- paramCols[! paramCols %in% resultsGroupBy]
-      perfDF <- evalByGroup(resultsTrainGroup, nrow(targetsGoldTrain), recallAtValues, groupBy=optimAcrossCols)
+      perfDF <- evalByGroup(resultsTrainGroup, groupBy=optimAcrossCols,nbTargetGoldPairs=nbTargetGoldPairs, recallAtValues)
 #      print(paste("DEBUG selectBestMeasure = ",selectBestMeasure))
 #      print(perfDF)
       topPerf <- min(perfDF[,selectBestMeasure])
@@ -1047,7 +1048,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
      targetPairsThisDataset <- targetPairsDF[as.character(targetPairsDF$dataset)==as.character(datasetRes[1,'dataset']),]
 #     print(paste("nrow(targetPairsThisDataset)=",nrow(targetPairsThisDataset)))
 #     print(targetPairsThisDataset)
-     evalByGroup(datasetRes, nrow(targetPairsThisDataset), recallAtValues, groupBy=resultsGroupBy)
+     evalByGroup(datasetRes, groupBy=resultsGroupBy,nbTargetGoldPairs=nbTargetGoldPairs, recallAtValues)
   })
   if (returnDetailByTargetGoldPairs) {
     list(aggregatedPerf=aggregatedPerf,detailedResults=detailedResults)
