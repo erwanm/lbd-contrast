@@ -155,9 +155,8 @@ kable(r[sample(1:nrow(r),6),])
 - For every method and every target-gold pair, the output contains only the row corresponding to the gold in the output ranking.
 
 
-```
+```{r}
 r <- applyMethodsMultiTargets(lbd_data_diso,targetGoldPairs,methods0)
-print(nrow(r))
 print(colnames(r))
 kable(r[sample(1:nrow(r),6),])
 ```
