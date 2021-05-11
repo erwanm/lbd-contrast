@@ -194,11 +194,57 @@ kable(bestByMethodId$aggregatedPerf)
 ### Experiment 1: Evaluation of a few Simple Methods
 
 
-```{r}
+```{r simple}
 methods0 <- generateMethods(measures=c('pmi','npmi'))
 methods0 <- methods0[methods0$refView!='pmc-articles' & (methods0$refView!='unfiltered-medline' | methods0$refLevel=='by-doc'),]
 res0 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods0)
 perf0 <- evalByGroup(res0, nbTargetGoldPairs=8)
+write.table(res0, 'simple.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 kable(perf0)
+```
+
+### Experiment 2: Comparing Methods Parameters
+
+```{r compare1}
+methods1 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = 1:20)
+res1 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods1)
+perf1 <- evalByGroup(res1, nbTargetGoldPairs=8)
+write.table(res1, 'param-minFreq.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
+```{r compare2}
+methods2 <- generateMethods(measures=c('pmi','npmi','mi','pmi2','pmi3'),minFreqThresholds = c(1,3,5))
+res2 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods2)
+perf2 <- evalByGroup(res2, nbTargetGoldPairs=8)
+write.table(res2, 'param-measures.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
+
+```{r compare3}
+methods3 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = c(1,3,5),refMaskPairs=NULL)
+res3 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods3)
+perf3 <- evalByGroup(res3, nbTargetGoldPairs=8)
+write.table(res3, 'param-views.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
+```{r compare4}
+methods4 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = c(1,3,5),contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
+res4 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods4)
+perf4 <- evalByGroup(res4, nbTargetGoldPairs=8)
+write.table(res4, 'param-discardRows.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
+### Experiment 3: Parameter Tuning with Leave-One-Out Cross-Validation
+
+```{r loo1}
+all_methods <- generateMethods(refMaskPairs=NULL,contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
+system.time(bestByMethodIdNoOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE))
+write.table(bestByMethodIdNoOptim$detailedResults,'loo-no-optim.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+```
+
+
+```{r loo2}
+system.time(bestByMethodIdWithOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,optimMinMaxThresholds=TRUE,returnDetailByTargetGoldPairs=TRUE))
+write.table(bestByMethodIdWithOptim$detailedResults,'loo-with-optim.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 ```
 
