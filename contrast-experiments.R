@@ -623,14 +623,14 @@ filterFreqOrderAndAddRank <- function(df, minJointFreq, associationMeasure) {
 #
 # Reminder: the rank/relRank as input and output always follows low value = high association = better 
 #
-# methodId indicates the ranking method used to "contrast" the views: if 'diffRank1' the difference in relative rank is used (default), 'diffRank2' for the difference in absolute rank,
+# methodId indicates the ranking method used to "contrast" the views: if 'diffRelRank' the difference in relative rank is used (default), 'diffAbsRank' for the difference in absolute rank,
 # otherwise if 'associationRefData' the rank follows the association measure in the ref dataset (note: with this option one must use the 'maxJointFreqMask' threshold
 # to tune the ranking, otherwise it's simply the same as the ref dataset).
 # Note: the output DF is ordered by the main criterion (defined by the method 'orderByDiffRank') and as second criterion
 #       by the diff in joint freq between the two views. This is implemented in the order of the output DF but not in the output rank/relRank column.
 # Note: in the output the final "contrast rank" column is called 'rank', in order to standardize comparisons later.
 #
-contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFreqMask=NA, dscardRowNotInMaskView=FALSE,methodId='diffRank1',mergeByCols=c('concept'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq') {
+contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFreqMask=NA, discardRowNotInMaskView=FALSE,methodId='diffRelRank',mergeByCols=c('concept'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq') {
   # init columns names for later
   relRankMaskCol <- paste0(relRankCol,'.mask')
   relRankRefCol <- paste0(relRankCol,'.ref')
@@ -645,7 +645,7 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
   }
 
   # merge by concept, preserving all the rows in ref view
-  if (dscardRowNotInMaskView) {
+  if (discardRowNotInMaskView) {
     contrasted <- merge(refViewDF, maskViewDF, by=mergeByCols,suffixes=c('.ref','.mask'))
   } else {
     contrasted <- merge(refViewDF, maskViewDF, by=mergeByCols,all.x=TRUE,suffixes=c('.ref','.mask'))
@@ -668,10 +668,10 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
   if (methodId == 'associationRefData') {
     contrasted$rank <- rank(contrasted[,relRankRefCol])
   } else {
-    if (methodId == 'diffRank1') {
+    if (methodId == 'diffRelRank') {
       contrasted$rank <- rank(contrasted$diffRelRank)
     } else {
-      if (methodId == 'diffRank2') {
+      if (methodId == 'diffAbsRank') {
         contrasted$rank <- rank(contrasted$diffRank)
       } else {
         stop("Error: invalid value for orderByDiffRank")
@@ -696,7 +696,7 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 #  note: methodsDF may contain the optional column 'dataset' in case the min and max are different by dataset, but this must have been filtered before this function.
 #
 #
-evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'),
+applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'),
                                     viewKeepCols=c('concept', 'rank', 'relRank', 'jointFreq')) {
   ddply(unique(methodsDF), methodCols, function(methodRow) {
    refView <- relationsDF[ as.character(relationsDF$view) == as.character(methodRow$refView) & as.character(relationsDF$level) == as.character(methodRow$refLevel), ]
@@ -728,7 +728,7 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
        refView <- refView[,viewKeepCols]
        maskView <- maskView[,viewKeepCols]
      }
-     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, methodId=methodRow$methodId, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq',dscardRowNotInMaskView=methodRow$discardRowsNotInMaskView)
+     contrastViews(refView, maskView, minJointFreqRef=methodRow$minFreq, maxJointFreqMask=methodRow$maxFreq, methodId=methodRow$methodId, mergeByCols=c('concept'), relRankCol='relRank', jointFreqCol='jointFreq',discardRowNotInMaskView=methodRow$discardRowsNotInMaskView)
    }
   })
 }
@@ -743,7 +743,7 @@ evalMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('method
 #
 # use debugOutput=TRUE and viewKeepCols = NULL for maximum detail in the output. Important: in case of debug output there's no row if the concept is not found.
 #
-evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'), viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
+applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'), viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPairRow) {
 #    print(goldPairRow)
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
@@ -752,7 +752,7 @@ evalMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF,
       methodsDatasetDF <- methodsDF[as.character(methodsDF$dataset)==as.character(goldPairRow$dataset),]
     }
     resMethods <- if (nrow(relSelectedTarget)>0) {
-      rankings <- evalMethodsSingleTarget(relSelectedTarget, methodsDatasetDF, viewKeepCols=viewKeepCols)
+      rankings <- applyMethodsSingleTarget(relSelectedTarget, methodsDatasetDF, viewKeepCols=viewKeepCols)
       ddply(methodsDF, methodCols, function(methodRow) {
           methodRankingDF <- merge(rankings, methodRow, by=methodCols)
 #          print(paste("METHOD:"))
@@ -828,7 +828,7 @@ generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
                                           refLevel=c('by-doc'           ,         'by-sent',                   'by-doc' ),
                                           maskView=c('unfiltered-medline',        'unfiltered-medline',        'abstracts+articles'),
                                           maskLevel=c('by-doc'          ,         'by-sent' ,                  'by-sent' )),
-                   contrastMethodsIds = c('diffRank1','diffRank2', 'associationRefData'),
+                   contrastMethodsIds = c('diffRelRank','diffAbsRank', 'associationRefData'),
                    contrastDiscardRowsNotInMaskView=FALSE,
                    minFreqThresholds=NA,
                    withBaselines = TRUE
@@ -1010,7 +1010,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 
     # train
     print("    Training")
-    resultsTrain <- evalMethodsMultiTargets(relTrain, targetsGoldTrain, methodsDF)
+    resultsTrain <- applyMethodsMultiTargets(relTrain, targetsGoldTrain, methodsDF)
     if (nrow(methodsDF)*nrow(targetsGoldTrain) != nrow(resultsTrain)) {
       stop(paste("Expecting results for",nrow(methodsDF),"x",nrow(targetsGoldTrain),"; nrow(resultsTrain) =",nrow(resultsTrain)))
     }
@@ -1023,7 +1023,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 
       # obtain best perf method
       optimAcrossCols <- paramCols[! paramCols %in% resultsGroupBy]
-      perfDF <- evalRecallAt(resultsTrainGroup, nrow(targetsGoldTrain), recallAtValues, groupBy=optimAcrossCols)
+      perfDF <- evalByGroup(resultsTrainGroup, nrow(targetsGoldTrain), recallAtValues, groupBy=optimAcrossCols)
 #      print(paste("DEBUG selectBestMeasure = ",selectBestMeasure))
 #      print(perfDF)
       topPerf <- min(perfDF[,selectBestMeasure])
@@ -1037,7 +1037,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
       # apply on test instance
 #      print("    Apply on test instance for group")
 #      print(bestMethodGroup[1,resultsGroupBy])
-      evalMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
+      applyMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
     })
   })
   print("Final aggregation across all test instances results")
@@ -1047,7 +1047,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
      targetPairsThisDataset <- targetPairsDF[as.character(targetPairsDF$dataset)==as.character(datasetRes[1,'dataset']),]
 #     print(paste("nrow(targetPairsThisDataset)=",nrow(targetPairsThisDataset)))
 #     print(targetPairsThisDataset)
-     evalRecallAt(datasetRes, nrow(targetPairsThisDataset), recallAtValues, groupBy=resultsGroupBy)
+     evalByGroup(datasetRes, nrow(targetPairsThisDataset), recallAtValues, groupBy=resultsGroupBy)
   })
   if (returnDetailByTargetGoldPairs) {
     list(aggregatedPerf=aggregatedPerf,detailedResults=detailedResults)
@@ -1059,24 +1059,26 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 
 
 #
-# receives a DF from evalMethodsMultiTargets which contains several target-gold pairs and a column 'rank'.
+# receives a DF from applyMethodsMultiTargets which contains several target-gold pairs and a column 'rank'.
 # - 'groupBy' indicates how to group the rows so that every group contains one set of unique target-gold pairs
-# - 'nbTargetGoldPairs': for sanity check the number of pairs must be provided
+# - 'nbTargetGoldPairs': it is recommended to provide the number of pairs expected for a group of target-gold pairs.
 #
 # returns a df with one row for every 'groupBy' containing meanRank, nbFound, nbTotal + recall@N columns + MNTR@N columns
 #
 #  MNTR@N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
 #
-evalRecallAt <- function(resultsByTarget, nbTargetGoldPairs, recallAtValues=c(10,100,1000,10000), groupBy=c()) {
-#  print("evalRecallAt receives results:")
+evalByGroup <- function(resultsByTarget, groupBy=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq'), nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
+#  print("evalByGroup receives results:")
 #  print(head(resultsByTarget))
   ddply(resultsByTarget, groupBy, function(resultsAcrossTargets) {
-    if (nrow(resultsAcrossTargets) != nbTargetGoldPairs) {
-      print("PROBLEM. head(resultsAcrossTargets) =")
-      print(head(resultsAcrossTargets))
-      print("groupBy=")
-      print(groupBy)
-      stop("Error with sanity check: expected ",nbTargetGoldPairs," target-gold pairs but found ",nrow(resultsAcrossTargets))
+    if (is.na(nbTargetGoldPairs)) {
+      nbTargetGoldPairs <- nrow(resultsAcrossTargets)
+    } else {
+      if (!is.na(nbTargetGoldPairs) & nrow(resultsAcrossTargets) != nbTargetGoldPairs) {
+#        print("Current group:")
+#        print(resultsAcrossTargets[1,groupBy])
+        warning(paste("Error with sanity check: expected",nbTargetGoldPairs,"target-gold pairs but found",nrow(resultsAcrossTargets)))
+      }
     }
     rowsNotNA <- !is.na(resultsAcrossTargets$rank)
     r<-data.frame(meanRankNoNA=mean(resultsAcrossTargets$rank[rowsNotNA]),
@@ -1092,7 +1094,7 @@ evalRecallAt <- function(resultsByTarget, nbTargetGoldPairs, recallAtValues=c(10
       truncatedRank <- truncatedRank / recallAtValues[i]
 #      print(paste("DEBUG truncatedRank at",recallAtValues[i],' (2):'))
 #      print(truncatedRank)
-      r[,paste('MNTR',recallAtValues[i],sep='@')] <- mean(truncatedRank)
+      r[,paste('MNTR',recallAtValues[i],sep='@')] <- sum(truncatedRank) / nbTargetGoldPairs
     }
     r
   })
