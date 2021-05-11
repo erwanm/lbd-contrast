@@ -469,7 +469,7 @@ summary {
 </div>
 <div id="hardware-requirements" class="section level2">
 <h2>Hardware Requirements</h2>
-<p>A recent enough computer with at least 8 GB RAM (16 GB recommended).</p>
+<p>16 GB RAM recommended.</p>
 </div>
 <div id="preparing-for-the-contrasts-experiments" class="section level2">
 <h2>Preparing for The Contrasts Experiments</h2>
@@ -912,10 +912,10 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>4180</td>
+<td>7645</td>
 <td align="left">baseline</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">pmi</td>
@@ -927,21 +927,21 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">1950</td>
 <td align="right">2003</td>
 <td align="left">KD</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
-<td align="left">C0740343</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">C0433445</td>
 <td align="right">1</td>
-<td align="right">17090</td>
-<td align="right">142</td>
-<td align="right">62840578</td>
-<td align="right">4.6945812</td>
-<td align="right">0.1812216</td>
-<td align="right">1.0e-07</td>
-<td align="right">-21.21061</td>
-<td align="right">-47.11581</td>
-<td align="right">282.0</td>
-<td align="right">1507</td>
-<td align="right">0.1871267</td>
+<td align="right">6672</td>
+<td align="right">367</td>
+<td align="right">15136496</td>
+<td align="right">2.6279881</td>
+<td align="right">0.1101811</td>
+<td align="right">1e-07</td>
+<td align="right">-21.22354</td>
+<td align="right">-45.07507</td>
+<td align="right">1097.0</td>
+<td align="right">2566</td>
+<td align="right">0.4275136</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -953,7 +953,7 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
-<td>27277</td>
+<td>25426</td>
 <td align="left">associationRefData</td>
 <td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
@@ -970,7 +970,7 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">C0035613</td>
+<td align="left">C0544955</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -980,21 +980,21 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">1875.0</td>
+<td align="right">26.5</td>
 <td align="right">NA</td>
-<td align="right">0.6079767</td>
-<td align="right">1875</td>
-<td align="right">0.6079767</td>
+<td align="right">0.0085927</td>
+<td align="right">26.5</td>
+<td align="right">0.0085927</td>
 <td align="right">1</td>
 <td align="right">1507</td>
-<td align="right">1</td>
+<td align="right">1.0000000</td>
 <td align="right">0</td>
-<td align="right">-0.3920233</td>
-<td align="right">368</td>
+<td align="right">-0.9914073</td>
+<td align="right">-1480.5</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td>7860</td>
+<td>6497</td>
 <td align="left">baseline</td>
 <td align="left">unfiltered-medline</td>
 <td align="left">by-doc</td>
@@ -1011,19 +1011,19 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="left">KD</td>
 <td align="left">unfiltered-medline</td>
 <td align="left">by-doc</td>
-<td align="left">C0751144</td>
-<td align="right">3</td>
+<td align="left">C0024266</td>
+<td align="right">2</td>
 <td align="right">6672</td>
-<td align="right">12</td>
+<td align="right">2285</td>
 <td align="right">15136496</td>
-<td align="right">9.1476244</td>
-<td align="right">0.4108233</td>
-<td align="right">1.6e-06</td>
-<td align="right">-13.11894</td>
-<td align="right">-35.38551</td>
-<td align="right">46.5</td>
+<td align="right">0.9896459</td>
+<td align="right">0.0433076</td>
+<td align="right">0e+00</td>
+<td align="right">-21.86188</td>
+<td align="right">-44.71341</td>
+<td align="right">1692.0</td>
 <td align="right">2566</td>
-<td align="right">0.0181216</td>
+<td align="right">0.6593920</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1035,52 +1035,11 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
-<td>6677</td>
-<td align="left">baseline</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="left">ALS</td>
-<td align="left">C0002736</td>
-<td align="right">1950</td>
-<td align="right">2003</td>
-<td align="left">KD</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">C0032533</td>
-<td align="right">1</td>
-<td align="right">6672</td>
-<td align="right">1529</td>
-<td align="right">15136496</td>
-<td align="right">0.5692517</td>
-<td align="right">0.0238665</td>
-<td align="right">0.0e+00</td>
-<td align="right">-23.28228</td>
-<td align="right">-47.13380</td>
-<td align="right">1834.0</td>
-<td align="right">2566</td>
-<td align="right">0.7147311</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-</tr>
-<tr class="odd">
-<td>27800</td>
-<td align="left">associationRefData</td>
+<td>17334</td>
+<td align="left">diffRelRank</td>
 <td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
 <td align="left">by-sent</td>
 <td align="left">pmi</td>
 <td align="left">NA</td>
@@ -1093,7 +1052,7 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">C0206686</td>
+<td align="left">C0025289</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1103,50 +1062,79 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">2398.0</td>
+<td align="right">1114.0</td>
 <td align="right">NA</td>
-<td align="right">0.7775616</td>
-<td align="right">2398</td>
-<td align="right">0.7775616</td>
-<td align="right">1</td>
-<td align="right">1507</td>
-<td align="right">1</td>
+<td align="right">0.7392170</td>
+<td align="right">1169.0</td>
+<td align="right">0.7757133</td>
+<td align="right">4</td>
+<td align="right">1133</td>
+<td align="right">0.7744361</td>
+<td align="right">4</td>
+<td align="right">0.0012772</td>
+<td align="right">36.0</td>
 <td align="right">0</td>
-<td align="right">-0.2224384</td>
-<td align="right">891</td>
-<td align="right">1</td>
 </tr>
-<tr class="even">
-<td>685</td>
-<td align="left">baseline</td>
+<tr class="odd">
+<td>15808</td>
+<td align="left">diffRelRank</td>
 <td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
 <td align="left">pmi</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="left">ALS</td>
-<td align="left">C0002736</td>
-<td align="right">1950</td>
-<td align="right">2003</td>
-<td align="left">KD</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">C0039590</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2672.0</td>
+<td align="right">NA</td>
+<td align="right">0.8664073</td>
+<td align="right">2804.0</td>
+<td align="right">0.9092088</td>
+<td align="right">1</td>
+<td align="right">2279</td>
+<td align="right">0.8881528</td>
+<td align="right">1</td>
+<td align="right">0.0210561</td>
+<td align="right">525.0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>29466</td>
+<td align="left">associationRefData</td>
 <td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">C0029456</td>
-<td align="right">7</td>
-<td align="right">6771</td>
-<td align="right">18304</td>
-<td align="right">15154912</td>
-<td align="right">-0.2243875</td>
-<td align="right">-0.0106618</td>
-<td align="right">0.0e+00</td>
-<td align="right">-21.27031</td>
-<td align="right">-42.31624</td>
-<td align="right">2606.0</td>
-<td align="right">3084</td>
-<td align="right">0.8450065</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">C0456511</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1156,6 +1144,18 @@ kable(r[sample(1:nrow(r),6),])</code></pre>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
+<td align="right">981.0</td>
+<td align="right">NA</td>
+<td align="right">0.3180934</td>
+<td align="right">981.0</td>
+<td align="right">0.3180934</td>
+<td align="right">1</td>
+<td align="right">2566</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">-0.6819066</td>
+<td align="right">-1585.0</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -1201,100 +1201,100 @@ print(colnames(r))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>14</td>
-<td align="left">KD</td>
-<td align="left">ALS</td>
-<td align="left">Ataxia</td>
-<td align="left">associationRefData</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="right">1864.0</td>
-<td align="right">0.2792509</td>
-<td align="right">6675</td>
-</tr>
-<tr class="even">
-<td>220</td>
-<td align="left">PTC</td>
-<td align="left">ALS</td>
-<td align="left">Spinocerebellar</td>
-<td align="left">diffAbsRank</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="right">1123.0</td>
-<td align="right">0.3210406</td>
-<td align="right">3498</td>
-</tr>
-<tr class="odd">
-<td>119</td>
-<td align="left">KD</td>
-<td align="left">FTD</td>
-<td align="left">Bipolar</td>
-<td align="left">associationRefData</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="right">1945.0</td>
-<td align="right">0.6855834</td>
-<td align="right">2837</td>
-</tr>
-<tr class="even">
-<td>147</td>
-<td align="left">PTC</td>
-<td align="left">ALS</td>
-<td align="left">Autism</td>
-<td align="left">diffAbsRank</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-sent</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="right">523.5</td>
-<td align="right">0.5458811</td>
-<td align="right">959</td>
-</tr>
-<tr class="odd">
-<td>104</td>
-<td align="left">KD</td>
-<td align="left">ALS</td>
-<td align="left">Spinocerebellar</td>
-<td align="left">associationRefData</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">pmi</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-<td align="right">344.0</td>
-<td align="right">0.1115435</td>
-<td align="right">3084</td>
-</tr>
-<tr class="even">
-<td>169</td>
+<td>173</td>
 <td align="left">PTC</td>
 <td align="left">ALS</td>
 <td align="left">Myopathy</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="right">2846</td>
+<td align="right">0.8136078</td>
+<td align="right">3498</td>
+</tr>
+<tr class="even">
+<td>166</td>
+<td align="left">PTC</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="right">727</td>
+<td align="right">0.2078330</td>
+<td align="right">3498</td>
+</tr>
+<tr class="odd">
+<td>194</td>
+<td align="left">PTC</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="right">179</td>
+<td align="right">0.7489540</td>
+<td align="right">239</td>
+</tr>
+<tr class="even">
+<td>189</td>
+<td align="left">PTC</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="right">57</td>
+<td align="right">0.5044248</td>
+<td align="right">113</td>
+</tr>
+<tr class="odd">
+<td>193</td>
+<td align="left">PTC</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="right">179</td>
+<td align="right">0.7489540</td>
+<td align="right">239</td>
+</tr>
+<tr class="even">
+<td>139</td>
+<td align="left">PTC</td>
+<td align="left">ALS</td>
+<td align="left">Autism</td>
 <td align="left">baseline</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-sent</td>
@@ -1304,9 +1304,9 @@ print(colnames(r))</code></pre>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">406.0</td>
-<td align="right">0.3968719</td>
-<td align="right">1023</td>
+<td align="right">540</td>
+<td align="right">0.7277628</td>
+<td align="right">742</td>
 </tr>
 </tbody>
 </table>
@@ -1989,6 +1989,1307 @@ print(colnames(r))</code></pre>
 </div>
 <div id="leave-one-out-cross-validation" class="section level3">
 <h3>Leave-One-Out Cross-Validation</h3>
+<p><code>crossValidateMethodsLOO</code> performs parameter tuning with Leave-One-Out (LOO) cross-validation over a set of target-gold pairs for several groups of methods. Some of the methods parameters can be fixed with <code>resultsGroupBy</code>, while any other variations in the parameters provided in <code>methodsDF</code> are used for tuning. Optionally the min/max thresholds parameters can be tuned as well by setting <code>optimMinMaxThresholds=TRUE</code>.</p>
+<pre class="r"><code>bestByMethodId &lt;- crossValidateMethodsLOO(lbd_data_diso,targetGoldPairs,methods1,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE)</code></pre>
+<pre><code>## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736          Ataxia      C0004134  1950 2008
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736          Autism      C0004352  1950 2009
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736  Extrapyramidal      C0015371  1950 2016
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736        Myopathy      C0026848  1950 1984
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736       Parkinson      C0030567  1950 1983
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736       Psychosis      C0033975  1950 2010
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        ALS C0002736 Spinocerebellar      C0087012  1950 2003
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName targetId goldConceptName goldConceptId start  end
+## 1      KD        FTD C0338451         Bipolar      C0005586  1950 2005
+## [1] &quot;number training cases:  7&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690          Ataxia  MESH:D001259  1950 2005
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690          Autism  MESH:D001321  1950 2009
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690  Extrapyramidal  MESH:D001480  1950 2014
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690        Myopathy  MESH:D009135  1950 2011
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;Warning: cannot find target-gold pair in relByTargetDF. goldPairRow = &quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690 Spinocerebellar  MESH:D020754  1950 2011
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690       Parkinson  MESH:D010300  1950 1986
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690       Psychosis  MESH:D011618  1950 2016
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;TEST instance:&quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690 Spinocerebellar  MESH:D020754  1950 2011
+## [1] &quot;number training cases:  6&quot;
+## [1] &quot;    Training&quot;
+## [1] &quot;Warning: cannot find target-gold pair in relByTargetDF. goldPairRow = &quot;
+##   dataset targetName     targetId goldConceptName goldConceptId start  end
+## 1     PTC        ALS MESH:D000690        Myopathy  MESH:D009135  1950 2011
+## [1] &quot;    Selecting best method and applying for every group&quot;
+## [1] &quot;Final aggregation across all test instances results&quot;
+## [1] &quot;dataset= KD&quot;
+## [1] &quot;dataset= PTC&quot;</code></pre>
+<p>By default a dataframe is returned which contains the performance on the test set for every group of fixed parameters. If <code>returnDetailByTargetGoldPairs</code> is <code>TRUE</code>, a list is returned which contains two dataframes:</p>
+<ul>
+<li><code>aggregatedPerf</code> is the regular performance dataframe on the test set.</li>
+<li><code>detailedResults</code> is the dataframe containing results for every target-gold pair during training. This can be used to analyze how often every method parameter is selected as the best in its group.</li>
+</ul>
+<pre class="r"><code>kable(bestByMethodId$aggregatedPerf)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">dataset</th>
+<th align="left">methodId</th>
+<th align="right">meanRankNoNA</th>
+<th align="right">nbFound</th>
+<th align="right">nbTotal</th>
+<th align="right"><a href="mailto:R@10" class="email">R@10</a></th>
+<th align="right"><a href="mailto:MNTR@10" class="email">MNTR@10</a></th>
+<th align="right"><a href="mailto:R@100" class="email">R@100</a></th>
+<th align="right"><a href="mailto:MNTR@100" class="email">MNTR@100</a></th>
+<th align="right"><a href="mailto:R@1000" class="email">R@1000</a></th>
+<th align="right"><a href="mailto:MNTR@1000" class="email">MNTR@1000</a></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="right">687.5714</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">0.6250000</td>
+<td align="right">0.5832500</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="right">380.5714</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.3750000</td>
+<td align="right">0.7550000</td>
+<td align="right">0.7500000</td>
+<td align="right">0.4172500</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="right">328.9286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.3750000</td>
+<td align="right">0.7512500</td>
+<td align="right">0.8750000</td>
+<td align="right">0.4128125</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="right">339.0000</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.3750000</td>
+<td align="right">0.8412500</td>
+<td align="right">0.8750000</td>
+<td align="right">0.4216250</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="right">239.8333</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.1428571</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8571429</td>
+<td align="right">0.3484286</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="right">200.3333</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.2857143</td>
+<td align="right">0.8200000</td>
+<td align="right">0.8571429</td>
+<td align="right">0.3145714</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="right">245.3333</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.2857143</td>
+<td align="right">0.8742857</td>
+<td align="right">0.8571429</td>
+<td align="right">0.3531429</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="right">244.3333</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.2857143</td>
+<td align="right">0.9057143</td>
+<td align="right">0.8571429</td>
+<td align="right">0.3522857</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<div id="experiment-1-evaluation-of-a-few-simple-methods" class="section level3">
+<h3>Experiment 1: Evaluation of a few Simple Methods</h3>
+<pre class="r"><code>methods0 &lt;- generateMethods(measures=c(&#39;pmi&#39;,&#39;npmi&#39;))</code></pre>
+<pre><code>## [1] &quot;Info: 12  baseline methods&quot;
+## [1] &quot;Info: refMaskPairs contains 3 rows&quot;
+## [1] &quot;Info: 18  contrast methods&quot;</code></pre>
+<pre class="r"><code>methods0 &lt;- methods0[methods0$refView!=&#39;pmc-articles&#39; &amp; (methods0$refView!=&#39;unfiltered-medline&#39; | methods0$refLevel==&#39;by-doc&#39;),]
+res0 &lt;- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods0)
+perf0 &lt;- evalByGroup(res0, nbTargetGoldPairs=8)</code></pre>
+<pre><code>## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7
+
+## Warning in .fun(piece, ...): Error with sanity check: expected 8 target-gold
+## pairs but found 7</code></pre>
+<pre class="r"><code>kable(perf0)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">dataset</th>
+<th align="left">methodId</th>
+<th align="left">refView</th>
+<th align="left">refLevel</th>
+<th align="left">maskView</th>
+<th align="left">maskLevel</th>
+<th align="left">measure</th>
+<th align="left">minFreq</th>
+<th align="left">maxFreq</th>
+<th align="right">meanRankNoNA</th>
+<th align="right">nbFound</th>
+<th align="right">nbTotal</th>
+<th align="right"><a href="mailto:R@10" class="email">R@10</a></th>
+<th align="right"><a href="mailto:MNTR@10" class="email">MNTR@10</a></th>
+<th align="right"><a href="mailto:R@100" class="email">R@100</a></th>
+<th align="right"><a href="mailto:MNTR@100" class="email">MNTR@100</a></th>
+<th align="right"><a href="mailto:R@1000" class="email">R@1000</a></th>
+<th align="right"><a href="mailto:MNTR@1000" class="email">MNTR@1000</a></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10497.812</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.8870000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">8413.750</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.8181250</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">2870.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7661250</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">2789.714</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7395000</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">4071.938</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.8745000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">baseline</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">3837.000</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7983750</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">22184.688</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">20844.500</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">19736.875</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">18676.250</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">3624.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.125</td>
+<td align="right">0.9278750</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">3657.286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.9208750</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">13730.438</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.9795000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">11656.438</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.9485000</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">13425.875</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.9203125</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">11407.375</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.8787500</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">3035.357</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.8001875</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">2982.286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7716250</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10497.812</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.8870000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">8413.750</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.8181250</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10497.812</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.250</td>
+<td align="right">0.8870000</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">8413.750</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.8181250</td>
+</tr>
+<tr class="odd">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">2870.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7661250</td>
+</tr>
+<tr class="even">
+<td align="left">KD</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">2789.714</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.0000</td>
+<td align="right">0.375</td>
+<td align="right">0.7395000</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">15211.000</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7773750</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10280.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7763750</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1447.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.500</td>
+<td align="right">0.6162500</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1325.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.625</td>
+<td align="right">0.5581250</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1650.429</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.250</td>
+<td align="right">0.7658750</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">baseline</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1538.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.375</td>
+<td align="right">0.7092500</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">22988.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7695000</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">20887.000</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7687500</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">21456.643</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7870625</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">18323.500</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7873125</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1742.286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.125</td>
+<td align="right">0.8325</td>
+<td align="right">0.375</td>
+<td align="right">0.6342500</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffRelRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1696.286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.125</td>
+<td align="right">0.8325</td>
+<td align="right">0.375</td>
+<td align="right">0.6277500</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">16338.500</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7773750</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">11521.571</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7757500</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">16011.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7871875</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">11203.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7870625</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1575.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.125</td>
+<td align="right">0.8325</td>
+<td align="right">0.375</td>
+<td align="right">0.6570625</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">diffAbsRank</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1463.714</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.125</td>
+<td align="right">0.8325</td>
+<td align="right">0.500</td>
+<td align="right">0.6292500</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">15211.000</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7773750</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10280.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7763750</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">15211.000</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7773750</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">10280.143</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.125</td>
+<td align="right">0.7763750</td>
+</tr>
+<tr class="odd">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">pmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1447.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.500</td>
+<td align="right">0.6162500</td>
+</tr>
+<tr class="even">
+<td align="left">PTC</td>
+<td align="left">associationRefData</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-sent</td>
+<td align="left">npmi</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1325.857</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0.875</td>
+<td align="right">0.000</td>
+<td align="right">0.8750</td>
+<td align="right">0.625</td>
+<td align="right">0.5581250</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
