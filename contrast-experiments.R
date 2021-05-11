@@ -745,20 +745,22 @@ applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('metho
 #
 applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'), viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPairRow) {
-#    print(goldPairRow)
+#   print(paste("GOLD CONCEPT=",as.character(goldPairRow$goldConceptId)))
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
     methodsDatasetDF <- methodsDF
     if ('dataset' %in% colnames(methodsDF)) {
       methodsDatasetDF <- methodsDF[as.character(methodsDF$dataset)==as.character(goldPairRow$dataset),]
     }
     resMethods <- if (nrow(relSelectedTarget)>0) {
-      rankings <- applyMethodsSingleTarget(relSelectedTarget, methodsDatasetDF, viewKeepCols=viewKeepCols)
-      ddply(methodsDF, methodCols, function(methodRow) {
-          methodRankingDF <- merge(rankings, methodRow, by=methodCols)
+      # update: originally all the methods were passed to applyMethodsSingleTarget but this requires too much memory
+      #   when there are many methods, since all the resulting rankings need to be stored at the same time.
+      #   Thus we now run applyMethodsSingleTarget for one method at a time, collect the result for the gold and discard
+      #   the ranking before going to the next method.
+      ddply(methodsDatasetDF, methodCols, function(methodRow) {
 #          print(paste("METHOD:"))
 # 	  print(methodRow)
-#	  print(paste("GOLD CONCEPT=",as.character(goldPairRow$goldConceptId)))
-          goldResDF <- methodRankingDF[as.character(methodRankingDF[,'concept']) == as.character(goldPairRow$goldConceptId),]
+          ranking <- applyMethodsSingleTarget(relSelectedTarget, methodRow, viewKeepCols=viewKeepCols)
+          goldResDF <- ranking[as.character(ranking[,'concept']) == as.character(goldPairRow$goldConceptId),]
 #	  print("GOLD RES")
 #          print(goldResDF)
           if (nrow(goldResDF) > 1) {
@@ -769,10 +771,10 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
           } else {
             if (nrow(goldResDF) == 0) { # not found at all
 #              print("NOT found")
-              data.frame(rank=NA, relRank=NA,viewSize=nrow(methodRankingDF))
+              data.frame(rank=NA, relRank=NA,viewSize=nrow(ranking))
             } else {  # ok, found (exactly 1 row)
 #              print("found")
-	      data.frame(rank=goldResDF$rank, relRank=goldResDF$relRank, viewSize=nrow(methodRankingDF))
+	      data.frame(rank=goldResDF$rank, relRank=goldResDF$relRank, viewSize=nrow(ranking))
 	    }
          }
       })
