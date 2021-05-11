@@ -157,7 +157,6 @@ kable(r[sample(1:nrow(r),6),])
 
 ```{r}
 r <- applyMethodsMultiTargets(lbd_data_diso,targetGoldPairs,methods0)
-print(nrow(r))
 print(colnames(r))
 kable(r[sample(1:nrow(r),6),])
 ```
