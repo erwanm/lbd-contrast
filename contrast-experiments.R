@@ -977,8 +977,8 @@ filterSelectedGoldPairRow <- function(goldPairRow, df, reverse=FALSE) {
 #
 crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
                                     selectBestMeasure = 'MNTR@1000',
-                                    recallAtValues=c(10,100,1000,10000),
-                                    optimMinMaxThresholds=TRUE, 
+                                    recallAtValues=c(10,100,1000),
+                                    optimMinMaxThresholds=FALSE, 
 				    returnDetailByTargetGoldPairs=FALSE,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 

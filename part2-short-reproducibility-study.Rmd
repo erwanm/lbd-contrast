@@ -44,7 +44,7 @@ source('contrast-experiments.R')
 
 ## Hardware Requirements
 
-A recent enough computer with at least 8 GB RAM (16 GB recommended).
+16 GB RAM recommended.
 
 
 ## Preparing for The Contrasts Experiments
@@ -155,7 +155,7 @@ kable(r[sample(1:nrow(r),6),])
 - For every method and every target-gold pair, the output contains only the row corresponding to the gold in the output ranking.
 
 
-```
+```{r}
 r <- applyMethodsMultiTargets(lbd_data_diso,targetGoldPairs,methods0)
 print(nrow(r))
 print(colnames(r))
@@ -173,4 +173,13 @@ kable(perf)
 ```
 
 ### Leave-One-Out Cross-Validation
+
+`crossValidateMethodsLOO` performs parameter tuning with Leave-One-Out (LOO) cross-validation over a set of target-gold pairs for several groups of methods. Some of the methods parameters can be fixed with `resultsGroupBy`, while any other variations in the parameters provided in `methodsDF` are used for tuning. Optionally the min/max thresholds parameters can be tuned as well by setting `optimMinMaxThresholds=TRUE`. 
+
+```{r}
+bestByMethodId <- crossValidateMethodsLOO()
+```
+
+
+## Experiments
 
