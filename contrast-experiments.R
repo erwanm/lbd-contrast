@@ -7,6 +7,7 @@ library(plyr)
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
 measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3')
+methodParams = c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
 
 loadDiscoveries <- function(f='data/discoveries.tsv') {
   d<-read.table(f,sep='\t')
@@ -688,7 +689,6 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 # runs a batch of methods for one target and returns the full ranking for every method as a tidy DF.
 #
 # - relationsDF = associatedDF after filtering one target+gold pair with its specific range of years
-# - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'associationRefData'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq
 # - unused parameters should be NA
 # - viewKeepCols = columns transmitted for each view to the contrastView function. Add columns names 'x' here in order to have 'x.ref' and 'x.mask' in the output. 
 #                  If viewKeepCols is NULL, then all the columns are kept in the output (useful for debugging/analyzing)
@@ -696,7 +696,7 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
 #  note: methodsDF may contain the optional column 'dataset' in case the min and max are different by dataset, but this must have been filtered before this function.
 #
 #
-applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'),
+applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=methodParams,
                                     viewKeepCols=c('concept', 'rank', 'relRank', 'jointFreq')) {
   ddply(unique(methodsDF), methodCols, function(methodRow) {
    refView <- relationsDF[ as.character(relationsDF$view) == as.character(methodRow$refView) & as.character(relationsDF$level) == as.character(methodRow$refLevel), ]
@@ -743,7 +743,7 @@ applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=c('metho
 #
 # use debugOutput=TRUE and viewKeepCols = NULL for maximum detail in the output. Important: in case of debug output there's no row if the concept is not found.
 #
-applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView'), viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
+applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF, methodCols=methodParams, viewKeepCols=c('concept', 'rank','relRank', 'jointFreq'), debugOutput=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPairRow) {
 #   print(paste("GOLD CONCEPT=",as.character(goldPairRow$goldConceptId)))
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
@@ -796,17 +796,17 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
 
 
 
-assignThresholdsToMethods <- function(methodsDF, thresholdsByView) {
+assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=methodParams) {
   m1 <- merge(methodsDF, thresholdsByView, all.x=TRUE, by.x=c('refView','refLevel'),by.y=c('view','level'))
   m1$minFreq <- m1$min
 #  print(nrow(m1))
   # baseline: assign max to ref view as well
-  mB <- m1[m1$methodId=='baseline',c('methodId','dataset', 'refView','refLevel','maskView','maskLevel','measure','minFreq')]
+  mB <- m1[m1$methodId=='baseline',methodCols]
   mB2 <- merge(mB, thresholdsByView, all.x=TRUE, by.x=c('dataset', 'refView','refLevel'),by.y=c('dataset','view','level'))
   mB2$maxFreq <- mB2$max
 #  print(nrow(mB2))
   # contrast: assign max to mask view
-  mC <- m1[m1$methodId!='baseline',c('methodId','dataset', 'refView','refLevel','maskView','maskLevel','measure','minFreq')]
+  mC <- m1[m1$methodId!='baseline',methodCols]
   mC2 <- merge(mC, thresholdsByView, all.x=TRUE, by.x=c('dataset','maskView','maskLevel'),by.y=c('dataset','view','level'))
   mC2$maxFreq <- mC2$max
 #  print(nrow(mC2))
@@ -817,13 +817,13 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView) {
     stop("BUG: no maxFreq col??")
   }
 #  print(colnames(m3))
-  m3[,c('methodId','dataset', 'refView','refLevel','maskView','maskLevel','measure','minFreq','maxFreq')]
+  m3[,methodCols]
 }
 
 
 
 
-# - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'associationRefData'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq
+# - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'associationRefData'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq,contrastDiscardRowsNotInMaskView
 # assign NULL to refMaskPairs in order to generate all the possible combinations (many!!)
 generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
                    refMaskPairs=data.frame(refView=c('abstracts+articles',        'abstracts+articles' ,       'abstracts+articles'),
@@ -985,7 +985,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 				                            nbTargetGoldPairs=NA,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 
-                                    paramCols=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq','discardRowsNotInMaskView')
+                                    methodCols=methodParams
                                    ) {
    
    detailedResults <- ddply(targetPairsDF, targetGoldCols, function(targetGoldTest) {
@@ -1025,7 +1025,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 #      print(resultsTrainGroup[1,resultsGroupBy])
 
       # obtain best perf method
-      optimAcrossCols <- paramCols[! paramCols %in% resultsGroupBy]
+      optimAcrossCols <- methodCols[! methodCols %in% resultsGroupBy]
       perfDF <- evalByGroup(resultsTrainGroup, groupBy=optimAcrossCols,nbTargetGoldPairs=nbTargetGoldPairs, recallAtValues)
 #      print(paste("DEBUG selectBestMeasure = ",selectBestMeasure))
 #      print(perfDF)
@@ -1070,7 +1070,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 #
 #  MNTR@N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
 #
-evalByGroup <- function(resultsByTarget, groupBy=c('dataset','methodId', 'refView','refLevel','maskView','maskLevel','measure','minFreq', 'maxFreq'), nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
+evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
 #  print("evalByGroup receives results:")
 #  print(head(resultsByTarget))
   ddply(resultsByTarget, groupBy, function(resultsAcrossTargets) {
@@ -1131,7 +1131,7 @@ selectBestMethod <- function(perfDF, maxRank=10000) {
 
 
 # reformats a dataframe of results to show the parmaeter of insterest as columns (allows parallel comparison)
-compareMethodParam <- function(resultsByTarget,param='methodId', methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')) {
+compareMethodParam <- function(resultsByTarget,param='methodId', methodCols=methodParams) {
   d<-resultsByTarget[,!colnames(resultsByTarget) %in% c('relRank','viewSize')]
   methodColsMinusParam <- methodCols[! methodCols %in% param]
   f1 <- paste("dataset","targetName","goldConceptName",paste(methodColsMinusParam,collapse="+"),sep="+")
@@ -1143,7 +1143,7 @@ compareMethodParam <- function(resultsByTarget,param='methodId', methodCols=c('m
 # this graph shows boxplots for param value1 vs param value 2 for every variant of the other parameters
 # note that it's not very "clean" because each boxplot contains the points from the different targets + from dataset (and possibly other columns)
 #
-graphMethodParam <- function(resultsByTarget,param='methodId', methodCols=c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')) {
+graphMethodParam <- function(resultsByTarget,param='methodId', methodCols=methodParams) {
   d<-resultsByTarget[,!colnames(resultsByTarget) %in% c('relRank','viewSize')]
   methodColsMinusParam <- methodCols[! methodCols %in% param]
   u <- unique(d[,methodColsMinusParam])
