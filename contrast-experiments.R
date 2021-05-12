@@ -1076,8 +1076,8 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 #  MNTR.N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
 #
 evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
-  if (!'dataset' %in% methodCols) {
-    methodCols <- c('dataset',methodCols)
+  if (!'dataset' %in% groupBy) {
+    groupBy <- c('dataset',groupBy)
   }
 #  print("evalByGroup receives results:")
 #  print(head(resultsByTarget))
