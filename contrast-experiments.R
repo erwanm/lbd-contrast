@@ -978,7 +978,7 @@ filterSelectedGoldPairRow <- function(goldPairRow, df, reverse=FALSE) {
 # dataframe containing the result for every target-gold pair, including the method parameters.
 #
 crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
-                                    selectBestMeasure = 'MNTR@1000',
+                                    selectBestMeasure = 'MNTR.1000',
                                     recallAtValues=c(10,100,1000),
                                     optimMinMaxThresholds=FALSE, 
 				                            returnDetailByTargetGoldPairs=FALSE,
@@ -1030,7 +1030,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 #      print(paste("DEBUG selectBestMeasure = ",selectBestMeasure))
 #      print(perfDF)
       topPerf <- min(perfDF[,selectBestMeasure])
-      # note: unlikely to have two identical scores with NMTR@1000 but using head anyway to avoid technical problems
+      # note: unlikely to have two identical scores with NMTR.1000 but using head anyway to avoid technical problems
       head(perfDF[perfDF[,selectBestMeasure] == topPerf,], 1)
     })
 #    print("DEBUG bestMethodByGroup = ")
@@ -1066,9 +1066,9 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 # - 'groupBy' indicates how to group the rows so that every group contains one set of unique target-gold pairs
 # - 'nbTargetGoldPairs': it is recommended to provide the number of pairs expected for a group of target-gold pairs.
 #
-# returns a df with one row for every 'groupBy' containing meanRank, nbFound, nbTotal + recall@N columns + MNTR@N columns
+# returns a df with one row for every 'groupBy' containing meanRank, nbFound, nbTotal + recall.N columns + MNTR.N columns
 #
-#  MNTR@N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
+#  MNTR.N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
 #
 evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
 #  print("evalByGroup receives results:")
@@ -1089,7 +1089,7 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
                  nbTotal=nbTargetGoldPairs
               )
     for (i in 1:length(recallAtValues)) {
-      r[,paste('R',recallAtValues[i],sep='@')] <- nrow(resultsAcrossTargets[rowsNotNA & resultsAcrossTargets$rank <= recallAtValues[i],]) / nbTargetGoldPairs
+      r[,paste('R',recallAtValues[i],sep='.')] <- nrow(resultsAcrossTargets[rowsNotNA & resultsAcrossTargets$rank <= recallAtValues[i],]) / nbTargetGoldPairs
       truncatedRank <- resultsAcrossTargets$rank
       truncatedRank[is.na(truncatedRank) | truncatedRank>recallAtValues[i]] <- recallAtValues[i]
 #      print(paste("DEBUG truncatedRank at",recallAtValues[i],' (1):'))
@@ -1097,7 +1097,7 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
       truncatedRank <- truncatedRank / recallAtValues[i]
 #      print(paste("DEBUG truncatedRank at",recallAtValues[i],' (2):'))
 #      print(truncatedRank)
-      r[,paste('MNTR',recallAtValues[i],sep='@')] <- sum(truncatedRank) / nbTargetGoldPairs
+      r[,paste('MNTR',recallAtValues[i],sep='.')] <- sum(truncatedRank) / nbTargetGoldPairs
     }
     r
   })
@@ -1105,7 +1105,7 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
 
 
 #
-# select best method based on the mean of the Recall@N columns
+# select best method based on the mean of the Recall.N columns
 # not used anymore, using NMTR now
 #
 selectBestMethod <- function(perfDF, maxRank=10000) {
@@ -1150,4 +1150,21 @@ graphMethodParam <- function(resultsByTarget,param='methodId', methodCols=method
   u$id <- as.factor(1:nrow(u))
   d <- merge(d,u)
   ggplot(d,aes_string('id','rank',fill=param))+geom_boxplot()
+}
+
+#
+# perfDF <- evalByGroup(resultsByTarget)
+#
+basicGraphMethodParamComparison <- function(perfDF,param='methodId',perfCol='MNTR.1000',byCol=NA,facetDataset=TRUE) {
+  print(ddply(perfDF, param, function(s) { mean(s[,perfCol])}))
+  if (is.na(byCol)) {
+    g<-ggplot(perfDF,aes_string(param,perfCol)) + geom_boxplot()
+  } else {
+    perfDF[,'BY'] <- as.factor(perfDF[,byCol])
+    g<-ggplot(perfDF,aes_string(param,'TARGETCOL',colour='BY')) + geom_boxplot()+ylab(perfCol)
+  }
+  if (facetDataset) {
+    g <- g + facet_grid(dataset ~ .)
+  }
+  g
 }
