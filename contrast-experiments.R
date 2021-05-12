@@ -797,11 +797,16 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
 
 
 assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=methodParams) {
+  if (!'dataset' %in% methodCols) {
+    methodCols <- c('dataset',methodCols)
+  }
   m1 <- merge(methodsDF, thresholdsByView, all.x=TRUE, by.x=c('refView','refLevel'),by.y=c('view','level'))
   m1$minFreq <- m1$min
 #  print(nrow(m1))
   # baseline: assign max to ref view as well
   mB <- m1[m1$methodId=='baseline',methodCols]
+#  print(colnames(mB))
+#  print(colnames(thresholdsByView))
   mB2 <- merge(mB, thresholdsByView, all.x=TRUE, by.x=c('dataset', 'refView','refLevel'),by.y=c('dataset','view','level'))
   mB2$maxFreq <- mB2$max
 #  print(nrow(mB2))
