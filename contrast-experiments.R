@@ -7,7 +7,7 @@ library(plyr)
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
 measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3')
-methodParams = c('dataset', 'methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
+methodParams = c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
 
 loadDiscoveries <- function(f='data/discoveries.tsv') {
   d<-read.table(f,sep='\t')
@@ -797,6 +797,9 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
 
 
 assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=methodParams) {
+  if (!'dataset' %in% methodCols) {
+    methodCols <- c('dataset',methodCols)
+  }
   m1 <- merge(methodsDF, thresholdsByView, all.x=TRUE, by.x=c('refView','refLevel'),by.y=c('view','level'))
   m1$minFreq <- m1$min
 #  print(nrow(m1))
@@ -1073,6 +1076,9 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 #  MNTR.N =  Mean Normalized Truncated Rank at N = mean of the ranks considering any rank higher or equal N as N normalized in [0,1] (lower better)
 #
 evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
+  if (!'dataset' %in% groupBy) {
+    groupBy <- c('dataset',groupBy)
+  }
 #  print("evalByGroup receives results:")
 #  print(head(resultsByTarget))
   differenceNbPairs <- c()
