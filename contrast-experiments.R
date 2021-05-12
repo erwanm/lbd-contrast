@@ -1167,11 +1167,12 @@ graphMethodParam <- function(resultsByTarget,param='methodId', methodCols=method
 #
 basicGraphMethodParamComparison <- function(perfDF,param='methodId',perfCol='MNTR.1000',byCol=NA,facetDataset=TRUE) {
   print(ddply(perfDF, param, function(s) { mean(s[,perfCol])}))
+  perfDF[,param] <- as.factor(perfDF[,param])
   if (is.na(byCol)) {
     g<-ggplot(perfDF,aes_string(param,perfCol)) + geom_boxplot()
   } else {
-    perfDF[,'BY'] <- as.factor(perfDF[,byCol])
-    g<-ggplot(perfDF,aes_string(param,'TARGETCOL',colour='BY')) + geom_boxplot()+ylab(perfCol)
+    perfDF[,byCol] <- as.factor(perfDF[,byCol])
+    g<-ggplot(perfDF,aes_string(param,perfCol,colour=byCol)) + geom_boxplot()+ylab(perfCol)
   }
   if (facetDataset) {
     g <- g + facet_grid(dataset ~ .)
