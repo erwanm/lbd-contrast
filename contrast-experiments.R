@@ -7,7 +7,7 @@ library(plyr)
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
 measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3')
-methodParams = c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
+methodParams = c('dataset', 'methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
 
 loadDiscoveries <- function(f='data/discoveries.tsv') {
   d<-read.table(f,sep='\t')
@@ -797,9 +797,6 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
 
 
 assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=methodParams) {
-  if (!'dataset' %in% methodCols) {
-    methodCols <- c('dataset',methodCols)
-  }
   m1 <- merge(methodsDF, thresholdsByView, all.x=TRUE, by.x=c('refView','refLevel'),by.y=c('view','level'))
   m1$minFreq <- m1$min
 #  print(nrow(m1))
@@ -1078,14 +1075,16 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs=NA, recallAtValues=c(10,100,1000)) {
 #  print("evalByGroup receives results:")
 #  print(head(resultsByTarget))
-  ddply(resultsByTarget, groupBy, function(resultsAcrossTargets) {
+  differenceNbPairs <- c()
+  evalRes <- ddply(resultsByTarget, groupBy, function(resultsAcrossTargets) {
     if (is.na(nbTargetGoldPairs)) {
       nbTargetGoldPairs <- nrow(resultsAcrossTargets)
     } else {
       if (!is.na(nbTargetGoldPairs) & nrow(resultsAcrossTargets) != nbTargetGoldPairs) {
 #        print("Current group:")
 #        print(resultsAcrossTargets[1,groupBy])
-        warning(paste("Error with sanity check: expected",nbTargetGoldPairs,"target-gold pairs but found",nrow(resultsAcrossTargets)))
+	 differenceNbPairs <<- c(differenceNbPairs, nrow(resultsAcrossTargets))
+#	 print(differenceNbPairs)
       }
     }
     rowsNotNA <- !is.na(resultsAcrossTargets$rank)
@@ -1106,6 +1105,12 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
     }
     r
   })
+  if (length(differenceNbPairs)>0) {
+     print("Collected number of differences between expected and actual number of target-gold pairs:")
+     print(ddply(data.frame(actual=differenceNbPairs),'actual',function(sub) { data.frame(expected=nbTargetGoldPairs,actual=sub$actual[1],nb.times=nrow(sub)) }))
+     warning(paste("Error with sanity check: expected",nbTargetGoldPairs,"target-gold pairs but found different number of rows (see details above)"))
+  }
+  evalRes
 }
 
 
