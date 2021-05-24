@@ -133,6 +133,22 @@ targetPairsJointData <- filterJointPairs(targetPairs,raw$joint)
 kable(targetPairsJointData[sample(1:nrow(targetPairsJointData), 6),])
 ```
 
+### Joint frequency across years
+
+The following shows the earliest year where a co-occurrence was found for every relation:
+
+```{r}
+firstYear <- ddply(targetPairsJointData,c('concept1','concept2'), function(s) { data.frame(firstYear=min(s$year))})
+kable(firstYear)
+```
+
+
+
+
+```{r}
+plotTargetDiscoveriesJointFreq(targetPairsJointData,customTheme = TRUE,renameViews = TRUE)
+```
+
 ### Calculating the Range of Years Before Discovery
 
 The function below calculates the first year of the consecutive sequence where the two concepts have at least one occurrence every year (assumed to represent the "discovery"). It returns for every relation the range of years *before* this "discovery year": by default the start year is arbitrarily set to 1950, and the end year is the year just before the "discovery year".

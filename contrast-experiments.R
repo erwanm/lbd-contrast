@@ -6,7 +6,7 @@ library(plyr)
 
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
-measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3')
+measures = c('scp', 'pmi', 'npmi', 'mi', 'nmi', 'pmi2', 'pmi3')
 methodParams = c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
 
 loadDiscoveries <- function(f='data/discoveries.tsv') {
@@ -192,9 +192,12 @@ filterJointPairs <- function(targetPairsDF, jointDF,yearMin=1950, yearMax=2019) 
   })
 }
 
+simplifyNames <- function(d) {
+  d$view<- revalue(d$view, c("unfiltered-medline"="abstracts", "pmc-articles"="articles"))
+  d
+}
 
-
-plotTargetDiscoveriesJointFreq <- function(filteredJointPairsDF,yearMin=1980, layout1=FALSE, discardParkinson=TRUE, onlyMedline=FALSE,casesYGrid=FALSE) {
+plotTargetDiscoveriesJointFreq <- function(filteredJointPairsDF,yearMin=1980, layout1=FALSE, discardParkinson=TRUE, onlyMedline=FALSE,casesYGrid=FALSE, customTheme=FALSE, renameViews=FALSE) {
   d <- filteredJointPairsDF[filteredJointPairsDF$year>=yearMin,]
   if (onlyMedline) {
     d <- d[d$view=='unfiltered-medline',]
@@ -206,16 +209,28 @@ plotTargetDiscoveriesJointFreq <- function(filteredJointPairsDF,yearMin=1980, la
     first <- first[first$concept1 != 'Parkinson' & first$concept2 != 'Parkinson',]
   }
   g <- if (layout1) {
+    if (renameViews){
+      d <-simplifyNames(d)
+    }
     ggplot(d,aes(year,jointFreq,fill=level)) + geom_col(position='dodge') + geom_vline(data = first,aes(xintercept = startYear,colour=level),linetype='dashed')
   } else {
     d <- d[d$view != 'pmc-articles',]
     first <- first[first$view != 'pmc-articles',]
+    if (renameViews){
+      d <-simplifyNames(d)
+      first <- simplifyNames(first)
+    }
     ggplot(d,aes(year,jointFreq,fill=level)) + geom_col(position='identity',alpha=.5) + geom_vline(data = first,aes(xintercept = startYear,colour=level),linetype='dashed') 
   }
-  if (casesYGrid) {
+  g <- if (casesYGrid) {
     g + facet_grid(concept1+concept2 ~ dataset+view,scales = "free_y")
   } else {
     g + facet_grid(dataset+view ~ concept1+concept2, scales = "free_y")
+  }
+  if (customTheme) {
+    g + theme(axis.text.x = element_text(angle = 90),text = element_text(size = 14)) +ylab("Joint Frequency")
+  } else {
+    g
   }
 }
 
@@ -250,7 +265,7 @@ firstYearConsecutiveSequence <- function(filteredJointPairsDF, groupBy=c('concep
 # - yearMin in the start year
 # - the end year is obtained as the first of the consecutive years: it is defined as variable for the dataset (KD or PMC) but fixed for the view and the level.
 #
-selectYearRange <- function(filteredJointPairsDF, selectView='unfiltered-medline', selectLevel='by-doc', yearMin=1950, groupBy=c('concept1','concept2','dataset','view','level', 'id1', 'id2')) {
+selectYearRange <- function(filteredJointPairsDF, selectView='abstracts+articles', selectLevel='by-doc', yearMin=1950, groupBy=c('concept1','concept2','dataset','view','level', 'id1', 'id2')) {
   consDF0 <- firstYearConsecutiveSequence(filteredJointPairsDF)
   consDF <- consDF0[consDF0$view==selectView & consDF0$level==selectLevel,]
   ddply(consDF, groupBy, function(row) {
@@ -481,7 +496,11 @@ aggregatePairsDataOverYears <- function(pairsDataDF, yearRangeDF, sumCols=c('joi
 }
 
 
-binaryMI <- function(pA, pB, pA_B) {
+#
+# if normalized is FALSE returns the binary MI.
+# if normalized is TRUE, returns a list (mi, nmi): the first is regular (binary) MI and the second is normalized MI (NMI)
+#
+binaryMI <- function(pA, pB, pA_B, normalized=FALSE) {
   pNA_B <- pB - pA_B
   pA_NB <- pA - pA_B
   pNA_NB <- 1 - ( pA_B + pNA_B + pA_NB)
@@ -490,7 +509,16 @@ binaryMI <- function(pA, pB, pA_B) {
   mi[pNA_B>0] <- mi[pNA_B>0] + pNA_B[pNA_B>0] * log2( pNA_B[pNA_B>0] / ((1-pA[pNA_B>0]) * pB[pNA_B>0]) )
   mi[pA_NB>0] <- mi[pA_NB>0] + pA_NB[pA_NB>0] * log2( pA_NB[pA_NB>0] / (pA[pA_NB>0] * (1-pB[pA_NB>0])) )
   mi[pA_B>0] <- mi[pA_B>0] + pA_B[pA_B>0] * log2( pA_B[pA_B>0] / (pA[pA_B>0] * pB[pA_B>0]) )
-  mi
+  if (normalized) {
+    norm <- rep(0, length(pA_B))
+    norm[pNA_NB>0] <- norm[pNA_NB>0] + pNA_NB[pNA_NB>0] * log2( pNA_NB[pNA_NB>0]  )
+    norm[pNA_B>0] <- norm[pNA_B>0] + pNA_B[pNA_B>0] * log2( pNA_B[pNA_B>0]  )
+    norm[pA_NB>0] <- norm[pA_NB>0] + pA_NB[pA_NB>0] * log2( pA_NB[pA_NB>0]  )
+    norm[pA_B>0] <- norm[pA_B>0] + pA_B[pA_B>0] * log2( pA_B[pA_B>0] )
+    list(mi=mi, nmi=mi/-norm)
+  } else {
+    mi
+  }
 }
 
 calculateAssociation <- function(integratedRelationsDF, filterMeasures=measures,docFreq1Col='targetFreq',docFreq2Col='conceptFreq') { 
@@ -498,14 +526,23 @@ calculateAssociation <- function(integratedRelationsDF, filterMeasures=measures,
   pA <- integratedRelationsDF[,docFreq1Col] / integratedRelationsDF$nbDocs
   pB <- integratedRelationsDF[,docFreq2Col] / integratedRelationsDF$nbDocs
   pmi <- log2( jointProb / (pA * pB) )
+  if ('scp' %in% filterMeasures) {
+    integratedRelationsDF$scp <- jointProb ^ 2 / (pA * pB)
+  }
   if ('pmi' %in% filterMeasures) {
     integratedRelationsDF$pmi <- pmi
   }
    if ('npmi' %in% filterMeasures) {
     integratedRelationsDF$npmi <- - pmi / log2(jointProb)
-  }
-  if ('mi' %in% filterMeasures) {
-    integratedRelationsDF$mi <- binaryMI(pA, pB, jointProb)
+   }
+  if ('nmi' %in% filterMeasures) {
+    l <- binaryMI(pA, pB, jointProb, normalized=TRUE)
+    integratedRelationsDF$mi <- l$mi
+    integratedRelationsDF$nmi <- l$nmi
+  } else {
+    if ('mi' %in% filterMeasures) {
+      integratedRelationsDF$mi <- binaryMI(pA, pB, jointProb)
+    }
   }
   if ('pmi2' %in% filterMeasures) {
     integratedRelationsDF$pmi2 <- log2( (jointProb^2) / (pA * pB) )
@@ -565,7 +602,7 @@ reformatRelationsByTarget <- function(measuredDF, targetPairsDF) {
 # Note: this function is not used in the main process across methods and targets
 #
 #
-baselineGoldRank <- function(relByTargetDF, targetGoldPairsDF, groupBy=c('start', 'end', 'dataset', 'level', 'view'), orderBy=c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),relRankMaxIfNotFound=FALSE) {
+baselineGoldRank <- function(relByTargetDF, targetGoldPairsDF, groupBy=c('start', 'end', 'dataset', 'level', 'view'), orderBy=measures,relRankMaxIfNotFound=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPair) {
 #    print(as.character(goldPair$targetName))
 #    print(goldPair$start)
@@ -625,7 +662,7 @@ filterFreqOrderAndAddRank <- function(df, minJointFreq, associationMeasure) {
 # Reminder: the rank/relRank as input and output always follows low value = high association = better 
 #
 # methodId indicates the ranking method used to "contrast" the views: if 'diffRelRank' the difference in relative rank is used (default), 'diffAbsRank' for the difference in absolute rank,
-# otherwise if 'associationRefData' the rank follows the association measure in the ref dataset (note: with this option one must use the 'maxJointFreqMask' threshold
+# otherwise if 'basicContrast' the rank follows the association measure in the ref dataset (note: with this option one must use the 'maxJointFreqMask' threshold
 # to tune the ranking, otherwise it's simply the same as the ref dataset).
 # Note: the output DF is ordered by the main criterion (defined by the method 'orderByDiffRank') and as second criterion
 #       by the diff in joint freq between the two views. This is implemented in the order of the output DF but not in the output rank/relRank column.
@@ -666,7 +703,7 @@ contrastViews <- function(refViewDF, maskViewDF, minJointFreqRef=NA, maxJointFre
   contrasted$diffRelRank <- contrasted[,relRankRefCol] - contrasted[,relRankMaskCol]
   contrasted$diffRank <- contrasted[,rankRefCol] - contrasted[,rankMaskCol]
   contrasted$diffJointFreq <- contrasted[,jointFreqRefCol] - contrasted[,jointFreqMaskCol]
-  if (methodId == 'associationRefData') {
+  if (methodId == 'basicContrast') {
     contrasted$rank <- rank(contrasted[,relRankRefCol])
   } else {
     if (methodId == 'diffRelRank') {
@@ -828,14 +865,14 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=met
 
 
 
-# - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'associationRefData'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq,contrastDiscardRowsNotInMaskView
+# - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'basicContrast'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq,contrastDiscardRowsNotInMaskView
 # assign NULL to refMaskPairs in order to generate all the possible combinations (many!!)
-generateMethods <- function(measures = c('pmi', 'npmi', 'mi', 'pmi2', 'pmi3'),
+generateMethods <- function(measures = measures,
                    refMaskPairs=data.frame(refView=c('abstracts+articles',        'abstracts+articles' ,       'abstracts+articles'),
                                           refLevel=c('by-doc'           ,         'by-sent',                   'by-doc' ),
                                           maskView=c('unfiltered-medline',        'unfiltered-medline',        'abstracts+articles'),
                                           maskLevel=c('by-doc'          ,         'by-sent' ,                  'by-sent' )),
-                   contrastMethodsIds = c('diffRelRank','diffAbsRank', 'associationRefData'),
+                   contrastMethodsIds = c('diffRelRank','diffAbsRank', 'basicContrast'),
                    contrastDiscardRowsNotInMaskView=FALSE,
                    minFreqThresholds=NA,
                    withBaselines = TRUE
