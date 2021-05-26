@@ -38,7 +38,7 @@ For convenience the fully preprocessed dataset used in the paper is provided her
     
 The code can be loaded in the R interpreter with:
 
-```{r}
+```{r source}
 source('contrast-experiments.R')
 ```
 
@@ -53,12 +53,9 @@ source('contrast-experiments.R')
 
 
 
-```{r}
+```{r load}
 lbd_data<-read.table('lbd_data.tsv',header=TRUE,sep='\t',comment.char = "",quote="")
 lbd_data_diso<-read.table('lbd_data.DISO.tsv',header=TRUE,sep='\t',comment.char = "",quote="")
-```
-
-```{r}
 targetGoldPairs <- read.table('targets-gold-pairs-with-year-range.tsv',header=TRUE,sep='\t',comment.char = "",quote="")
 ```
 
@@ -195,7 +192,7 @@ kable(bestByMethodId$aggregatedPerf)
 
 
 ```{r simple}
-methods0 <- generateMethods(measures=c('pmi','npmi'))
+methods0 <- generateMethods(measures=c('scp','pmi','npmi','mi'),minFreqThresholds=c(1,3,5),contrastMethodsIds = c('diffAbsRank', 'basicContrast'))
 methods0 <- methods0[methods0$refView!='pmc-articles' & (methods0$refView!='unfiltered-medline' | methods0$refLevel=='by-doc'),]
 res0 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods0)
 perf0 <- evalByGroup(res0, nbTargetGoldPairs=8)

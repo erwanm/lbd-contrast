@@ -6,7 +6,7 @@ library(plyr)
 
 levels = c('by-doc','by-sent')
 views = c('abstracts+articles',  'pmc-articles',  'unfiltered-medline')
-measures = c('scp', 'pmi', 'npmi', 'mi', 'nmi', 'pmi2', 'pmi3')
+default_measures = c('scp', 'pmi', 'npmi', 'mi', 'nmi', 'pmi2', 'pmi3')
 methodParams = c('methodId', 'refView', 'refLevel', 'maskView', 'maskLevel', 'measure', 'minFreq', 'maxFreq','discardRowsNotInMaskView')
 
 loadDiscoveries <- function(f='data/discoveries.tsv') {
@@ -196,6 +196,7 @@ simplifyNames <- function(d) {
   d$view<- revalue(d$view, c("unfiltered-medline"="abstracts", "pmc-articles"="articles"))
   d
 }
+
 
 plotTargetDiscoveriesJointFreq <- function(filteredJointPairsDF,yearMin=1980, layout1=FALSE, discardParkinson=TRUE, onlyMedline=FALSE,casesYGrid=FALSE, customTheme=FALSE, renameViews=FALSE) {
   d <- filteredJointPairsDF[filteredJointPairsDF$year>=yearMin,]
@@ -521,7 +522,7 @@ binaryMI <- function(pA, pB, pA_B, normalized=FALSE) {
   }
 }
 
-calculateAssociation <- function(integratedRelationsDF, filterMeasures=measures,docFreq1Col='targetFreq',docFreq2Col='conceptFreq') { 
+calculateAssociation <- function(integratedRelationsDF, filterMeasures=default_measures,docFreq1Col='targetFreq',docFreq2Col='conceptFreq') { 
   jointProb <- integratedRelationsDF$jointFreq / integratedRelationsDF$nbDocs
   pA <- integratedRelationsDF[,docFreq1Col] / integratedRelationsDF$nbDocs
   pB <- integratedRelationsDF[,docFreq2Col] / integratedRelationsDF$nbDocs
@@ -602,7 +603,7 @@ reformatRelationsByTarget <- function(measuredDF, targetPairsDF) {
 # Note: this function is not used in the main process across methods and targets
 #
 #
-baselineGoldRank <- function(relByTargetDF, targetGoldPairsDF, groupBy=c('start', 'end', 'dataset', 'level', 'view'), orderBy=measures,relRankMaxIfNotFound=FALSE) {
+baselineGoldRank <- function(relByTargetDF, targetGoldPairsDF, groupBy=c('start', 'end', 'dataset', 'level', 'view'), orderBy=default_measures,relRankMaxIfNotFound=FALSE) {
   ddply(targetGoldPairsDF, c('dataset', 'targetName','goldConceptName'), function(goldPair) {
 #    print(as.character(goldPair$targetName))
 #    print(goldPair$start)
@@ -737,7 +738,6 @@ applyMethodsSingleTarget <- function(relationsDF, methodsDF, methodCols=methodPa
                                     viewKeepCols=c('concept', 'rank', 'relRank', 'jointFreq')) {
   ddply(unique(methodsDF), methodCols, function(methodRow) {
    refView <- relationsDF[ as.character(relationsDF$view) == as.character(methodRow$refView) & as.character(relationsDF$level) == as.character(methodRow$refLevel), ]
-#   print(as.character(methodRow$measure))
 #   print(head(refView[,as.character(methodRow$measure)], 15))
    refView$rank <- rank(-refView[,as.character(methodRow$measure)])
    refView$viewSize <- nrow(refView)
@@ -786,6 +786,9 @@ applyMethodsMultiTargets <- function(relByTargetDF, targetGoldPairsDF, methodsDF
     relSelectedTarget <- filterSelectedGoldPairRow(goldPairRow,relByTargetDF)
     methodsDatasetDF <- methodsDF
     if ('dataset' %in% colnames(methodsDF)) {
+      if (anyNA(methodsDF$dataset)) {
+        stop("Error: NA values in 'dataset' column in methodsDF")
+      }
       methodsDatasetDF <- methodsDF[as.character(methodsDF$dataset)==as.character(goldPairRow$dataset),]
     }
     resMethods <- if (nrow(relSelectedTarget)>0) {
@@ -837,7 +840,13 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=met
   if (!'dataset' %in% methodCols) {
     methodCols <- c('dataset',methodCols)
   }
+   if (anyNA(thresholdsByView$dataset)) {
+     stop("Bug in 'assignThresholdsToMethods': NA values in 'dataset' column (1)")
+   }
   m1 <- merge(methodsDF, thresholdsByView, all.x=TRUE, by.x=c('refView','refLevel'),by.y=c('view','level'))
+   if (anyNA(m1$dataset)) {
+     stop("Bug in 'assignThresholdsToMethods': NA values in 'dataset' column (2)")
+   }
   m1$minFreq <- m1$min
 #  print(nrow(m1))
   # baseline: assign max to ref view as well
@@ -859,6 +868,10 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=met
     stop("BUG: no maxFreq col??")
   }
 #  print(colnames(m3))
+   if (anyNA(m3$dataset)) {
+     stop("Bug in 'assignThresholdsToMethods': NA values in 'dataset' column (3)")
+   }
+
   m3[,methodCols]
 }
 
@@ -867,7 +880,7 @@ assignThresholdsToMethods <- function(methodsDF, thresholdsByView,methodCols=met
 
 # - methodsDF columns = 'methodId' ('baseline', 'diffRelRank', 'basicContrast'), refView, refLevel, maskView, maskLevel, measure, minFreq, maxFreq,contrastDiscardRowsNotInMaskView
 # assign NULL to refMaskPairs in order to generate all the possible combinations (many!!)
-generateMethods <- function(measures = measures,
+generateMethods <- function(measures = default_measures,
                    refMaskPairs=data.frame(refView=c('abstracts+articles',        'abstracts+articles' ,       'abstracts+articles'),
                                           refLevel=c('by-doc'           ,         'by-sent',                   'by-doc' ),
                                           maskView=c('unfiltered-medline',        'unfiltered-medline',        'abstracts+articles'),
@@ -957,7 +970,11 @@ calculateMinMaxTargetJointFreqByView <- function(relByTargetDF, targetPairsDF, t
 #  print("calculateMinMaxTargetJointFreqByView")
 #  print(nrow(relByTargetDF))
   d <- extractColValueByGoldPairAndView(relByTargetDF, targetPairsDF, viewCols=viewCols, targetGoldCols=targetGoldCols, valCol='jointFreq')
-  ddply(d[d$freq>0,], viewCols, function(viewFreqDF) {
+# BUG FIX May 26: the filtering below used to cause some views/targets to be absent, resulting in assignThresholds to return
+#                 a dataframe with NA values in the 'dataset' column, in turn causing errors in the LOO process.
+#                 CAUTION: I'm not sure why there was a filtering in the first place!!!
+#  ddply(d[d$freq>0,], viewCols, function(viewFreqDF) {
+  ddply(d, viewCols, function(viewFreqDF) {
     data.frame(min=min(viewFreqDF$freq), max=max(viewFreqDF$freq), nbFound=nrow(viewFreqDF))
   })
 }
@@ -1052,7 +1069,6 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
         # this will add the optional 'dataset' column:
         methodsDF <- assignThresholdsToMethods(methodsDF, thresholdsByView)
     }
-
     # train
     print("    Training")
     resultsTrain <- applyMethodsMultiTargets(relTrain, targetsGoldTrain, methodsDF)
@@ -1080,14 +1096,14 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
       
     ddply(bestMethodByGroup, resultsGroupBy, function(bestMethodGroup) {
       # apply on test instance
-#      print("    Apply on test instance for group")
-#      print(bestMethodGroup[1,resultsGroupBy])
+      print("    Apply on test instance for group")
+      print(bestMethodGroup[1,resultsGroupBy])
       applyMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
     })
   })
   print("Final aggregation across all test instances results")
   aggregatedPerf <- ddply(detailedResults, 'dataset', function(datasetRes) {
-     print(paste("dataset=",as.character(datasetRes[1,'dataset'])))
+#     print(paste("dataset=",as.character(datasetRes[1,'dataset'])))
 #     print(paste("nrow(datasetRes)=",nrow(datasetRes)))
      targetPairsThisDataset <- targetPairsDF[as.character(targetPairsDF$dataset)==as.character(datasetRes[1,'dataset']),]
 #     print(paste("nrow(targetPairsThisDataset)=",nrow(targetPairsThisDataset)))
@@ -1221,4 +1237,24 @@ basicGraphMethodParamComparison <- function(perfDF,param='methodId',perfCol='MNT
     g <- g + facet_grid(dataset ~ .)
   }
   g
+}
+
+
+simplifyNamesMethods <- function(d) {
+    d$methodId <- revalue(d$methodId, c("baseline"="BL", "basicContrast"="BC", "diffAbsRank" = "DRa", "diffRelRank" = "DRr"))
+    d$refView<- revalue(d$refView, c("unfiltered-medline"="abs", "pmc-articles"="art", "abstracts+articles" = "a+a"))
+    d$maskView<- revalue(d$maskView, c("unfiltered-medline"="abs", "pmc-articles"="art", "abstracts+articles" = "a+a"))
+    d$refLevel <- revalue(d$refLevel, c("by-doc" = "doc", "by-sent" = "sent" ))
+    d$maskLevel <- revalue(d$maskLevel, c("by-doc" = "doc", "by-sent" = "sent" ))
+    d
+}
+
+
+# resultsDF <- evalByGroup(...)
+# use xtable to print as latex table
+formatResultsTable1 <- function(resultsDF, measureCol='MNTR.1000') {
+  d <- resultsDF[,c('dataset','methodId','refView','refLevel','maskView','maskLevel','measure', 'minFreq', measureCol)]
+  d[,measureCol] <- round(d[,measureCol],digits=3)
+  d <-simplifyNamesMethods(d)
+  dcast(d,measure+minFreq ~ dataset + methodId + refView  +  refLevel + maskView + maskLevel)
 }
