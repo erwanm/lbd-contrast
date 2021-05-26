@@ -1154,6 +1154,9 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
     for (i in 1:length(recallAtValues)) {
       r[,paste('R',recallAtValues[i],sep='.')] <- nrow(resultsAcrossTargets[rowsNotNA & resultsAcrossTargets$rank <= recallAtValues[i],]) / nbTargetGoldPairs
       truncatedRank <- resultsAcrossTargets$rank
+      if (length(truncatedRank) < nbTargetGoldPairs) { # complement the vector if some pairs are absent
+        truncatedRank <- c(truncatedRank,rep(NA,nbTargetGoldPairs-length(truncatedRank)))
+      }
       truncatedRank[is.na(truncatedRank) | truncatedRank>recallAtValues[i]] <- recallAtValues[i]
 #      print(paste("DEBUG truncatedRank at",recallAtValues[i],' (1):'))
 #      print(truncatedRank)
@@ -1167,7 +1170,7 @@ evalByGroup <- function(resultsByTarget, groupBy=methodParams, nbTargetGoldPairs
   if (length(differenceNbPairs)>0) {
      print("Collected number of differences between expected and actual number of target-gold pairs:")
      print(ddply(data.frame(actual=differenceNbPairs),'actual',function(sub) { data.frame(expected=nbTargetGoldPairs,actual=sub$actual[1],nb.times=nrow(sub)) }))
-     warning(paste("Error with sanity check: expected",nbTargetGoldPairs,"target-gold pairs but found different number of rows (see details above)"))
+     warning(paste("Warning sanity check: expected",nbTargetGoldPairs,"target-gold pairs but found different number of rows (see details above)"))
   }
   evalRes
 }
@@ -1252,9 +1255,11 @@ simplifyNamesMethods <- function(d) {
 
 # resultsDF <- evalByGroup(...)
 # use xtable to print as latex table
-formatResultsTable1 <- function(resultsDF, measureCol='MNTR.1000') {
-  d <- resultsDF[,c('dataset','methodId','refView','refLevel','maskView','maskLevel','measure', 'minFreq', measureCol)]
+formatResultsTable1 <- function(resultsDF, measureCol='MNTR.1000', dataset='KD') {
+  d <- resultsDF[resultsDF$dataset==dataset,c('methodId','refView','refLevel','maskView','maskLevel','measure', 'minFreq', measureCol)]
   d[,measureCol] <- round(d[,measureCol],digits=3)
+  p<-ddply(d, 'methodId',function(s) {mean(s[,measureCol])})
+  print(p)
   d <-simplifyNamesMethods(d)
-  dcast(d,measure+minFreq ~ dataset + methodId + refView  +  refLevel + maskView + maskLevel)
+  dcast(d,measure+minFreq ~ methodId + refView  +  refLevel + maskView + maskLevel)
 }
