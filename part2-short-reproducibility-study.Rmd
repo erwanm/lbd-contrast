@@ -210,7 +210,7 @@ write.table(res1, 'param-minFreq.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 ```
 
 ```{r compare2}
-methods2 <- generateMethods(measures=c('pmi','npmi','mi','pmi2','pmi3'),minFreqThresholds = c(1,3,5))
+methods2 <- generateMethods(measures=default_measures,minFreqThresholds = c(1,3,5))
 res2 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods2)
 perf2 <- evalByGroup(res2, nbTargetGoldPairs=8)
 write.table(res2, 'param-measures.tsv',sep='\t',quote = FALSE,row.names=FALSE)
@@ -233,15 +233,11 @@ write.table(res4, 'param-discardRows.tsv',sep='\t',quote = FALSE,row.names=FALSE
 
 ### Experiment 3: Parameter Tuning with Leave-One-Out Cross-Validation
 
-```{r loo1}
-all_methods <- generateMethods(refMaskPairs=NULL,contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
+```{r loo}
+all_methods <- generateMethods(refMaskPairs=NULL,minFreqThresholds = 1:10, maxFreqThresholds=c(10,100,1000,NA),contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
 system.time(bestByMethodIdNoOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE))
 write.table(bestByMethodIdNoOptim$detailedResults,'loo-no-optim.tsv',sep='\t',quote = FALSE,row.names=FALSE)
 ```
 
 
-```{r loo2}
-system.time(bestByMethodIdWithOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,optimMinMaxThresholds=TRUE,returnDetailByTargetGoldPairs=TRUE))
-write.table(bestByMethodIdWithOptim$detailedResults,'loo-with-optim.tsv',sep='\t',quote = FALSE,row.names=FALSE)
-```
 

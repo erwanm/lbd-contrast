@@ -888,6 +888,7 @@ generateMethods <- function(measures = default_measures,
                    contrastMethodsIds = c('diffRelRank','diffAbsRank', 'basicContrast'),
                    contrastDiscardRowsNotInMaskView=FALSE,
                    minFreqThresholds=NA,
+                   maxFreqThresholds=NA,
                    withBaselines = TRUE
                             ) {
   # baseline methods
@@ -895,7 +896,9 @@ generateMethods <- function(measures = default_measures,
     ldply(levels, function(l) {
       ldply(measures, function(m) {
         ldply(minFreqThresholds, function(minF) {
-          data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=FALSE)
+          ldply(maxFreqThresholds, function(maxF) {
+            data.frame(methodId='baseline', refView=v, refLevel=l, maskView=NA, maskLevel=NA,measure=m, minFreq=minF, maxFreq=maxF,discardRowsNotInMaskView=FALSE)
+          })
         })
       })
     })
@@ -921,7 +924,9 @@ generateMethods <- function(measures = default_measures,
       ldply(contrastMethodsIds, function(id) {
         ldply(contrastDiscardRowsNotInMaskView, function(discardOpt) {
           ldply(minFreqThresholds, function(minF) {
-            data.frame(measure=m,methodId=id, minFreq=minF, maxFreq=NA,discardRowsNotInMaskView=discardOpt)
+            ldply(maxFreqThresholds, function(maxF) {
+              data.frame(measure=m,methodId=id, minFreq=minF, maxFreq=maxF,discardRowsNotInMaskView=discardOpt)
+            })
           })
         })
       })
@@ -1044,7 +1049,8 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
 				                            nbTargetGoldPairs=NA,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 
-                                    methodCols=methodParams
+                                    methodCols=methodParams,
+                                    parallel=FALSE
                                    ) {
    
    detailedResults <- ddply(targetPairsDF, targetGoldCols, function(targetGoldTest) {
@@ -1100,7 +1106,7 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
       print(bestMethodGroup[1,resultsGroupBy])
       applyMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
     })
-  })
+  },.parallel=parallel)
   print("Final aggregation across all test instances results")
   aggregatedPerf <- ddply(detailedResults, 'dataset', function(datasetRes) {
 #     print(paste("dataset=",as.character(datasetRes[1,'dataset'])))
@@ -1263,3 +1269,26 @@ formatResultsTable1 <- function(resultsDF, measureCol='MNTR.1000', dataset='KD')
   d <-simplifyNamesMethods(d)
   dcast(d,measure+minFreq ~ methodId + refView  +  refLevel + maskView + maskLevel)
 }
+
+
+# resultsDF is the output from evalMultiTarget
+proportionFoundByGoldPair <- function(resultsDF, countAt=c(10,100,1000),groupBy=c('dataset','methodId')) {
+  ddply(resultsDF,groupBy, function(groupDF) {
+    ddply(groupDF, c('targetName','goldConceptName'), function(goldDF) {
+      total <- nrow(goldDF)
+      ldply(countAt, function(threshold) {
+        nb <- nrow(goldDF[goldDF$rank<=threshold,])
+        data.frame(threshold=threshold,prop=nb/total)
+      })
+    })
+  })
+}
+
+
+# unfinished
+# res <-proportionFoundByGoldPair(...)
+#reformatPropByGold <- function(res,) {
+#  f1 <- paste("dataset","targetName","goldConceptName",paste(methodColsMinusParam,collapse="+"),sep="+")
+#  dcast(d, paste(f1,param,sep="~") ,value.var = 'rank'  )
+#dcast(x,dataset+methodId+targetName+goldConceptName~threshold)
+#}
