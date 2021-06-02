@@ -145,7 +145,7 @@ kable(firstYear)
 
 
 
-```{r}
+```{r, out.width="100%"}
 plotTargetDiscoveriesJointFreq(targetPairsJointData,customTheme = TRUE,renameViews = TRUE)
 ```
 
