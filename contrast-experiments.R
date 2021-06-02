@@ -1050,39 +1050,48 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
                                     targetGoldCols=c('dataset', 'targetName','goldConceptName', 'start', 'end'), 
                                     resultsGroupBy=c('dataset','methodId'), 
                                     methodCols=methodParams,
+				    verbose = TRUE,
                                     parallel=FALSE
                                    ) {
    
    detailedResults <- ddply(targetPairsDF, targetGoldCols, function(targetGoldTest) {
 
-    print("TEST instance:")
-    print(targetGoldTest)
+    if (verbose) {
+      print("TEST instance:")
+      print(targetGoldTest)
+    }
     targetsGoldTrain <- targetPairsDF[targetPairsDF[,'dataset'] == targetGoldTest[,'dataset'] 
                              & ( targetPairsDF[,'targetName'] != targetGoldTest[,'targetName'] | 
       			         targetPairsDF[,'goldConceptName'] != targetGoldTest[,'goldConceptName'] | 
       			         targetPairsDF[,'start'] != targetGoldTest[,'start'] | 
       			         targetPairsDF[,'end'] != targetGoldTest[,'end'] 
                                ),]
-    print(paste("number training cases: ",nrow(targetsGoldTrain)))
-#    print("filtering TEST")
+    if (verbose) {
+      print(paste("number training cases: ",nrow(targetsGoldTrain)))
+    }
     relTest <- filterSelectedGoldPairRow(targetGoldTest,relByTargetDF)
-#    print("filtering TRAIN")
     relTrain <- filterSelectedGoldPairRow(targetGoldTest,relByTargetDF, reverse=TRUE)
 
     if (optimMinMaxThresholds) {
+      if (verbose) {
         print("Selecting optimal min/max thresholds")
+      }
         thresholdsByView <- calculateMinMaxTargetJointFreqByView(relTrain, targetsGoldTrain)
         # this will add the optional 'dataset' column:
         methodsDF <- assignThresholdsToMethods(methodsDF, thresholdsByView)
     }
     # train
-    print("    Training")
+    if (verbose) {
+      print("    Training")
+    }
     resultsTrain <- applyMethodsMultiTargets(relTrain, targetsGoldTrain, methodsDF)
     if (nrow(methodsDF)*nrow(targetsGoldTrain) != nrow(resultsTrain)) {
       stop(paste("Expecting results for",nrow(methodsDF),"x",nrow(targetsGoldTrain),"; nrow(resultsTrain) =",nrow(resultsTrain)))
     }
 
-    print("    Selecting best method and applying for every group")
+    if (verbose) {
+      print("    Selecting best method and applying for every group")
+    }
     bestMethodByGroup <- ddply(resultsTrain, resultsGroupBy, function(resultsTrainGroup) {
  
 #      print("    Select best for group:")
@@ -1102,12 +1111,19 @@ crossValidateMethodsLOO <- function(relByTargetDF, targetPairsDF, methodsDF,
       
     ddply(bestMethodByGroup, resultsGroupBy, function(bestMethodGroup) {
       # apply on test instance
-      print("    Apply on test instance for group")
-      print(bestMethodGroup[1,resultsGroupBy])
-      applyMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
+      if (verbose) {
+        print("    Apply on test instance for group")
+        print(bestMethodGroup[1,resultsGroupBy])
+      }
+      testPerf <- applyMethodsMultiTargets(relTest, targetGoldTest, bestMethodGroup)
+      # adding perf found on training set  to the output DF for checking overfitting
+      testPerf[,paste('trainPerf',selectBestMeasure,sep='.')] <- rep(bestMethodGroup[,selectBestMeasure], nrow(testPerf))
+      testPerf
     })
   },.parallel=parallel)
-  print("Final aggregation across all test instances results")
+  if (verbose) {
+    print("Final aggregation across all test instances results")
+  }
   aggregatedPerf <- ddply(detailedResults, 'dataset', function(datasetRes) {
 #     print(paste("dataset=",as.character(datasetRes[1,'dataset'])))
 #     print(paste("nrow(datasetRes)=",nrow(datasetRes)))

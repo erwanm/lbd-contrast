@@ -165,7 +165,7 @@ optional parameter `nbTargetGoldPairs` can be used to check that the number of p
 
 ```{r}
 perf <- evalByGroup(r, nbTargetGoldPairs=8)
-kable(perf)
+kable(perf[sample(1:nrow(perf),6),])
 ```
 
 ### Leave-One-Out Cross-Validation
@@ -173,7 +173,7 @@ kable(perf)
 `crossValidateMethodsLOO` performs parameter tuning with Leave-One-Out (LOO) cross-validation over a set of target-gold pairs for several groups of methods. Some of the methods parameters can be fixed with `resultsGroupBy`, while any other variations in the parameters provided in `methodsDF` are used for tuning. Optionally the min/max thresholds parameters can be tuned as well by setting `optimMinMaxThresholds=TRUE`. 
 
 ```{r}
-bestByMethodId <- crossValidateMethodsLOO(lbd_data_diso,targetGoldPairs,methods1,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE)
+bestByMethodId <- crossValidateMethodsLOO(lbd_data_diso,targetGoldPairs,methods1,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE,verbose=FALSE)
 ```
 
 By default a dataframe is returned which contains the performance on the test set for every group of fixed parameters. If `returnDetailByTargetGoldPairs` is `TRUE`, a list is returned which contains two dataframes: 
@@ -185,10 +185,11 @@ By default a dataframe is returned which contains the performance on the test se
 kable(bestByMethodId$aggregatedPerf)
 ```
 
-## Experiments
+## Experiments in the paper
 
+For details please refer to the paper.
 
-### Experiment 1: Evaluation of a few Simple Methods
+### Unsupervised experiment 
 
 
 ```{r simple}
@@ -197,47 +198,39 @@ methods0 <- methods0[methods0$refView!='pmc-articles' & (methods0$refView!='unfi
 res0 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods0)
 perf0 <- evalByGroup(res0, nbTargetGoldPairs=8)
 write.table(res0, 'simple.tsv',sep='\t',quote = FALSE,row.names=FALSE)
-kable(perf0)
-```
-
-### Experiment 2: Comparing Methods Parameters
-
-```{r compare1}
-methods1 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = 1:20)
-res1 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods1)
-perf1 <- evalByGroup(res1, nbTargetGoldPairs=8)
-write.table(res1, 'param-minFreq.tsv',sep='\t',quote = FALSE,row.names=FALSE)
-```
-
-```{r compare2}
-methods2 <- generateMethods(measures=default_measures,minFreqThresholds = c(1,3,5))
-res2 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods2)
-perf2 <- evalByGroup(res2, nbTargetGoldPairs=8)
-write.table(res2, 'param-measures.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+kable(perf0[sample(1:nrow(perf0),6),])
 ```
 
 
-```{r compare3}
-methods3 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = c(1,3,5),refMaskPairs=NULL)
-res3 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods3)
-perf3 <- evalByGroup(res3, nbTargetGoldPairs=8)
-write.table(res3, 'param-views.tsv',sep='\t',quote = FALSE,row.names=FALSE)
-```
-
-```{r compare4}
-methods4 <- generateMethods(measures=c('pmi','npmi'),minFreqThresholds = c(1,3,5),contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
-res4 <- applyMethodsMultiTargets(lbd_data,targetGoldPairs,methods4)
-perf4 <- evalByGroup(res4, nbTargetGoldPairs=8)
-write.table(res4, 'param-discardRows.tsv',sep='\t',quote = FALSE,row.names=FALSE)
-```
-
-### Experiment 3: Parameter Tuning with Leave-One-Out Cross-Validation
+### Supervised experiment
 
 ```{r loo}
 all_methods <- generateMethods(refMaskPairs=NULL,minFreqThresholds = 1:10, maxFreqThresholds=c(10,100,1000,NA),contrastDiscardRowsNotInMaskView=c(TRUE,FALSE))
-system.time(bestByMethodIdNoOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE))
-write.table(bestByMethodIdNoOptim$detailedResults,'loo-no-optim.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+bestByMethodIdNoOptim <- crossValidateMethodsLOO(lbd_data,targetGoldPairs,all_methods,nbTargetGoldPairs=8,optimMinMaxThresholds=FALSE,returnDetailByTargetGoldPairs=TRUE, verbose=FALSE)
+write.table(bestByMethodIdNoOptim$detailedResults,'loo.details.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+write.table(bestByMethodIdNoOptim$aggregatedPerf,'loo.perf.tsv',sep='\t',quote = FALSE,row.names=FALSE)
+kable(bestByMethodIdNoOptim$aggregatedPerf)
 ```
+
+## Study how often a parameter is selected as optimal
+
+```{r optimal.minFreq}
+d <- bestByMethodIdNoOptim$detailedResults
+kable(ddply(d, c('dataset', 'minFreq'), nrow))
+```
+
+```{r optimal.measure}
+kable(ddply(d, c('dataset', 'measure'), nrow))
+```
+
+```{r optimal.views}
+dc <- d[d$methodId!='baseline',]
+byView<-ddply(dc,c('dataset','methodId','refView','refLevel','maskView','maskLevel'), nrow)
+sumByView<-ddply(byView,c('refView','refLevel','maskView','maskLevel'), function(x) {sum(x$V1)})
+kable(sumByView[sumByView$V1>3,])
+```
+
+
 
 
 
