@@ -12,6 +12,6 @@ This repository contains a library of R functions to manipulate the data, apply 
 
 A step by step documentation is provided in the form of two [R Markdown](https://rmarkdown.rstudio.com/) documents:
 
-- [Part 1: full replication](part1-full-replication.html): follow these instructions to run the full preprocessing, then go to step 2 below.
-- [Part 2: reproducibility study](part2-short-reproducibility-study.html): follow these instructions in order to reproduce the experiment with the preprocessed data.
+- [Part 1: full replication](https://erwanm.github.io/lbd-contrast/part1-full-replication.html): follow these instructions to run the full preprocessing, then go to step 2 below.
+- [Part 2: reproducibility study](https://erwanm.github.io/lbd-contrast/part2-short-reproducibility-study.html): follow these instructions in order to reproduce the experiment with the preprocessed data.
 
