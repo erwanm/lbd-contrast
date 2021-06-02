@@ -1292,3 +1292,20 @@ proportionFoundByGoldPair <- function(resultsDF, countAt=c(10,100,1000),groupBy=
 #  dcast(d, paste(f1,param,sep="~") ,value.var = 'rank'  )
 #dcast(x,dataset+methodId+targetName+goldConceptName~threshold)
 #}
+
+
+# res <- evalByGroup(d,8,groupBy='methodId',recallAtValues = c(100,500,1000))
+formatLOOResults <- function(resDF, groupBy=c('dataset','methodId')) {
+  measuresCols <- c(grep("^R.", colnames(resDF)), grep("^MNTR.", colnames(resDF)))
+  r<-cbind(resDF[,groupBy],resDF[,measuresCols])
+  r
+#  kd <- r[r$dataset=='KD',colnames(r)[!colnames(r) %in% 'dataset']]
+#  ptc <- r[r$dataset=='PTC',colnames(r)[!colnames(r) %in% 'dataset']]
+#  merge(kd,ptc,by='methodId',suffixes=c('.KD','.PTC'))
+}
+
+# input= the detailed output from loo
+detailsByGoldPairs <- function(df, groupBy=c('dataset',"methodId"),goldCols=c('targetName','goldConceptName')) {
+  cols <- c(groupBy, goldCols,'rank')
+  dcast(df[,cols],paste(paste0(goldCols,collapse='+'),paste0(groupBy,collapse='+'),sep='~') )
+}
