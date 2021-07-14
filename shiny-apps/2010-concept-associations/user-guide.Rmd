@@ -1,0 +1,169 @@
+---
+title: "User Guide: Top Associated Concepts with a Target Concept"
+author: "Erwan Moreau"
+date: "22 November 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(knitr)
+source('../study.R',chdir=TRUE)
+source('../brainmend-v2-PMI.R',chdir=TRUE)
+
+exampleTarget <- 'C0002736' # ALS
+exampleDataset <- 'unfiltered-medline.by-sentence'
+
+showColumns <-   c("CUI" , "firstTerm", "coarseCatId", "jointFreq",
+                   "probCuiGivenTarget", "probTargetGivenCui",
+                       "PMI"
+)
+```
+
+This document explains how [this Shiny visualization tool](../2010-concept-associations) works.
+
+
+## Summary
+
+This tool shows a table of the concepts associated with a particular target concept selected by the user. The concepts in the table are ordered by decreasing strength of association.
+
+* The user can select variants of the data used as a basis for calculating the associations: abstracts and/or full articles, co-occurrences counted by sentence or by paper. 
+* The "strength of association" is measured in the data by [Pointwise Mutual Information (PMI)](https://en.wikipedia.org/wiki/Pointwise_mutual_information), a statistical measure based on how often two concepts occur together with respect to how often each of them occurs on its own.
+* The user can refine the search of associated concepts:
+    * by setting a minimum frequency threshold, which removes the least "important" concepts
+    * by filtering the semantic types of the related concepts, for instance in order to visualize only the top genetic concepts.
+
+
+## Data
+
+The data used in this application has been precomputed using the biomedical text content from [Medline](https://www.nlm.nih.gov/bsd/medline.html) and [PubMed Central (PMC)](https://www.ncbi.nlm.nih.gov/pmc/) as well as the [UMLS metathesaurus](https://www.nlm.nih.gov/research/umls/index.html). Three variants of the data are proposed to the user: 
+
+* "abstracts only": the Medline abstracts
+* "articles only": the PMC full articles
+* "abstracts+articles": both the Medline abstracts and PMC articles (duplicate abstracts which appear in both are discarded)
+
+The associations between concepts may change depending on which dataset is selected by the user. For example abstracts are shorter and usually focus only on the most important concepts, whereas full papers contain more details and therefore more specific concepts.
+
+The PMI association value (see below) is calculated based on how often any two concepts appear together in the data and how often they appear individually. The fact that two concepts "appear together" can be interpreted at different levels, so for every dataset two levels of co-occurrence are proposed to the user:
+
+* "by paper" means that every pair of concepts found in the same document (abstract or article) are counted as a co-occurrence.
+* "by sentence" means that a pair of concept is counted as a co-occurrence only if the two concepts appear in the same sentence.
+
+Of course with the former option much more co-occurrences are counted. Some of the concept pairs might be remotely related (if at all), especially in the case of full articles. On the other hand, the latter option is restrictive and tends to only capture the clearest cases of relations between concepts, so it might be more accurate but it might also not cover all of relations.
+
+## Target Selection
+
+The user can select a target concept among a predefined list of ND concepts. The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept.
+
+There are several special cases available for selection: for every ND group X there is a choice "X (all concepts)", and there are also two global choices "ALL NDs target concepts" and "ALL NDs target concepts except group 'Other'". These special cases are made of the union of several target concepts, which means that a co-occurrence with a concept Y is counted every time any of the considered target concepts appears together with Y. This is intended to show for example the concepts most associated with Alzheimer's Disease (AD) defined in a broad sense, including concepts such as "presenile dementia" and "early onset of AD". 
+
+Technical note: a free choice of target concept is not possible because of the volume of data and the intensive precomputations required. Thus this list is currently limited to the initial target ND concepts, but it would be possible to extend it with more concepts in the future. The interface might also be improved in the future with a search box in order to make the selection more user-friendly.
+
+
+## Association Measure
+
+[Pointwise Mutual Information (PMI)](https://en.wikipedia.org/wiki/Pointwise_mutual_information) is the default measure used as indicator of the strength of the association between two concepts. This value is based on how often two concepts $A$ and $B$ occur together with respect to how often each of them occurs on its own. In other words, it does not only take into account how often two concepts are found together (the joint probability $p(A,B)$, which would be biased towards frequent concepts), it makes it relative to each concept frequency ($p(A)$ and $p(B)$). This way a rare concept $A$ might be found to be strongly associated with a frequent concept $B$ if $B$ almost always appears when $A$ does (high conditional probability $p(B|A)$), even though $A$ usually does not appear when $B$ does (low conditional probability $p(A|B)$).
+
+The PMI value has no predefined bounds, its minimum and maximum depend on the probabilities of the concepts $A$ and $B$. 
+
+* A high positive value denotes a high association, i.e. $A$ and $B$ tend to "attract each other". 
+* A value of zero (or close to zero) denotes the absence of interdependency, i.e. $A$ and $B$ appear together only by chance.
+* A negative value denotes a negative association, that is $A$ and $B$ tend to "repulse each other".
+
+The tool also proposes several other ways to measure association between concepts, presented below. It is recommended to choose the measure by trial and error based on the visible top result: one measure might be suitable for the desired goal for a particular target while another meaure works better in a different content. 
+
+* [Normalized Pointwise Mutual Information (NPMI)](https://en.wikipedia.org/wiki/Pointwise_mutual_information#Normalized_pointwise_mutual_information_(npmi)). In text data PMI is often considered biased towards rare events. NPMI is a variant of PMI known to reduces this bias, and it has the important advantage to be normalized: the value is between 0 and 1, making it easier to interpret.
+* [PMI^2 and PMI^3](https://www.researchgate.net/publication/282359004_Handling_the_Impact_of_Low_Frequency_Events_on_Co-occurrence_based_Measures_of_Word_Similarity_-_A_Case_Study_of_Pointwise_Mutual_Information) are two other variants of PMI meant to give more importance to more frequent events. As a result these measures focus on the most general concepts, PMI^3 even more strongly than PMI^2. 
+* [Mutual Information (MI)](https://en.wikipedia.org/wiki/Mutual_information). MI is closely related to PMI but it is more complex. It does not only reflect how much two concepts tend to appear together, it also takes into account how much they don't. This means that MI can be high also if two concepts tend to "avoid each other". While this could potentially be useful in general, it seems inadequate in the present application due to the very high number of concepts in the data. The MI results are also harder to interpret since there can be different reasons for a value to be high or low. For these reasons we do not recommend using it, but the option is available in the tool. 
+
+Technical note: the MI value is calculated based on the 2x2 contingency table corresponding to the presence or absence of each of the two concept, i.e. four cases are considered: neither A nor B is present, only A is present, only B is present, or both are present.
+
+## Joint Frequency Thresholding
+
+The user can select a minimum joint frequency, i.e. the minimum number of times two concepts must appear together to be selected. This makes it possible to filter out cases where two concepts occur rarely together (even if they have a high association value), and consequently push pairs which may have a slightly lower association value up to the the top of the table. This is useful because there are many rare concepts which appear always accompanied by the target concept, however they are often too specific to be considered as an important indicator of the target concept. Some rare concepts may also appear by chance with the target, as opposed to more frequent concepts. The more often a co-occurrence event happens, the more one can be confident that the association value is meaningful.
+
+The frequency threshold can also be seen as a way to adjust the level of generality of the observed concepts: increasing the threshold shows relationships involving high-level concepts, while decreasing leads to more specific relationship. Importantly, finding the desired level
+of generality may depend on the target concept, i.e. different concepts may require different threshold values.
+
+## Filtering by semantic type
+
+The concepts shown in the results table can be filtered by semantic category. This feature relies on UMLS semantic types, which involves two levels of classification. By default the semantic filtering is disabled, the user can enable it by selecting one of two available levels as "Granularity of the semantic categories". This action makes the selection box "Filter by semantic types" appear, where the user can select the desired categories of concepts. The concepts which do not belong to any of the selected semantic types are filtered out from the results, causing the other concepts to be pushed up to the top.
+
+Usability tip: when the "detailed" granularity is selected, there are around 50 to 60 semantic types available in the selection box. The "select all" and "deselect all" buttons (at the top of the selection list) are provided for conveniently eliminating or keeping only a few types.
+
+## Viewing the Results Table
+
+The table on the right side of the tool shows the concepts related to the target, ordered by decreasing association score (PMI by default), after applying the selected filters (see above). 
+
+* Every concept is identified by a CUI (Concept Unique Id). The CUI links to the UMLS page describing this concept in detail (this requires a UTS account).
+    * See [Usage Tips](#usage-tips) below about creating a UTS account. 
+    * There is a technical glitch which prevents redirecting the user to the UMLS concept page if they were not previously connected with their UTS account: the UTS website login page appears, but after login the user is redirected to the general UMLS page instead of the specific concept page. In this case the user has to click a second time on the CUI link, and this time the correct page appears. This happens only the first time the user clicks a link, since they will already be signed afterward.  
+* The "View Options" checkboxes can be used to control the appearance and content of the table:
+    * "Show all terms": print the full list of terms for every concept instead of only the first term (default). 
+    * "Show concepts groups": include the rows corresponding to special "groups concepts" (see [Target Selection](#target-selection) above) in the list.  
+    * "Show both PMI and MI" adds a column showing the value other than the selected association measure.
+    * "Show conditional probabilties": show the conditional probabilities columns. 
+* The table itself offers various controls for convenience: a search box at the top right, the number of rows at the bottom left, buttons to iterate through pages at the bottom right (the latter can be used to visualize concepts with low PMI value at the end of the table).
+
+
+## Usage Tips
+
+* The user's browser can be used to open several tabs or windows in order to see this document and manipulate the app at the same time. 
+* It is also possible to open several tabs or windows of the app itself in order to compare what happens in different configurations.
+* It is possible to select some rows in the results table and copy/paste them in an external document. Normally this is supposed to preserve the formatting, but this probably depends on the software used.
+* Access to the [UMLS Terminology Services](https://uts.nlm.nih.gov/uts/) (UTS) (when clicking on a CUI link in the results table) requires the user to have a UTS account. [Creating a UTS account](https://uts.nlm.nih.gov/uts/signup-login) is free (and it can be done through Google or Facebook authentication), but this is not an automatic process so the user may have to wait for the account to be validated. Once validated, the user just has to sign in in order to browse the concepts in the UMLS metathesaurus.
+
+## Examples
+
+In the following examples the `abstracts only` and `by sentence` options are selected for the dataset. The "Amyotrophic Lateral Sclerosis (ALS)" concept is used as target, and the default PMI is used as association measure.
+
+```{r, include=FALSE}
+d<-loadFullTargetCuiRelations(exampleTarget, exampleDataset)
+dsem <- loadFullTargetCuiRelations(exampleTarget, exampleDataset, semGranularityValue='coarse')
+d <- filterFreqOrderAndAddRank(d, 0, 'PMI')
+dsem <- filterFreqOrderAndAddRank(dsem, 0, 'PMI')
+d$firstTerm <- firstTermCol(d)
+dsem$firstTerm <- firstTermCol(dsem)
+```
+
+The following table shows the top 5 concepts obtained with the default minimum frequency 10:
+
+```{r, echo=FALSE}
+kable(head(d[d$jointFreq>=10,showColumns], 5),caption="Top 5 concepts associated with target ALS at min. frequency 10", row.names=FALSE)
+```
+
+The first row is the special [group concept](#target-selection) ALS. By construction, this group which includes the specific concept ALS is strongly associated with it: the `probCuiGivenTarget` conditional probability is one, meaning that whenever the target appears the group concept also appears (by definition of the group); the `probTargetGivenCui` is 0.84, meaning that the target appears 84% of the time when the group concept (naturally this is expected, ALS being the main concept in the group). Note that special "group concepts" can be filtered out using the [View Options](#viewing-the-results-table).
+
+Starting from the second row regular concepts appear. For example it can be seen that "Other motor neuron disease" belongs to the disorder ("DISO") category, it appears together with ALS 44 times in total which represents 66.7% of the occurences of the CUI "Other motor neuron disease" but only 0.06% of the occurrences of the target ALS, which is much more frequent.
+
+### Filtering with Minimum Joint Frequency
+
+The [minimum frequency](#joint-frequency-thresholding) can be used to adjust the results to the desired level of generality. For example decreasing the minimum to zero gives the following top 5 concepts:
+
+```{r, echo=FALSE}
+kable(head(d[,showColumns], 5),caption="Top 5 concepts associated with target ALS at min. frequency 0", row.names=FALSE)
+```
+
+This results in many rare concepts which have a high PMI with the target ALS because the latter always appears when they do (`probTargetGivenCui` is 1). However this is hardly meaningful, especially in the case of concepts which appear only once. It is also possible to do the oposite, that is to observe only the most general related concepts by increasing the minimum frequency, for example at 100 below:
+
+
+```{r, echo=FALSE}
+kable(head(d[d$jointFreq>=100,showColumns], 5),caption="Top 5 concepts associated with target ALS at min. frequency 100", row.names=FALSE)
+```
+
+With the rare concepts discarded, the results now show frequent concepts as strongest associations: "Motor neuron atrophy", "lateral sclerosis", "C9orf72 gene", "semiannular sulcus".  
+One may notice that the top PMI values are not very far from the ones observed before without any filtering. This is often the case when the target concept is very frequent, since many other concepts have a quite strong association with it, i.e. there are only small variations in association power (PMI) across a very large set of concepts. The filtering options help visualizing the most relevant relations for a particular goal.
+
+### Filtering with Semantic Types
+
+The below top 5 concepts are obtained by selecting the `coarse` semantic granularity and then enabling only the "Genes and Molecular Sequences" in the semantic filter:
+
+```{r, echo=FALSE}
+s<-dsem[!is.na(dsem$coarseCatId) & dsem$jointFreq>=100 & dsem$coarseCatId=='GENE',]
+kable(head(s[,showColumns], 5),caption="Top 5 concepts in the 'Genes and Molecular Sequences' category for target ALS (min. frequency 100)", row.names=FALSE)
+```
+
+With a min. frequency of 100, this filter leaves only 33 genetic concepts in the table. This way one can observe the difference in association strength between different concepts: while the top concepts have a PMI close to 9 and appear 20 to 30% together with the target (based on `probTargetGivenCui`), the concepts found at the bottom of the table have a PMI close to 0 or even slightly negative. This means that they are not especially associated with the target, and it can be seen that most of them are indeed generic terms such as "Genes", "Alleles", "DNA sequence".
