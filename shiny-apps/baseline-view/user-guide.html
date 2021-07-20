@@ -196,7 +196,8 @@ summary {
 </div>
 
 
-<p>This document explains how <a href="../2010-concept-associations">this Shiny visualization tool</a> works.</p>
+<p><em>Last update: July 2021.</em></p>
+<p>This document explains how <a href="../baseline-view">this Shiny visualization tool</a> works.</p>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
 <p>This tool shows a table of the concepts associated with a particular target concept selected by the user. The concepts in the table are ordered by decreasing strength of association.</p>
@@ -212,11 +213,19 @@ summary {
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>The data used in this application has been precomputed using the biomedical text content from <a href="https://www.nlm.nih.gov/bsd/medline.html">Medline</a> and <a href="https://www.ncbi.nlm.nih.gov/pmc/">PubMed Central (PMC)</a> as well as the <a href="https://www.nlm.nih.gov/research/umls/index.html">UMLS metathesaurus</a>. Three variants of the data are proposed to the user:</p>
+<p>The data used in this application has been precomputed using the biomedical text content from <a href="https://www.nlm.nih.gov/bsd/medline.html">Medline</a> and <a href="https://www.ncbi.nlm.nih.gov/pmc/">PubMed Central (PMC)</a> as well as the <a href="https://www.nlm.nih.gov/research/umls/index.html">UMLS metathesaurus</a> and <a href="https://www.ncbi.nlm.nih.gov/research/pubtator/">PubTatorCentral</a>.</p>
+<ul>
+<li>Two <em>sources</em> are proposed to the user:
+<ul>
+<li>The KD data is extracted with the KnowledgeDiscovery system by Jake Lever. Concepts are identified by string-matching based on the UMLS metathesaurus.</li>
+<li>The PTC data is extracted directly from PubTatorCentral, which provides a pre-annotated version of the biomedical literature.</li>
+</ul></li>
+<li>Three <em>views</em> are proposed:
 <ul>
 <li>&quot;abstracts only&quot;: the Medline abstracts</li>
 <li>&quot;articles only&quot;: the PMC full articles</li>
 <li>&quot;abstracts+articles&quot;: both the Medline abstracts and PMC articles (duplicate abstracts which appear in both are discarded)</li>
+</ul></li>
 </ul>
 <p>The associations between concepts may change depending on which dataset is selected by the user. For example abstracts are shorter and usually focus only on the most important concepts, whereas full papers contain more details and therefore more specific concepts.</p>
 <p>The PMI association value (see below) is calculated based on how often any two concepts appear together in the data and how often they appear individually. The fact that two concepts &quot;appear together&quot; can be interpreted at different levels, so for every dataset two levels of co-occurrence are proposed to the user:</p>
@@ -228,9 +237,12 @@ summary {
 </div>
 <div id="target-selection" class="section level2">
 <h2>Target Selection</h2>
-<p>The user can select a target concept among a predefined list of ND concepts. The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept.</p>
-<p>There are several special cases available for selection: for every ND group X there is a choice &quot;X (all concepts)&quot;, and there are also two global choices &quot;ALL NDs target concepts&quot; and &quot;ALL NDs target concepts except group 'Other'&quot;. These special cases are made of the union of several target concepts, which means that a co-occurrence with a concept Y is counted every time any of the considered target concepts appears together with Y. This is intended to show for example the concepts most associated with Alzheimer's Disease (AD) defined in a broad sense, including concepts such as &quot;presenile dementia&quot; and &quot;early onset of AD&quot;.</p>
-<p>Technical note: a free choice of target concept is not possible because of the volume of data and the intensive precomputations required. Thus this list is currently limited to the initial target ND concepts, but it would be possible to extend it with more concepts in the future. The interface might also be improved in the future with a search box in order to make the selection more user-friendly.</p>
+<p>The user can select a target concept among a predefined list of ND concepts.</p>
+<!--- The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept. 
+-->
+<!--- There are several special cases available for selection: for every ND group X there is a choice "X (all concepts)", and there are also two global choices "ALL NDs target concepts" and "ALL NDs target concepts except group 'Other'". These special cases are made of the union of several target concepts, which means that a co-occurrence with a concept Y is counted every time any of the considered target concepts appears together with Y. This is intended to show for example the concepts most associated with Alzheimer's Disease (AD) defined in a broad sense, including concepts such as "presenile dementia" and "early onset of AD". 
+-->
+<p>Technical note: a free choice of target concept is not possible because of the volume of data and the intensive precomputations required. Thus this list is currently limited to the set of diseases which appear as descendants of the concept &quot;Neurodegenerative Disorders&quot; in either MeSH or UMLS. It might be possible to extend the list with more concepts in the future. The interface might also be improved in the future with a search box in order to make the selection more user-friendly.</p>
 </div>
 <div id="association-measure" class="section level2">
 <h2>Association Measure</h2>
@@ -247,6 +259,7 @@ summary {
 <li><a href="https://www.researchgate.net/publication/282359004_Handling_the_Impact_of_Low_Frequency_Events_on_Co-occurrence_based_Measures_of_Word_Similarity_-_A_Case_Study_of_Pointwise_Mutual_Information">PMI^2 and PMI^3</a> are two other variants of PMI meant to give more importance to more frequent events. As a result these measures focus on the most general concepts, PMI^3 even more strongly than PMI^2.</li>
 <li><a href="https://en.wikipedia.org/wiki/Mutual_information">Mutual Information (MI)</a>. MI is closely related to PMI but it is more complex. It does not only reflect how much two concepts tend to appear together, it also takes into account how much they don't. This means that MI can be high also if two concepts tend to &quot;avoid each other&quot;. While this could potentially be useful in general, it seems inadequate in the present application due to the very high number of concepts in the data. The MI results are also harder to interpret since there can be different reasons for a value to be high or low. For these reasons we do not recommend using it, but the option is available in the tool.</li>
 </ul>
+<p>A few other less standard options are also proposed.</p>
 <p>Technical note: the MI value is calculated based on the 2x2 contingency table corresponding to the presence or absence of each of the two concept, i.e. four cases are considered: neither A nor B is present, only A is present, only B is present, or both are present.</p>
 </div>
 <div id="joint-frequency-thresholding" class="section level2">
@@ -256,29 +269,34 @@ summary {
 </div>
 <div id="filtering-by-semantic-type" class="section level2">
 <h2>Filtering by semantic type</h2>
-<p>The concepts shown in the results table can be filtered by semantic category. This feature relies on UMLS semantic types, which involves two levels of classification. By default the semantic filtering is disabled, the user can enable it by selecting one of two available levels as &quot;Granularity of the semantic categories&quot;. This action makes the selection box &quot;Filter by semantic types&quot; appear, where the user can select the desired categories of concepts. The concepts which do not belong to any of the selected semantic types are filtered out from the results, causing the other concepts to be pushed up to the top.</p>
-<p>Usability tip: when the &quot;detailed&quot; granularity is selected, there are around 50 to 60 semantic types available in the selection box. The &quot;select all&quot; and &quot;deselect all&quot; buttons (at the top of the selection list) are provided for conveniently eliminating or keeping only a few types.</p>
+<p>The concepts shown in the results table can be filtered by semantic category/group.</p>
+<!--
+This feature relies on UMLS semantic types, which involves two levels of classification. By default the semantic filtering is disabled, the user can enable it by selecting one of two available levels as "Granularity of the semantic categories". This action makes the selection box "Filter by semantic types" appear, where the user can select the desired categories of concepts.
+-->
+<p>The concepts which do not belong to any of the selected semantic types are filtered out from the results, causing the other concepts to be pushed up to the top.</p>
+<!--
+Usability tip: when the "detailed" granularity is selected, there are around 50 to 60 semantic types available in the selection box. The "select all" and "deselect all" buttons (at the top of the selection list) are provided for conveniently eliminating or keeping only a few types.
+-->
 </div>
 <div id="viewing-the-results-table" class="section level2">
 <h2>Viewing the Results Table</h2>
 <p>The table on the right side of the tool shows the concepts related to the target, ordered by decreasing association score (PMI by default), after applying the selected filters (see above).</p>
 <ul>
-<li>Every concept is identified by a CUI (Concept Unique Id). The CUI links to the UMLS page describing this concept in detail (this requires a UTS account).
+<li>With the KD source selected, every concept is identified by a CUI (Concept Unique Id). The CUI links to the UMLS page describing this concept in detail (this requires a UTS account).
 <ul>
 <li>See <a href="#usage-tips">Usage Tips</a> below about creating a UTS account.</li>
-<li>There is a technical glitch which prevents redirecting the user to the UMLS concept page if they were not previously connected with their UTS account: the UTS website login page appears, but after login the user is redirected to the general UMLS page instead of the specific concept page. In this case the user has to click a second time on the CUI link, and this time the correct page appears. This happens only the first time the user clicks a link, since they will already be signed afterward.<br />
-</li>
+<li>There is a technical glitch which prevents redirecting the user to the UMLS concept page if they were not previously connected with their UTS account: the UTS website login page appears, but after login the user is redirected to the general UMLS page instead of the specific concept page. In this case the user has to click a second time on the CUI link, and this time the correct page appears. This happens only the first time the user clicks a link, since they will already be signed afterward.</li>
 </ul></li>
-<li>The &quot;View Options&quot; checkboxes can be used to control the appearance and content of the table:
-<ul>
-<li>&quot;Show all terms&quot;: print the full list of terms for every concept instead of only the first term (default).</li>
-<li>&quot;Show concepts groups&quot;: include the rows corresponding to special &quot;groups concepts&quot; (see <a href="#target-selection">Target Selection</a> above) in the list.<br />
-</li>
-<li>&quot;Show both PMI and MI&quot; adds a column showing the value other than the selected association measure.</li>
-<li>&quot;Show conditional probabilties&quot;: show the conditional probabilities columns.</li>
-</ul></li>
-<li>The table itself offers various controls for convenience: a search box at the top right, the number of rows at the bottom left, buttons to iterate through pages at the bottom right (the latter can be used to visualize concepts with low PMI value at the end of the table).</li>
+<li>With the PTC source selected, the concept id is provided by PTC, which itself includes different data sources and therefore types of concepts ids. The concepts which originate from MeSH are provided with a link to the corresponding MeSH browser page.</li>
 </ul>
+<!--
+* The "View Options" checkboxes can be used to control the appearance and content of the table:
+    * "Show all terms": print the full list of terms for every concept instead of only the first term (default). 
+    * "Show concepts groups": include the rows corresponding to special "groups concepts" (see [Target Selection](#target-selection) above) in the list.  
+    * "Show both PMI and MI" adds a column showing the value other than the selected association measure.
+    * "Show conditional probabilties": show the conditional probabilities columns. 
+* The table itself offers various controls for convenience: a search box at the top right, the number of rows at the bottom left, buttons to iterate through pages at the bottom right (the latter can be used to visualize concepts with low PMI value at the end of the table).
+-->
 </div>
 <div id="usage-tips" class="section level2">
 <h2>Usage Tips</h2>
@@ -297,268 +315,252 @@ summary {
 <caption>Top 5 concepts associated with target ALS at min. frequency 10</caption>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
 <th align="right">jointFreq</th>
-<th align="right">probCuiGivenTarget</th>
-<th align="right">probTargetGivenCui</th>
-<th align="right">PMI</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">group.ALS</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">73631</td>
-<td align="right">1.0000000</td>
-<td align="right">0.8423925</td>
-<td align="right">10.750706</td>
-</tr>
-<tr class="even">
-<td align="left">C0154683</td>
-<td align="left">Other motor neuron disease</td>
-<td align="left">DISO</td>
-<td align="right">44</td>
-<td align="right">0.0005976</td>
-<td align="right">0.6666667</td>
-<td align="right">10.413179</td>
-</tr>
-<tr class="odd">
-<td align="left">C0678179</td>
-<td align="left">Rilutek</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">10</td>
-<td align="right">0.0001358</td>
-<td align="right">0.4761905</td>
-<td align="right">9.927752</td>
-</tr>
-<tr class="even">
-<td align="left">C3686938</td>
-<td align="left">Progressive motor neuron disease</td>
-<td align="left">DISO</td>
-<td align="right">34</td>
-<td align="right">0.0004618</td>
-<td align="right">0.4473684</td>
-<td align="right">9.837676</td>
-</tr>
-<tr class="odd">
-<td align="left">C1515501</td>
-<td align="left">9p21.2</td>
-<td align="left">ANAT</td>
-<td align="right">10</td>
-<td align="right">0.0001358</td>
-<td align="right">0.4000000</td>
-<td align="right">9.676213</td>
-</tr>
-</tbody>
-</table>
-<p>The first row is the special <a href="#target-selection">group concept</a> ALS. By construction, this group which includes the specific concept ALS is strongly associated with it: the <code>probCuiGivenTarget</code> conditional probability is one, meaning that whenever the target appears the group concept also appears (by definition of the group); the <code>probTargetGivenCui</code> is 0.84, meaning that the target appears 84% of the time when the group concept (naturally this is expected, ALS being the main concept in the group). Note that special &quot;group concepts&quot; can be filtered out using the <a href="#viewing-the-results-table">View Options</a>.</p>
-<p>Starting from the second row regular concepts appear. For example it can be seen that &quot;Other motor neuron disease&quot; belongs to the disorder (&quot;DISO&quot;) category, it appears together with ALS 44 times in total which represents 66.7% of the occurences of the CUI &quot;Other motor neuron disease&quot; but only 0.06% of the occurrences of the target ALS, which is much more frequent.</p>
-<div id="filtering-with-minimum-joint-frequency" class="section level3">
-<h3>Filtering with Minimum Joint Frequency</h3>
-<p>The <a href="#joint-frequency-thresholding">minimum frequency</a> can be used to adjust the results to the desired level of generality. For example decreasing the minimum to zero gives the following top 5 concepts:</p>
-<table>
-<caption>Top 5 concepts associated with target ALS at min. frequency 0</caption>
-<colgroup>
-<col width="7%"></col>
-<col width="37%"></col>
-<col width="9%"></col>
-<col width="8%"></col>
-<col width="14%"></col>
-<col width="14%"></col>
-<col width="7%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq</th>
-<th align="right">probCuiGivenTarget</th>
-<th align="right">probTargetGivenCui</th>
-<th align="right">PMI</th>
+<th align="right">pmi</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">C4475575</td>
 <td align="left">Radicava</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">8</td>
-<td align="right">0.0001086</td>
+<td align="left">CHEM</td>
+<td align="right">13</td>
+<td align="right">12.37871</td>
+<td align="right">18.0</td>
+</tr>
+<tr class="even">
+<td align="left">C0154683</td>
+<td align="left">Other motor neuron disease</td>
+<td align="left">DISO</td>
+<td align="right">50</td>
+<td align="right">11.96223</td>
+<td align="right">22.0</td>
+</tr>
+<tr class="odd">
+<td align="left">C0678179</td>
+<td align="left">Rilutek</td>
+<td align="left">CHEM</td>
+<td align="right">11</td>
+<td align="right">11.58517</td>
+<td align="right">32.5</td>
+</tr>
+<tr class="even">
+<td align="left">C3686938</td>
+<td align="left">Progressive motor neuron disease</td>
+<td align="left">DISO</td>
+<td align="right">42</td>
+<td align="right">11.46969</td>
+<td align="right">41.0</td>
+</tr>
+<tr class="odd">
+<td align="left">C1456383</td>
+<td align="left">IGFALS gene</td>
+<td align="left">GENE</td>
+<td align="right">1086</td>
+<td align="right">11.29005</td>
+<td align="right">43.0</td>
+</tr>
+</tbody>
+</table>
+<!--
+The first row is the special [group concept](#target-selection) ALS. By construction, this group which includes the specific concept ALS is strongly associated with it: the `probCuiGivenTarget` conditional probability is one, meaning that whenever the target appears the group concept also appears (by definition of the group); the `probTargetGivenCui` is 0.84, meaning that the target appears 84% of the time when the group concept (naturally this is expected, ALS being the main concept in the group). Note that special "group concepts" can be filtered out using the [View Options](#viewing-the-results-table).
+
+
+Starting from the second row regular concepts appear.
+-->
+<p>For example it can be seen that &quot;Other motor neuron disease&quot; belongs to the disorder (&quot;DISO&quot;) category, it appears together with ALS 50 times in total which represents a large proportion of the occurences of the CUI &quot;Other motor neuron disease&quot; but only a small proportion of the occurrences of the target ALS, which is much more frequent.</p>
+<div id="filtering-with-minimum-joint-frequency" class="section level3">
+<h3>Filtering with Minimum Joint Frequency</h3>
+<p>The <a href="#joint-frequency-thresholding">minimum frequency</a> can be used to adjust the results to the desired level of generality. For example decreasing the minimum to zero gives the following top 5 concepts:</p>
+<table>
+<caption>Top 5 concepts associated with target ALS at min. frequency 0</caption>
+<colgroup>
+<col width="10%"></col>
+<col width="53%"></col>
+<col width="7%"></col>
+<col width="11%"></col>
+<col width="10%"></col>
+<col width="6%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq</th>
+<th align="right">pmi</th>
+<th align="right">rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C4519182</td>
+<td align="left">AZD-7295</td>
+<td align="left">CHEM</td>
 <td align="right">1</td>
-<td align="right">10.99814</td>
+<td align="right">12.58517</td>
+<td align="right">8.5</td>
+</tr>
+<tr class="even">
+<td align="left">C0154758</td>
+<td align="left">Inflammatory and toxic neuropathy</td>
+<td align="left">DISO</td>
+<td align="right">1</td>
+<td align="right">12.58517</td>
+<td align="right">8.5</td>
+</tr>
+<tr class="odd">
+<td align="left">C0154684</td>
+<td align="left">Other anterior horn cell diseases</td>
+<td align="left">DISO</td>
+<td align="right">1</td>
+<td align="right">12.58517</td>
+<td align="right">8.5</td>
 </tr>
 <tr class="even">
 <td align="left">C0154754</td>
 <td align="left">Hereditary and idiopathic neuropathy, unspecified</td>
 <td align="left">DISO</td>
 <td align="right">2</td>
-<td align="right">0.0000272</td>
-<td align="right">1</td>
-<td align="right">10.99814</td>
+<td align="right">12.58517</td>
+<td align="right">8.5</td>
 </tr>
 <tr class="odd">
-<td align="left">C0154758</td>
-<td align="left">Inflammatory and toxic neuropathy</td>
+<td align="left">C2317805</td>
+<td align="left">multifactorial amyotrophic lateral sclerosis</td>
 <td align="left">DISO</td>
 <td align="right">1</td>
-<td align="right">0.0000136</td>
-<td align="right">1</td>
-<td align="right">10.99814</td>
-</tr>
-<tr class="even">
-<td align="left">C2317803</td>
-<td align="left">acquired amyotrophic lateral sclerosis</td>
-<td align="left">DISO</td>
-<td align="right">1</td>
-<td align="right">0.0000136</td>
-<td align="right">1</td>
-<td align="right">10.99814</td>
-</tr>
-<tr class="odd">
-<td align="left">C1328482</td>
-<td align="left">Drug-induced myasthenic syndrome</td>
-<td align="left">DISO</td>
-<td align="right">1</td>
-<td align="right">0.0000136</td>
-<td align="right">1</td>
-<td align="right">10.99814</td>
+<td align="right">12.58517</td>
+<td align="right">8.5</td>
 </tr>
 </tbody>
 </table>
-<p>This results in many rare concepts which have a high PMI with the target ALS because the latter always appears when they do (<code>probTargetGivenCui</code> is 1). However this is hardly meaningful, especially in the case of concepts which appear only once. It is also possible to do the oposite, that is to observe only the most general related concepts by increasing the minimum frequency, for example at 100 below:</p>
+<p>This results in many rare concepts (only 1 or 2 occurrences) which have a high PMI with the target ALS because the latter always appears when they do. However this is hardly meaningful, especially in the case of concepts which appear only once.</p>
+<p>Note: the rank of these concepts is identical because they have exactly the same PMI with the target. In such cases where several concepts are tied, the rank is the average of the ranks that would be obtained by ordering the tied concepts arbitrarily.</p>
+<p>It is also possible to do the oposite, that is to observe only the most general related concepts by increasing the minimum frequency, for example at 100 below:</p>
 <table>
 <caption>Top 5 concepts associated with target ALS at min. frequency 100</caption>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
 <th align="right">jointFreq</th>
-<th align="right">probCuiGivenTarget</th>
-<th align="right">probTargetGivenCui</th>
-<th align="right">PMI</th>
+<th align="right">pmi</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">group.ALS</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">73631</td>
-<td align="right">1.0000000</td>
-<td align="right">0.8423925</td>
-<td align="right">10.750706</td>
+<td align="left">C1456383</td>
+<td align="left">IGFALS gene</td>
+<td align="left">GENE</td>
+<td align="right">1086</td>
+<td align="right">11.29005</td>
+<td align="right">43</td>
 </tr>
 <tr class="even">
 <td align="left">C4024896</td>
 <td align="left">Motor neuron atrophy</td>
 <td align="left">DISO</td>
-<td align="right">493</td>
-<td align="right">0.0066955</td>
-<td align="right">0.3551873</td>
-<td align="right">9.504793</td>
+<td align="right">525</td>
+<td align="right">11.05528</td>
+<td align="right">50</td>
 </tr>
 <tr class="odd">
 <td align="left">C0154682</td>
 <td align="left">Lateral Sclerosis</td>
 <td align="left">DISO</td>
-<td align="right">258</td>
-<td align="right">0.0035040</td>
-<td align="right">0.3185185</td>
-<td align="right">9.347590</td>
+<td align="right">292</td>
+<td align="right">10.93107</td>
+<td align="right">58</td>
 </tr>
 <tr class="even">
 <td align="left">C1428691</td>
 <td align="left">C9orf72 gene</td>
 <td align="left">GENE</td>
-<td align="right">1026</td>
-<td align="right">0.0139343</td>
-<td align="right">0.3127095</td>
-<td align="right">9.321036</td>
+<td align="right">1382</td>
+<td align="right">10.90755</td>
+<td align="right">60</td>
 </tr>
 <tr class="odd">
-<td align="left">C3498531</td>
-<td align="left">semiannular sulcus</td>
+<td align="left">C0524459</td>
+<td align="left">Lower motor neuron</td>
 <td align="left">ANAT</td>
-<td align="right">545</td>
-<td align="right">0.0074018</td>
-<td align="right">0.2917559</td>
-<td align="right">9.220975</td>
+<td align="right">893</td>
+<td align="right">10.86020</td>
+<td align="right">62</td>
 </tr>
 </tbody>
 </table>
-<p>With the rare concepts discarded, the results now show frequent concepts as strongest associations: &quot;Motor neuron atrophy&quot;, &quot;lateral sclerosis&quot;, &quot;C9orf72 gene&quot;, &quot;semiannular sulcus&quot;.<br />
-One may notice that the top PMI values are not very far from the ones observed before without any filtering. This is often the case when the target concept is very frequent, since many other concepts have a quite strong association with it, i.e. there are only small variations in association power (PMI) across a very large set of concepts. The filtering options help visualizing the most relevant relations for a particular goal.</p>
+<p>With the rare concepts discarded, the results now show frequent concepts as strongest associations. One may notice that the top PMI values are not very far from the ones observed before without any filtering. This is often the case when the target concept is very frequent, since many other concepts have a quite strong association with it, i.e. there are only small variations in association power (PMI) across a very large set of concepts. The filtering options help visualizing the most relevant relations for a particular goal.</p>
 </div>
 <div id="filtering-with-semantic-types" class="section level3">
 <h3>Filtering with Semantic Types</h3>
-<p>The below top 5 concepts are obtained by selecting the <code>coarse</code> semantic granularity and then enabling only the &quot;Genes and Molecular Sequences&quot; in the semantic filter:</p>
+<p>The below top 5 concepts are obtained by selecting only the &quot;Genes and Molecular Sequences&quot; in the semantic filter:</p>
 <table>
 <caption>Top 5 concepts in the 'Genes and Molecular Sequences' category for target ALS (min. frequency 100)</caption>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
 <th align="right">jointFreq</th>
-<th align="right">probCuiGivenTarget</th>
-<th align="right">probTargetGivenCui</th>
-<th align="right">PMI</th>
+<th align="right">pmi</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">C1428691</td>
-<td align="left">C9orf72 gene</td>
-<td align="left">GENE</td>
-<td align="right">1026</td>
-<td align="right">0.0139343</td>
-<td align="right">0.3127095</td>
-<td align="right">9.321036</td>
-</tr>
-<tr class="even">
-<td align="left">C1420588</td>
-<td align="left">TARDBP gene</td>
-<td align="left">GENE</td>
-<td align="right">1942</td>
-<td align="right">0.0263748</td>
-<td align="right">0.2591061</td>
-<td align="right">9.049756</td>
-</tr>
-<tr class="odd">
-<td align="left">C1421305</td>
-<td align="left">UBQLN2 gene</td>
-<td align="left">GENE</td>
-<td align="right">106</td>
-<td align="right">0.0014396</td>
-<td align="right">0.2494118</td>
-<td align="right">8.994742</td>
-</tr>
-<tr class="even">
-<td align="left">C1538299</td>
-<td align="left">ATXN2 gene</td>
-<td align="left">GENE</td>
-<td align="right">150</td>
-<td align="right">0.0020372</td>
-<td align="right">0.2423263</td>
-<td align="right">8.953164</td>
-</tr>
-<tr class="odd">
 <td align="left">C1456383</td>
 <td align="left">IGFALS gene</td>
 <td align="left">GENE</td>
-<td align="right">445</td>
-<td align="right">0.0060437</td>
-<td align="right">0.2372068</td>
-<td align="right">8.922358</td>
+<td align="right">1086</td>
+<td align="right">11.29005</td>
+<td align="right">43</td>
+</tr>
+<tr class="even">
+<td align="left">C1428691</td>
+<td align="left">C9orf72 gene</td>
+<td align="left">GENE</td>
+<td align="right">1382</td>
+<td align="right">10.90755</td>
+<td align="right">60</td>
+</tr>
+<tr class="odd">
+<td align="left">C1420588</td>
+<td align="left">TARDBP gene</td>
+<td align="left">GENE</td>
+<td align="right">2325</td>
+<td align="right">10.55432</td>
+<td align="right">89</td>
+</tr>
+<tr class="even">
+<td align="left">C1421305</td>
+<td align="left">UBQLN2 gene</td>
+<td align="left">GENE</td>
+<td align="right">124</td>
+<td align="right">10.39725</td>
+<td align="right">99</td>
+</tr>
+<tr class="odd">
+<td align="left">C1420306</td>
+<td align="left">SOD1 gene</td>
+<td align="left">GENE</td>
+<td align="right">4541</td>
+<td align="right">10.34614</td>
+<td align="right">100</td>
 </tr>
 </tbody>
 </table>
-<p>With a min. frequency of 100, this filter leaves only 33 genetic concepts in the table. This way one can observe the difference in association strength between different concepts: while the top concepts have a PMI close to 9 and appear 20 to 30% together with the target (based on <code>probTargetGivenCui</code>), the concepts found at the bottom of the table have a PMI close to 0 or even slightly negative. This means that they are not especially associated with the target, and it can be seen that most of them are indeed generic terms such as &quot;Genes&quot;, &quot;Alleles&quot;, &quot;DNA sequence&quot;.</p>
+<p>With a min. frequency of 100, this filter leaves only a reasonable number of genetic concepts in the table:</p>
+<pre class="r"><code>nrow(s)</code></pre>
+<pre><code>## [1] 37</code></pre>
+<p>This way one can observe the difference in association strength between different concepts: while the top concepts have a PMI close to 9 and appear 20 to 30% together with the target (based on <code>probTargetGivenCui</code>), the concepts found at the bottom of the table have a PMI close to 0 or even slightly negative. This means that they are not especially associated with the target, and it can be seen that most of them are indeed generic terms such as &quot;Genes&quot;, &quot;Alleles&quot;, &quot;DNA sequence&quot;.</p>
 </div>
 </div>
 

@@ -23,7 +23,7 @@ getViewTotal <- function(viewDir, dataDir='../../../ND-hierarchy-data-for-rankin
   df[,2]
 }
 
-loadFullTargetCuiRelations <- function(cui, viewDir, singleGroupByRow=FALSE) {
+loadFullTargetCuiRelations <- function(cui, viewDir, dataDir='../../../ND-hierarchy-data-for-rankings', singleGroupByRow=FALSE) {
   if (!is.null(cui)) {
     filename <- cui
     if (singleGroupByRow) {
@@ -32,7 +32,7 @@ loadFullTargetCuiRelations <- function(cui, viewDir, singleGroupByRow=FALSE) {
     path <- paste(dataDir,viewDir, filename,sep='/')
     df <- read.table(path, sep='\t', quote="", comment.char = "", row.names=NULL,stringsAsFactors = FALSE)
     colnames(df) <- c('concept','freq','term','group','jointFreq')
-    print(nrow(df))
+#    print(nrow(df))
     df
   }
 }

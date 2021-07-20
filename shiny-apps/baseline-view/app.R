@@ -15,7 +15,7 @@ library(DT)
 source('../../contrast-experiments.R')
 source('../util.R')
 
-linkUserGuide <- "../2010-concept-associations.user-guide"
+linkUserGuide <- "../baseline-view.user-guide"
 defaultMinJointFreq <- 10
 
 sourcesList <- list('KD','PTC')
