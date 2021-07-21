@@ -129,8 +129,13 @@ server <- function(input, output) {
     }
   })
   
+  freqFiltered <- reactive({
+    df <- targetCuiRelations()
+    df[df$jointFreq>=input$minJointFreq,]
+  })
+  
   orderedByAssociation <- reactive({
-    orderConceptsByAssociation(targetCuiRelations(), statsTargetAndView(), input$associationMeasure)
+    orderConceptsByAssociation(freqFiltered(), statsTargetAndView(), input$associationMeasure)
   })
   
   
