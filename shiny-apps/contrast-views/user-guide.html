@@ -196,17 +196,17 @@ summary {
 </div>
 
 
-<p>This document explains how <a href="../2010-hidden-association-contrast-datasets">this Shiny visualization tool</a> works. It is recommended to understand the <a href="../2010-concept-associations/">&quot;Top Associated Concepts with a Target Concept&quot;</a> tool (<a href="../2010-concept-associations.user-guide">see documentation</a>) before starting with this one.</p>
+<p>This document explains how <a href="../contrast-views">this Shiny visualization tool</a> works. It is recommended to understand the <a href="../baseline-view/">&quot;Top Associated Concepts with a Target Concept&quot;</a> tool (<a href="../baseline-view.user-guide">see documentation</a>) before starting with this one.</p>
 <div id="summary" class="section level2">
 <h2>Summary</h2>
-<p>This tool is intended to contrast two datasets in order to emphasize how they differ the most. It presents the user with a list of concepts associated with a chosen target concept, ordered according to the difference in association strength between two selected datasets with the concepts with the highest difference shown at the top. Thus the useris able to visualize the concepts which have a very high association strength in the first dataset but a very low one in the second one.</p>
+<p>This tool is intended to contrast two datasets in order to emphasize how they differ the most. It presents the user with a list of concepts associated with a chosen target concept, ordered according to the difference in association strength between two selected datasets, with the concepts with the highest difference shown at the top. Thus the user is able to visualize the concepts which have a very high association strength in the first dataset but a very low one in the second one.</p>
 <p>This comparison is meant to detect concepts which are susceptible to have a meaningful relationship with the target concept, but this relationship has been &quot;overlooked&quot; in the literature. The method relies on the assumption that concepts relationships which are well studied are strongly associated even if considering only abstracts at the sentence level, which correspond to the most restrictive type of literature data available. By contrast, the full articles by paper are the least retrictive in terms of volume and diversity of relationships captured. Therefore it is assumed that two concepts which have a strong association in the latter (full articles) but are absent or have a weak association in the former (abstracts) are a good candidate as an overlooked relationship: the relationship is not well studied otherwise it would be found in the abstracts, and it is significant otherwise it would not have a strong association in the full articles.</p>
-<p>Essentially, this tool attempts to simulate the process of a human expert going through the list of top associated concepts from the full articles (as can be done with the <a href="../2010-concept-associations/">previous tool</a>) and extracting the relationships considered non-obvious and potentially candidates for further investigation.</p>
+<p>Essentially, this tool attempts to simulate the process of a human expert going through the list of top associated concepts from the full articles (as can be done with the <a href="../baseline-view/">previous tool</a>) and extracting the relationships considered non-obvious and potentially candidates for further investigation.</p>
 <p>The <a href="#frequency-filters">frequency filters</a> <code>min joint freq in dataset 1</code> and <code>max joint frequency in dataset 2</code> play an important role in the selection of the associated concepts shown in the results. Intuitively, the former allows the user to <em>adjust the generality level</em> while the latter is used to <em>adjust the contrast level</em>. The tool is designed to let the user find the &quot;sweet spot&quot; for these parameters so that the output contains exploitable concepts, i.e. points to relationships which are relevant, non-obvious and good candidates for further study.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>This tool uses the same type of data as the <a href="../2010-concept-associations/">&quot;Top Associated Concepts with a Target Concept&quot;</a> tool, please refer to <a href="../2010-concept-associations.user-guide/#data">its documentation for details about the data</a>). However, while the previous tool was based on a single dataset, the present one is based on comparing two datasets against each other. The comparison is not symetrical, because the system selects concepts which satisfy these two conditions:</p>
+<p>This tool uses the same type of data as the <a href="../baseline-view/">&quot;Top Associated Concepts with a Target Concept&quot;</a> tool, please refer to <a href="../baseline-view.user-guide/#data">its documentation for details about the data</a>). However, while the previous tool was based on a single dataset, the present one is based on comparing two datasets against each other. The comparison is not symetrical, because the system selects concepts which satisfy these two conditions:</p>
 <ul>
 <li>The concept has a high association strength with the target in the first dataset,</li>
 <li>The concept has a low association strength or is not associated at all with the target in the second dataset.</li>
@@ -215,37 +215,43 @@ summary {
 </div>
 <div id="target-selection" class="section level2">
 <h2>Target Selection</h2>
-<p>The user can select a target concept among a predefined list of ND concepts. The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept. See the <a href="../2010-concept-associations.user-guide/#target-selection">documentation of the previous tool</a> for details.</p>
+<p>The user can select a target concept among a predefined list of ND concepts. <!-- The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept.
+--></p>
+<p>See the <a href="../baseline-view/#target-selection">documentation of the previous tool</a> for details.</p>
 </div>
 <div id="ranking-method" class="section level2">
 <h2>Ranking Method</h2>
-<p>The order of the associated concepts in the results table depends on two options: the association measure (MI or PMI), which is explained in <a href="../2010-concept-associations.user-guide#association-measure">the documentation of the previous tool</a> (PMI, the default, is recommended), and the <code>method to rank CUIs</code>, which can be either <code>Diff relative rank 1 vs 2</code> (the default) or <code>Association measure in 1</code>.</p>
-<div id="by-difference-in-relative-rank" class="section level3">
-<h3>By Difference in Relative Rank</h3>
-<p>In both datasets, the associated concepts are ranked by their association measure (PMI by default) and their relative rank is calculated: the concept with the highest PMI has a relative rank of 1, and conversely a concept with a low PMI has a relative rank close to 0. Then the concepts are ordered by the difference between their two relative ranks (dataset 1 minus dataset 2) from highest difference at the top to lowest difference at the bottom.</p>
-<p>This method satisfies the main objective since the highest possible difference happens for concepts which have a very high association in dataset 1 and a very low one in dataset 2. It orders the full list of concepts by how much their rank differ in the two datasets, so even if there is no concept which satisfies the two conditions perfectly the top concepts will be the closest ones to the goal. For example, a concept with a high association in dataset 1 but an average association in dataset 2 appears higher than one with an average rank in both.</p>
-<p>Technical note: the difference is not calculated based on the association value because these values are not reliably comparable across datasets due to their different size.</p>
-</div>
-<div id="by-association-measure-in-dataset-1" class="section level3">
-<h3>By Association Measure in Dataset 1</h3>
-<p>With this option enabled, the results table shows the concepts ordered by their association measure in the first data. This means that it shows exactly the same list as the <a href="../2010-concept-associations/">previous tool</a>, but enriched with the association value and other statistics based on the second dataset and possibly filtered with additional frequency constraints (see <a href="#frequency-filters">Frequency Filters</a> below).</p>
+<p>The order of the associated concepts in the results table depends on two options: the association measure (MI or PMI), which is explained in <a href="../baseline-view.user-guide#association-measure">the documentation of the previous tool</a> (PMI, the default, is recommended), and the <code>method to rank CUIs</code>, which can be either <code>Basic Contrast</code> (the default), <code>Relative Diff Rank</code> or <code>Absolute Diff Rank</code>.</p>
+<div id="basic-contrast" class="section level3">
+<h3>Basic Contrast</h3>
+<p>With this option enabled, the results table shows the concepts ordered by their association measure in the first data: first the reference view concepts are ranked, then the concepts which have a joint frequency in the mask view higher than the maximum parameter are filtered out (see <a href="#frequency-filters">Frequency Filters</a> below). This means that it shows the same list as the <a href="../baseline-view/">previous tool</a> for the reference view, except that the filtering is based on the mask view.</p>
 <p>This view can be simpler to interpret because it directly follows the order of the top associated concepts in the first dataset, while letting the user analyze the differences between the two datasets. In this view, the <code>max joint frequency in dataset 2</code> (see <a href="#frequency-filters">Frequency Filters</a> below) is a crucial parameter: if set to a very high value, the list contains all the concepts in dataset 1, but if set to a low value (especially at the default 0) the concepts which have a higher frequency in dataset 2 are filtered out. In this case the effect is very similar to using the <code>Diff relative rank 1 vs 2</code> method, since it keeps only the concepts which have a low association (or are absent) in dataset 2 at the top of list.</p>
+</div>
+<div id="by-difference-in-relativeabsolute-rank" class="section level3">
+<h3>By Difference in Relative/Absolute Rank</h3>
+<p>In both datasets, the associated concepts are ranked by their association measure (PMI by default) and their rank (relative or absolute) is calculated. Then the concepts are ordered by the difference between their two ranks (dataset 1 minus dataset 2) from lowest difference at the top to highest difference at the bottom of the ranking.</p>
+<p>This method satisfies the main objective since the highest possible difference happens for concepts which have a high association in dataset 1 and a low one in dataset 2. It orders the full list of concepts by how much their rank differs in the two datasets, so even if there is no concept which satisfies the two conditions perfectly the top concepts will be the closest ones to the goal. For example, a concept with a high association in dataset 1 but an average association in dataset 2 appears higher than one with an average rank in both.</p>
+<p>Technical notes:</p>
+<ul>
+<li>The difference is not calculated based on the association value because these values are not reliably comparable across datasets due to their different size.</li>
+<li>The absolute rank depends on the number of concepts in the view, whereas the relative rank doesn't since it's normalized by the size of the view. This implies that the relative and absolute versions produce different rankings.</li>
+</ul>
 </div>
 </div>
 <div id="frequency-filters" class="section level2">
 <h2>Frequency Filters</h2>
 <p>The options <code>min joint freq in dataset 1</code> and <code>max joint frequency in dataset 2</code> provide the user with the ability to adjust the list by filtering out concepts which do not satisfy the two conditions.</p>
-<p>The minimum frequency in the first dataset is used in the same way as in the previous tool. The user can adjust this parameter to filter out the least frequently associated concepts, which can happen by chance and are often too specific (see also the <a href="../2010-concept-associations.user-guide/#joint-frequency-thresholding">documentation of the previous tool</a>).</p>
+<p>The minimum frequency in the first dataset is used in the same way as in the previous tool. The user can adjust this parameter to filter out the least frequently associated concepts, which can happen by chance and are often too specific (see also the <a href="../baseline-view.user-guide/#joint-frequency-thresholding">documentation of the previous tool</a>).</p>
 <p>The maximum frequency in the second dataset is proposed in this tool so that the user can also filter out concepts which appear too frequently in the second dataset (since the goal is to find concepts which are poorly or not at all associated with the target in the second dataset). By default the threshold is set to zero, which means that only concepts which don't appear at all in the second dataset are presented. But this threshold can be relaxed by setting a higher value, thus letting concepts which exist in the second dataset appear in the results. The effect differs depending on the <a href="#ranking-method">ranking method</a>:</p>
 <ul>
-<li>With the default <code>Diff relative rank 1 vs 2</code> method, even a high <code>max joint frequency in dataset 2</code> value is unlikely to show any additional concept at the top of the list because their difference in relative rank is not as high as the ones with a lower frequency in dataset 2. However this can happen either if the target concept has few associated concepts, or if the <code>min joint freq in dataset 1</code> is set to a high value. In this case which helps finding general/frequent concepts, the <code>max joint frequency in dataset 2</code> value is used to avoid (or not) the concepts which do not have a high difference between the two datasets.</li>
-<li>With the <code>Association measure in 1</code> method, the <code>max joint frequency in dataset 2</code> is the only way to make the second dataset affect which concepts are shown: with a low threshold (especially the default value 0), the concepts which a high association in dataset 2 are filtered out, but with a very high threshold they are shown as well so the contrast between the two datasets is not clearly visible.</li>
+<li>With the default <code>Basic Contrast</code> method, the <code>max joint frequency in dataset 2</code> is the only way to make the second dataset affect which concepts are shown: with a low threshold (especially the default value 0), the concepts which a high association in dataset 2 are filtered out, but with a very high threshold they are shown as well so the contrast between the two datasets is not clearly visible.</li>
+<li>With the <code>Diff rank 1 vs 2</code> method, even a high <code>max joint frequency in dataset 2</code> value is unlikely to show any additional concept at the top of the list because their difference in relative rank is not as high as the ones with a lower frequency in dataset 2. However this can happen either if the target concept has few associated concepts, or if the <code>min joint freq in dataset 1</code> is set to a high value. In this case which helps finding general/frequent concepts, the <code>max joint frequency in dataset 2</code> value is used to avoid (or not) the concepts which do not have a high difference between the two datasets.</li>
 </ul>
 <p>Overall the two thresholds <code>min joint freq in dataset 1</code> and <code>max joint frequency in dataset 2</code> play an important role in the selection of the associated concepts shown in the results. Intuitively, the former allows the user to <em>adjust the generality level</em> while the latter is used to <em>adjust the contrast level</em>. These two thresholds should be adjusted depending on the target concept (in particular its frequency and number of associated concepts) and the desired outcome (level of generality and contrast).</p>
 </div>
 <div id="filtering-by-semantic-type-and-other-options" class="section level2">
 <h2>Filtering by semantic type and other options</h2>
-<p>Please refer to the <a href="../2010-concept-associations.user-guide/#filtering-by-semantic-type">documentation of the previous tool</a>. You can also check the <a href="../2010-concept-associations.user-guide/#usage-tips">usage tips</a>.</p>
+<p>Please refer to the <a href="../baseline-view.user-guide/#filtering-by-semantic-type">documentation of the previous tool</a>. You can also check the <a href="../baseline-view.user-guide/#usage-tips">usage tips</a>.</p>
 </div>
 <div id="examples" class="section level2">
 <h2>Examples</h2>
@@ -254,473 +260,477 @@ summary {
 <table style="width:100%;">
 <caption>Top 5 concepts for ALS (default parameters)</caption>
 <colgroup>
-<col width="6%"></col>
-<col width="25%"></col>
 <col width="8%"></col>
-<col width="10%"></col>
-<col width="6%"></col>
+<col width="20%"></col>
+<col width="5%"></col>
+<col width="12%"></col>
+<col width="13%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
 <col width="9%"></col>
-<col width="10%"></col>
-<col width="6%"></col>
-<col width="8%"></col>
-<col width="7%"></col>
+<col width="5%"></col>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq.high</th>
-<th align="right">PMI.high</th>
-<th align="right">relRank.high</th>
-<th align="right">jointFreq.low</th>
-<th align="right">PMI.low</th>
-<th align="right">relRank.low</th>
-<th align="right">diff</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq.ref</th>
+<th align="right">jointFreq.mask</th>
+<th align="right">pmi.ref</th>
+<th align="right">pmi.mask</th>
+<th align="right">rank.ref</th>
+<th align="right">rank.mask</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">C3255210</td>
+<td align="left">Azolen</td>
+<td align="left">CHEM</td>
+<td align="right">12</td>
+<td align="right">0</td>
+<td align="right">15.43535</td>
+<td align="right">NA</td>
+<td align="right">1384.5</td>
+<td align="right">23165</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">C0381157</td>
+<td align="left">Autologen</td>
+<td align="left">CHEM</td>
+<td align="right">20</td>
+<td align="right">0</td>
+<td align="right">15.41333</td>
+<td align="right">NA</td>
+<td align="right">1387.0</td>
+<td align="right">23165</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">C3498115</td>
+<td align="left">entorhinal white matter</td>
+<td align="left">ANAT</td>
+<td align="right">85</td>
+<td align="right">0</td>
+<td align="right">15.40563</td>
+<td align="right">NA</td>
+<td align="right">1388.0</td>
+<td align="right">23165</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
 <td align="left">C0718950</td>
 <td align="left">Biomox</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">10</td>
-<td align="right">6.778746</td>
-<td align="right">0.9908914</td>
+<td align="left">CHEM</td>
+<td align="right">12</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9908914</td>
-</tr>
-<tr class="even">
-<td align="left">C3546443</td>
-<td align="left">neuronal cytoplasmic inclusion</td>
-<td align="left">ANAT</td>
-<td align="right">21</td>
-<td align="right">6.733658</td>
-<td align="right">0.9907690</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9907690</td>
+<td align="right">15.32844</td>
+<td align="right">NA</td>
+<td align="right">1397.0</td>
+<td align="right">23165</td>
+<td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="left">C1413035</td>
-<td align="left">CACFD1 gene</td>
-<td align="left">GENE</td>
-<td align="right">11</td>
-<td align="right">6.179284</td>
-<td align="right">0.9890305</td>
+<td align="left">C0613678</td>
+<td align="left">UTEN</td>
+<td align="left">CHEM</td>
+<td align="right">101</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9890305</td>
-</tr>
-<tr class="even">
-<td align="left">C1832274</td>
-<td align="left">Charcot-Marie-Tooth disease, Type 2D</td>
-<td align="left">DISO</td>
-<td align="right">28</td>
-<td align="right">5.991154</td>
-<td align="right">0.9798729</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9798729</td>
-</tr>
-<tr class="odd">
-<td align="left">C0393578</td>
-<td align="left">Pallidoluysian degeneration</td>
-<td align="left">DISO</td>
-<td align="right">13</td>
-<td align="right">5.934865</td>
-<td align="right">0.9797383</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9797383</td>
+<td align="right">15.26653</td>
+<td align="right">NA</td>
+<td align="right">1410.0</td>
+<td align="right">23165</td>
+<td align="right">5</td>
 </tr>
 </tbody>
 </table>
-<p>A brief analysis shows that some of these concepts are surprising in relation to ALS, while others have an indirect relationship:</p>
-<ul>
-<li>&quot;Biomox&quot; is an <a href="https://www.rxwiki.com/biomox">Amoxicillin antibiotic</a> (apparently commonly used <a href="https://us.virbac.com/products/antibiotics/biomox-amoxicillin-tablets">with dogs</a>). Its strong association with ALS in the data would require an investigation.</li>
-<li>&quot;Neuronal cytoplasmic inclusion&quot; is a very specific anatomical term which makes sense in relation to ALS.</li>
-<li>&quot;CACFD1 gene&quot; (Calcium Channel Flower Domain Containing 1) is a gene which could be associated with some form of <a href="https://www.genecards.org/cgi-bin/carddisp.pl?gene=CACFD1">myopathy</a>.</li>
-<li>&quot;Charcot-Marie-Tooth disease&quot; is the <a href="https://en.wikipedia.org/wiki/Charcot%E2%80%93Marie%E2%80%93Tooth_disease">most commonly inherited neurological disease</a></li>
-<li>&quot;Pallidoluysian degeneration&quot; appears to be related to an <a href="https://en.wikipedia.org/wiki/Dentatorubral%E2%80%93pallidoluysian_atrophy">inherited disease which is rare except in Japan</a></li>
-</ul>
-<p>These concepts are quite specific and their quite strong association with ALS is not immediately clear. It is possible that some are explained by chance (e.g. the antibiotic) or by some bias in the literature, but in general an expert would have to perform a deeper analysis in order to understand the nature of the association.</p>
-<p>It can be observed that <code>jointFreq.low</code>, the joint frequency in dataset 2, is always 0, which indicates that these concepts do not appear at all together in the second dataset. As a result their relative rank is is the lowest possible (0) in dataset 2, and since it is high in dataset 1 they obtain a high difference.</p>
+<!--
+Some of these concepts are surprising in relation to ALS, while others have an indirect relationship:
+
+* "Biomox" is an [Amoxicillin antibiotic](https://www.rxwiki.com/biomox) (apparently commonly used [with dogs](https://us.virbac.com/products/antibiotics/biomox-amoxicillin-tablets)). Its strong association with ALS in the data would require an investigation. 
+* "Neuronal cytoplasmic inclusion" is a very specific anatomical term which makes sense in relation to ALS.
+* "CACFD1 gene" (Calcium Channel Flower Domain Containing 1) is a gene which could be associated with some form of [myopathy](https://www.genecards.org/cgi-bin/carddisp.pl?gene=CACFD1).
+* "Charcot-Marie-Tooth disease" is the [most commonly inherited neurological disease](https://en.wikipedia.org/wiki/Charcot%E2%80%93Marie%E2%80%93Tooth_disease)
+* "Pallidoluysian degeneration" appears to be related to an [inherited disease which is rare except in Japan](https://en.wikipedia.org/wiki/Dentatorubral%E2%80%93pallidoluysian_atrophy)
+-->
+<p>These concepts are quite specific and their quite strong association with ALS is not immediately clear. It is possible that some are explained by chance or by some bias in the literature, but in general an expert would have to perform a deeper analysis in order to understand the nature of the association.</p>
+<p>It can be observed that <code>jointFreq.mask</code>, the joint frequency in dataset 2, is always 0, which indicates that these concepts do not appear at all together in the second dataset. As a result their association is is the lowest possible in dataset 2, and since it is high in dataset 1 they obtain a high difference.</p>
 <div id="ranking-methods-and-thresholds" class="section level3">
 <h3>Ranking Methods and Thresholds</h3>
-<p>It is worth noticing that in this particular case the <code>max joint freq in dataset 2</code> threshold, which is 0 by default, is not the reason why the top results are made of concepts which do not appear in the second dataset. Indeed, changing this parameter to a high value (for instance 99999) shows the exact same top concepts. In fact, the <code>max joint freq in dataset 2</code> threshold often has little effect with the default <a href="#ranking-method">ranking method</a> <code>Diff relative rank 1 vs 2</code>, unless <code>the min joint freq in dataset 1</code> threshold is high or the target concept is not frequent. This is because this ranking method favours concepts which do not appear at all in dataset 2, since these concepts have a very high relative rank difference as long as they are ranked at the top in dataset 1.</p>
-<p>By contrast, results with the alternative <a href="#ranking-method">ranking method</a> <code>Association measure in 1</code> are much more affected by the <code>max joint freq in dataset 2</code> parameter: if the threshold is high then the method simply shows the top concepts in dataset 1, whereas if the threshold is low (especially 0) then it tends to show the same results as the default ranking method <code>Diff relative rank 1 vs 2</code>, as shown in the following examples.</p>
+<p>With the <a href="#ranking-method">ranking method</a> <code>Basic contrast</code>, results are strongly affected by the <code>max joint freq in dataset 2</code> parameter: if the threshold is high then the method simply shows the top concepts in dataset 1, whereas if the threshold is low (especially 0) then it tends to show the same results as the alternative ranking method <code>Diff rank 1 vs 2</code>, as shown in the following examples.</p>
 <table style="width:100%;">
-<caption>Top 5 concepts for ALS with ranking method 'association measure in 1' and 'max joint freq in dataset 2' set to 0</caption>
+<caption>Top 5 concepts for ALS, Basic Contrast with max joint freq 2 = 10</caption>
 <colgroup>
-<col width="6%"></col>
-<col width="25%"></col>
-<col width="8%"></col>
-<col width="10%"></col>
-<col width="6%"></col>
-<col width="9%"></col>
-<col width="10%"></col>
-<col width="6%"></col>
-<col width="8%"></col>
 <col width="7%"></col>
+<col width="31%"></col>
+<col width="5%"></col>
+<col width="10%"></col>
+<col width="11%"></col>
+<col width="7%"></col>
+<col width="7%"></col>
+<col width="7%"></col>
+<col width="7%"></col>
+<col width="4%"></col>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq.high</th>
-<th align="right">PMI.high</th>
-<th align="right">relRank.high</th>
-<th align="right">jointFreq.low</th>
-<th align="right">PMI.low</th>
-<th align="right">relRank.low</th>
-<th align="right">diff</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq.ref</th>
+<th align="right">jointFreq.mask</th>
+<th align="right">pmi.ref</th>
+<th align="right">pmi.mask</th>
+<th align="right">rank.ref</th>
+<th align="right">rank.mask</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">C0718950</td>
-<td align="left">Biomox</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">10</td>
-<td align="right">6.778746</td>
-<td align="right">0.9908914</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9908914</td>
+<td align="left">C4475575</td>
+<td align="left">Radicava</td>
+<td align="left">CHEM</td>
+<td align="right">50</td>
+<td align="right">8</td>
+<td align="right">15.55083</td>
+<td align="right">14.20717</td>
+<td align="right">688.5</td>
+<td align="right">33</td>
+<td align="right">1.5</td>
 </tr>
 <tr class="even">
-<td align="left">C3546443</td>
-<td align="left">neuronal cytoplasmic inclusion</td>
-<td align="left">ANAT</td>
-<td align="right">21</td>
-<td align="right">6.733658</td>
-<td align="right">0.9907690</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9907690</td>
-</tr>
-<tr class="odd">
-<td align="left">C1413035</td>
-<td align="left">CACFD1 gene</td>
-<td align="left">GENE</td>
-<td align="right">11</td>
-<td align="right">6.179284</td>
-<td align="right">0.9890305</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9890305</td>
-</tr>
-<tr class="even">
-<td align="left">C1832274</td>
-<td align="left">Charcot-Marie-Tooth disease, Type 2D</td>
-<td align="left">DISO</td>
-<td align="right">28</td>
-<td align="right">5.991154</td>
-<td align="right">0.9798729</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9798729</td>
-</tr>
-<tr class="odd">
-<td align="left">C0393578</td>
-<td align="left">Pallidoluysian degeneration</td>
-<td align="left">DISO</td>
-<td align="right">13</td>
-<td align="right">5.934865</td>
-<td align="right">0.9797383</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0</td>
-<td align="right">0.9797383</td>
-</tr>
-</tbody>
-</table>
-<table style="width:100%;">
-<caption>Top 5 concepts for ALS with ranking method 'association measure in 1' and 'max joint freq in dataset 2' set to 2</caption>
-<colgroup>
-<col width="6%"></col>
-<col width="27%"></col>
-<col width="8%"></col>
-<col width="10%"></col>
-<col width="6%"></col>
-<col width="8%"></col>
-<col width="9%"></col>
-<col width="6%"></col>
-<col width="8%"></col>
-<col width="7%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq.high</th>
-<th align="right">PMI.high</th>
-<th align="right">relRank.high</th>
-<th align="right">jointFreq.low</th>
-<th align="right">PMI.low</th>
-<th align="right">relRank.low</th>
-<th align="right">diff</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
 <td align="left">C3280587</td>
 <td align="left">AMYOTROPHIC LATERAL SCLEROSIS 16, JUVENILE</td>
 <td align="left">DISO</td>
+<td align="right">12</td>
+<td align="right">1</td>
+<td align="right">15.55083</td>
+<td align="right">12.62221</td>
+<td align="right">688.5</td>
+<td align="right">204</td>
+<td align="right">1.5</td>
+</tr>
+<tr class="odd">
+<td align="left">C0668601</td>
+<td align="left">SOD1 G93A protein</td>
+<td align="left">CHEM</td>
+<td align="right">36</td>
+<td align="right">4</td>
+<td align="right">15.51130</td>
+<td align="right">14.20717</td>
+<td align="right">1377.0</td>
+<td align="right">33</td>
+<td align="right">3.0</td>
+</tr>
+<tr class="even">
+<td align="left">C4522181</td>
+<td align="left">Brachial Amyotrophic Diplegia</td>
+<td align="left">DISO</td>
+<td align="right">13</td>
 <td align="right">10</td>
-<td align="right">7.041780</td>
-<td align="right">0.9955926</td>
+<td align="right">15.44391</td>
+<td align="right">13.20717</td>
+<td align="right">1382.0</td>
+<td align="right">129</td>
+<td align="right">4.0</td>
+</tr>
+<tr class="odd">
+<td align="left">C3255210</td>
+<td align="left">Azolen</td>
+<td align="left">CHEM</td>
+<td align="right">12</td>
+<td align="right">0</td>
+<td align="right">15.43535</td>
+<td align="right">NA</td>
+<td align="right">1384.5</td>
+<td align="right">23165</td>
+<td align="right">6.5</td>
+</tr>
+</tbody>
+</table>
+<p>This example where <code>max joint freq in dataset 2</code> is set to 10 shows that some concepts have a high association in both datasets, as opposed to the ones obtained with <code>max joint freq in dataset 2</code> set to 0 or the <code>Diff rank 1 vs 2</code> method (see below). Naturally the goal of the tool is to filter out these concepts, but the <code>basic contrast</code> method can be used to observe how such well-studied concepts are progressively discarded when starting from a high <code>max joint freq in dataset 2</code> value and then decreasing it.</p>
+<table style="width:100%;">
+<caption>Top 5 concepts for ALS, Absolute Diff Rank with max joint freq = 0</caption>
+<colgroup>
+<col width="8%"></col>
+<col width="20%"></col>
+<col width="5%"></col>
+<col width="12%"></col>
+<col width="13%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
+<col width="9%"></col>
+<col width="5%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq.ref</th>
+<th align="right">jointFreq.mask</th>
+<th align="right">pmi.ref</th>
+<th align="right">pmi.mask</th>
+<th align="right">rank.ref</th>
+<th align="right">rank.mask</th>
+<th align="right">rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C3255210</td>
+<td align="left">Azolen</td>
+<td align="left">CHEM</td>
+<td align="right">12</td>
+<td align="right">0</td>
+<td align="right">15.43535</td>
+<td align="right">NA</td>
+<td align="right">1384.5</td>
+<td align="right">23165</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">C0381157</td>
+<td align="left">Autologen</td>
+<td align="left">CHEM</td>
+<td align="right">20</td>
+<td align="right">0</td>
+<td align="right">15.41333</td>
+<td align="right">NA</td>
+<td align="right">1387.0</td>
+<td align="right">23165</td>
 <td align="right">2</td>
-<td align="right">10.068610</td>
-<td align="right">0.9986717</td>
-<td align="right">-0.0030791</td>
+</tr>
+<tr class="odd">
+<td align="left">C3498115</td>
+<td align="left">entorhinal white matter</td>
+<td align="left">ANAT</td>
+<td align="right">85</td>
+<td align="right">0</td>
+<td align="right">15.40563</td>
+<td align="right">NA</td>
+<td align="right">1388.0</td>
+<td align="right">23165</td>
+<td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="left">C0718950</td>
 <td align="left">Biomox</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">10</td>
-<td align="right">6.778746</td>
-<td align="right">0.9908914</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.9908914</td>
-</tr>
-<tr class="odd">
-<td align="left">C3546443</td>
-<td align="left">neuronal cytoplasmic inclusion</td>
-<td align="left">ANAT</td>
-<td align="right">21</td>
-<td align="right">6.733658</td>
-<td align="right">0.9907690</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.9907690</td>
-</tr>
-<tr class="even">
-<td align="left">C3820494</td>
-<td align="left">NMJ stability</td>
-<td align="left">PHYS</td>
-<td align="right">17</td>
-<td align="right">6.485387</td>
-<td align="right">0.9903221</td>
-<td align="right">1</td>
-<td align="right">6.746682</td>
-<td align="right">0.9705249</td>
-<td align="right">0.0197972</td>
-</tr>
-<tr class="odd">
-<td align="left">C2827498</td>
-<td align="left">Neuer</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">46</td>
-<td align="right">6.415595</td>
-<td align="right">0.9895324</td>
-<td align="right">2</td>
-<td align="right">6.483647</td>
-<td align="right">0.9661735</td>
-<td align="right">0.0233589</td>
-</tr>
-</tbody>
-</table>
-<p>The last example with <code>max joint freq in dataset 2</code> set to 2 shows that some concepts have a high association in both datasets, as opposed to the ones obtained with <code>max joint freq in dataset 2</code> set to 0 or the <code>Diff relative rank 1 vs 2</code> method. Naturally the goal of the tool is to filter out these concepts, but the <code>Association measure in 1</code> method can be used to observe how such well-studied concepts are progressively discarded when starting from a high <code>max joint freq in dataset 2</code> value and then decreasing it.</p>
-<p>With the default <code>Diff relative rank 1 vs 2</code> method, one should set a high value for both parameters <code>min joint freq in dataset 1</code> and <code>max joint freq in dataset 2</code> in order to see some concepts which appear in dataset 2 at the top. The first discards rare concepts in dataset 1, while the second allows frequent concepts in dataset 2. As seen above, without any contraints the top concepts with <code>Diff relative rank 1 vs 2</code> tend to be quite rare and specific. Increasing <code>min joint freq in dataset 1</code> removes such specific concepts from the top of the list and replaces them with more frequent and therefore more general concepts. Such concepts are more likely to also appear in dataset 2, as shown in the following example:</p>
-<table style="width:100%;">
-<caption>Top 5 concepts for ALS with ranking method 'Diff relative rank 1 vs 2', 'in joint freq in dataset 1' set to 200 and 'max joint freq in dataset 2' set to 9999</caption>
-<colgroup>
-<col width="8%"></col>
-<col width="9%"></col>
-<col width="10%"></col>
-<col width="12%"></col>
-<col width="8%"></col>
-<col width="11%"></col>
-<col width="12%"></col>
-<col width="8%"></col>
-<col width="10%"></col>
-<col width="8%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq.high</th>
-<th align="right">PMI.high</th>
-<th align="right">relRank.high</th>
-<th align="right">jointFreq.low</th>
-<th align="right">PMI.low</th>
-<th align="right">relRank.low</th>
-<th align="right">diff</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">C1537935</td>
-<td align="left">MRAP gene</td>
-<td align="left">GENE</td>
-<td align="right">544</td>
-<td align="right">2.786196</td>
-<td align="right">0.8027938</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.8027938</td>
-</tr>
-<tr class="even">
-<td align="left">C0083072</td>
-<td align="left">isopentane</td>
 <td align="left">CHEM</td>
-<td align="right">214</td>
-<td align="right">2.542456</td>
-<td align="right">0.7702893</td>
+<td align="right">12</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.7702893</td>
+<td align="right">15.32844</td>
+<td align="right">NA</td>
+<td align="right">1397.0</td>
+<td align="right">23165</td>
+<td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="left">C1420718</td>
-<td align="left">TH gene</td>
-<td align="left">GENE</td>
-<td align="right">415</td>
-<td align="right">3.115781</td>
-<td align="right">0.8429684</td>
-<td align="right">2</td>
-<td align="right">-1.253318</td>
-<td align="right">0.1494595</td>
-<td align="right">0.6935089</td>
-</tr>
-<tr class="even">
-<td align="left">C0039538</td>
-<td align="left">Teratoma</td>
-<td align="left">DISO</td>
-<td align="right">200</td>
-<td align="right">2.106792</td>
-<td align="right">0.6999547</td>
-<td align="right">1</td>
-<td align="right">-3.031067</td>
-<td align="right">0.0188714</td>
-<td align="right">0.6810833</td>
-</tr>
-<tr class="odd">
-<td align="left">C0172493</td>
-<td align="left">Novus</td>
-<td align="left">CHEM;CHEM</td>
-<td align="right">325</td>
-<td align="right">1.841716</td>
-<td align="right">0.6501879</td>
+<td align="left">C0613678</td>
+<td align="left">UTEN</td>
+<td align="left">CHEM</td>
+<td align="right">101</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.6501879</td>
+<td align="right">15.26653</td>
+<td align="right">NA</td>
+<td align="right">1410.0</td>
+<td align="right">23165</td>
+<td align="right">5</td>
 </tr>
 </tbody>
 </table>
-<p>It can be observed that the different in relative rank is lower than in the previous examples, due to the removal of the concepts with the highest difference. The top two concepts are still concepts which do not appear in dataset 2, but the third and fourth have a couple co-occurrences. Still their relative rank in dataset 2 (abstracts) is very low as expected (this is why they are ranked at the top), which could be an indication that their association with the target is not established in the literature. Of course, it is also possible that their high association in the full articles is due to some artefact. Interestingly, these two concepts even have a <a href="../2010-concept-associations.user-guide/#association-measure">negative PMI value</a> in dataset 2, meanining that the concept and the target tend to &quot;avoid each other&quot; in the abstracts.</p>
-<p>Finally one can use the <a href="../2010-concept-associations.user-guide/#filtering-by-semantic-type">semantic filters</a> in order to focus on a specific type of concept. The following example is obtained by selecting the <code>coarse</code> semantic granularity and then enabling only the &quot;Genes and Molecular Sequences&quot; in the semantic filter:</p>
+<p>In this example the <code>max joint freq in dataset 2</code> threshold is 0 (default) but this is not the reason why the top results are made of concepts which do not appear in the second dataset. Indeed, changing this parameter to a high value (for instance 99999) shows the exact same top concepts. In fact, the <code>max joint freq in dataset 2</code> threshold often has little effect with the <code>Diff rank 1 vs 2</code> <a href="#ranking-method">ranking method</a>, unless <code>the min joint freq in dataset 1</code> threshold is high or the target concept is not frequent. This is because this ranking method favours concepts which do not appear at all in dataset 2, since these concepts have a very high relative rank difference as long as they are ranked at the top in dataset 1.</p>
+<p>With the default <code>Diff rank 1 vs 2</code> method, one should set a high value for both parameters <code>min joint freq in dataset 1</code> and <code>max joint freq in dataset 2</code> in order to see some concepts which appear in dataset 2 at the top. The first discards rare concepts in dataset 1, while the second allows frequent concepts in dataset 2. As seen above, without any contraints the top concepts with <code>Diff rank 1 vs 2</code> tend to be quite rare and specific. Increasing <code>min joint freq in dataset 1</code> removes such specific concepts from the top of the list and replaces them with more frequent and therefore more general concepts. Such concepts are more likely to also appear in dataset 2, as shown in the following example:</p>
 <table style="width:100%;">
-<caption>Top 5 concepts in the 'Genes and Molecular Sequences' category for ALS (with ranking method 'Diff relative rank 1 vs 2', 'in joint freq in dataset 1' set to 200 and 'max joint freq in dataset 2' set to 9999)</caption>
+<caption>Top 5 concepts for ALS with ranking method 'Diff absolute rank 1 vs 2', 'min joint freq in dataset 1' set to 400 and 'max joint freq in dataset 2' set to 9999</caption>
 <colgroup>
 <col width="8%"></col>
+<col width="17%"></col>
+<col width="6%"></col>
+<col width="13%"></col>
+<col width="13%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
 <col width="9%"></col>
-<col width="10%"></col>
-<col width="12%"></col>
-<col width="8%"></col>
-<col width="11%"></col>
-<col width="12%"></col>
-<col width="8%"></col>
-<col width="10%"></col>
-<col width="8%"></col>
+<col width="5%"></col>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">CUI</th>
-<th align="left">firstTerm</th>
-<th align="left">coarseCatId</th>
-<th align="right">jointFreq.high</th>
-<th align="right">PMI.high</th>
-<th align="right">relRank.high</th>
-<th align="right">jointFreq.low</th>
-<th align="right">PMI.low</th>
-<th align="right">relRank.low</th>
-<th align="right">diff</th>
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq.ref</th>
+<th align="right">jointFreq.mask</th>
+<th align="right">pmi.ref</th>
+<th align="right">pmi.mask</th>
+<th align="right">rank.ref</th>
+<th align="right">rank.mask</th>
+<th align="right">rank</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">C1537935</td>
-<td align="left">MRAP gene</td>
-<td align="left">GENE</td>
-<td align="right">544</td>
-<td align="right">2.786196</td>
-<td align="right">0.8005448</td>
-<td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.8005448</td>
-</tr>
-<tr class="even">
-<td align="left">C1420718</td>
-<td align="left">TH gene</td>
-<td align="left">GENE</td>
+<td align="left">C1308189</td>
+<td align="left">ERF protein, human</td>
+<td align="left">CHEM</td>
 <td align="right">415</td>
-<td align="right">3.115781</td>
-<td align="right">0.8405544</td>
-<td align="right">2</td>
-<td align="right">-1.253318</td>
-<td align="right">0.1532529</td>
-<td align="right">0.6873015</td>
-</tr>
-<tr class="odd">
-<td align="left">C1539807</td>
-<td align="left">SP5 gene</td>
-<td align="left">GENE</td>
-<td align="right">246</td>
-<td align="right">1.651419</td>
-<td align="right">0.6084014</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.6084014</td>
+<td align="right">12.54866</td>
+<td align="right">NA</td>
+<td align="right">10418</td>
+<td align="right">23165.0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
-<td align="left">C1420654</td>
-<td align="left">TCOF1 gene</td>
+<td align="left">C1333360</td>
+<td align="left">ERF gene</td>
 <td align="left">GENE</td>
-<td align="right">288</td>
-<td align="right">1.411918</td>
-<td align="right">0.5505663</td>
+<td align="right">420</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.5505663</td>
+<td align="right">12.30001</td>
+<td align="right">NA</td>
+<td align="right">11954</td>
+<td align="right">23165.0</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="left">C1423529</td>
-<td align="left">ANKH gene</td>
+<td align="left">C1446539</td>
+<td align="left">tegafur-uracil</td>
+<td align="left">CHEM</td>
+<td align="right">480</td>
+<td align="right">2</td>
+<td align="right">14.05151</td>
+<td align="right">4.303291</td>
+<td align="right">3181</td>
+<td align="right">14284.5</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">C0043102</td>
+<td align="left">Weil Disease</td>
+<td align="left">DISO</td>
+<td align="right">648</td>
+<td align="right">1</td>
+<td align="right">13.42155</td>
+<td align="right">4.294284</td>
+<td align="right">5608</td>
+<td align="right">14324.5</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">C0085196</td>
+<td align="left">Oxidopamine</td>
+<td align="left">CHEM</td>
+<td align="right">676</td>
+<td align="right">9</td>
+<td align="right">12.95100</td>
+<td align="right">3.917538</td>
+<td align="right">8025</td>
+<td align="right">15910.0</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>It can be observed that the difference in relative rank is lower than in the previous examples, due to the removal of the concepts with the highest difference. The top two concepts are still concepts which do not appear in dataset 2, but the third and fourth have a couple co-occurrences. Still their relative rank in dataset 2 (abstracts) is very low as expected (this is why they are ranked at the top), which could be an indication that their association with the target is not established in the literature. Of course, it is also possible that their high association in the full articles is due to some artefact.</p>
+<!--
+Interestingly, these two concepts even have a [negative PMI value](../2010-concept-associations.user-guide/#association-measure) in dataset 2, meanining that the concept and the target tend to "avoid each other" in the abstracts.
+-->
+<p>Finally one can use the <a href="../2010-concept-associations.user-guide/#filtering-by-semantic-type">semantic filters</a> in order to focus on a specific type of concept. The following example is obtained by selecting only the &quot;Genes and Molecular Sequences&quot; in the semantic filter:</p>
+<table>
+<caption>Top 5 concepts in the 'Genes and Molecular Sequences' category for ALS (with ranking method 'Diff absolute rank 1 vs 2', 'min joint freq in dataset 1' set to 200 and 'max joint freq in dataset 2' set to 9999)</caption>
+<colgroup>
+<col width="9%"></col>
+<col width="11%"></col>
+<col width="6%"></col>
+<col width="14%"></col>
+<col width="14%"></col>
+<col width="9%"></col>
+<col width="9%"></col>
+<col width="9%"></col>
+<col width="10%"></col>
+<col width="5%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">concept</th>
+<th align="left">term</th>
+<th align="left">group</th>
+<th align="right">jointFreq.ref</th>
+<th align="right">jointFreq.mask</th>
+<th align="right">pmi.ref</th>
+<th align="right">pmi.mask</th>
+<th align="right">rank.ref</th>
+<th align="right">rank.mask</th>
+<th align="right">rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C1333360</td>
+<td align="left">ERF gene</td>
 <td align="left">GENE</td>
-<td align="right">209</td>
-<td align="right">1.362199</td>
-<td align="right">0.5375102</td>
+<td align="right">420</td>
 <td align="right">0</td>
-<td align="right">-Inf</td>
-<td align="right">0.0000000</td>
-<td align="right">0.5375102</td>
+<td align="right">12.30001</td>
+<td align="right">NA</td>
+<td align="right">11954</td>
+<td align="right">23165.0</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">C1412727</td>
+<td align="left">BACE1 gene</td>
+<td align="left">GENE</td>
+<td align="right">547</td>
+<td align="right">3</td>
+<td align="right">12.56508</td>
+<td align="right">4.326569</td>
+<td align="right">9692</td>
+<td align="right">14178.0</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">C1415888</td>
+<td align="left">IFI30 gene</td>
+<td align="left">GENE</td>
+<td align="right">960</td>
+<td align="right">5</td>
+<td align="right">14.34985</td>
+<td align="right">6.660279</td>
+<td align="right">2919</td>
+<td align="right">5979.5</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">C1414477</td>
+<td align="left">ETV5 gene</td>
+<td align="left">GENE</td>
+<td align="right">825</td>
+<td align="right">5</td>
+<td align="right">12.27221</td>
+<td align="right">4.475175</td>
+<td align="right">12060</td>
+<td align="right">13591.0</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td align="left">C0599295</td>
+<td align="left">ERG gene</td>
+<td align="left">GENE</td>
+<td align="right">959</td>
+<td align="right">7</td>
+<td align="right">11.86224</td>
+<td align="right">3.576386</td>
+<td align="right">15856</td>
+<td align="right">17258.0</td>
+<td align="right">17</td>
 </tr>
 </tbody>
 </table>

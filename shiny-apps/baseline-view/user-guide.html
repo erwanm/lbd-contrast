@@ -501,7 +501,7 @@ Starting from the second row regular concepts appear.
 </div>
 <div id="filtering-with-semantic-types" class="section level3">
 <h3>Filtering with Semantic Types</h3>
-<p>The below top 5 concepts are obtained by selecting only the &quot;Genes and Molecular Sequences&quot; in the semantic filter:</p>
+<p>The below top 5 concepts are obtained by selecting only the &quot;Genes and Molecular Sequences&quot; in the semantic filter, with a min. frequency of 100:</p>
 <table>
 <caption>Top 5 concepts in the 'Genes and Molecular Sequences' category for target ALS (min. frequency 100)</caption>
 <thead>
@@ -557,10 +557,7 @@ Starting from the second row regular concepts appear.
 </tr>
 </tbody>
 </table>
-<p>With a min. frequency of 100, this filter leaves only a reasonable number of genetic concepts in the table:</p>
-<pre class="r"><code>nrow(s)</code></pre>
-<pre><code>## [1] 37</code></pre>
-<p>This way one can observe the difference in association strength between different concepts: while the top concepts have a PMI close to 9 and appear 20 to 30% together with the target (based on <code>probTargetGivenCui</code>), the concepts found at the bottom of the table have a PMI close to 0 or even slightly negative. This means that they are not especially associated with the target, and it can be seen that most of them are indeed generic terms such as &quot;Genes&quot;, &quot;Alleles&quot;, &quot;DNA sequence&quot;.</p>
+<p>Note that this filter leaves only around 40 genetic concepts in the table (thanks to the minimum frequency filter). This way one can observe the difference in association strength between different concepts: while the top concepts have a high PMI close to, the concepts found at the bottom of the table have a PMI close to 0 or even slightly negative. This means that they are not especially associated with the target, and it can be seen that most of them are indeed generic terms such as &quot;Genes&quot;, &quot;Alleles&quot;, &quot;DNA sequence&quot;.</p>
 </div>
 </div>
 

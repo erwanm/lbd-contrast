@@ -15,7 +15,7 @@ library(DT)
 source('../../contrast-experiments.R')
 source('../util.R')
 
-linkUserGuide <- "../2010-hidden-association-contrast-datasets.user-guide"
+linkUserGuide <- "../contrast-views.user-guide"
 
 defaultMinJointFreq1 <- 10
 defaultMaxJointFreq2 <- 0
@@ -154,14 +154,14 @@ server <- function(input, output) {
   targetCuiRelationsHigh <- reactive({
     target <- input$targetInput
     if (!is.null(target)) {
-      loadFullTargetCuiRelations(target, datasetPathHigh(),TRUE)
+      loadFullTargetCuiRelations(target, datasetPathHigh(),singleGroupByRow=TRUE)
     }
   })
 
   targetCuiRelationsLow <- reactive({
     target <- input$targetInput
     if (!is.null(target)) {
-      loadFullTargetCuiRelations(target, datasetPathLow(),TRUE)
+      loadFullTargetCuiRelations(target, datasetPathLow(),singleGroupByRow=TRUE)
     }
   })
 
@@ -194,12 +194,12 @@ server <- function(input, output) {
     dh <- orderedByAssociationHigh()
     dl <- orderedByAssociationLow()
 #    print(paste('contrastData: nrow(dh)=',nrow(dh),'; nrow(dl)=',nrow(dl)))
-    print(colnames(dh))
+#    print(colnames(dh))
     if (!is.null(dh) & !is.null(dl)) {
       method = input$showOrderedBy
-      print(method)
-      print(input$minJointFreq1)
-      print(input$maxJointFreq2)
+#      print(method)
+#      print(input$minJointFreq1)
+#      print(input$maxJointFreq2)
       d <- contrastViews(dh, dl, minJointFreqRef=input$minJointFreq1, maxJointFreqMask=input$maxJointFreq2, discardRowNotInMaskView=FALSE,methodId=method,mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
 #      print(paste('contrastData: nrow(d)=',nrow(d),'colnames(d)='))
 #      print(colnames(d))

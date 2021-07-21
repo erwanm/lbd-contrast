@@ -117,7 +117,7 @@ server <- function(input, output) {
   targetCuiRelations <- reactive({
     target <- input$targetInput
     if (!is.null(target)) {
-      loadFullTargetCuiRelations(target, datasetPath(),TRUE)
+      loadFullTargetCuiRelations(target, datasetPath(),singleGroupByRow=TRUE)
     }
   })
 

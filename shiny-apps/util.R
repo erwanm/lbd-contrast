@@ -30,6 +30,7 @@ loadFullTargetCuiRelations <- function(cui, viewDir, dataDir='../../../ND-hierar
       filename <- paste0(filename,'.key-id-group')
     }
     path <- paste(dataDir,viewDir, filename,sep='/')
+#    print(path)
     df <- read.table(path, sep='\t', quote="", comment.char = "", row.names=NULL,stringsAsFactors = FALSE)
     colnames(df) <- c('concept','freq','term','group','jointFreq')
 #    print(nrow(df))
