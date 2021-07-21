@@ -1,0 +1,39 @@
+---
+title: "BrainMEND Literature-Based Discovery tools"
+author: "Erwan Moreau"
+date: "July 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+## Overview
+
+The tools below propose an interactive interface to explore relations between some neurodegenerative concepts extracted from the biomedical literature. The tools are prototypes for a new literature-based discovery method presented in **[pending]**. 
+
+- [Associated concepts by ND target](baseline-view/) ([documentation](baseline-view.user-guide/))
+- [Contrast two Datasets given a Target Concept](contrast-views/) ([documentation](contrast-views.user-guide/))
+
+
+The code for the contrast method can be found in [this github repository](https://github.com/erwanm/lbd-contrast).
+
+
+## Contact
+
+Feedback/queries: [erwan.moreau@adaptcentre.ie](mailto:erwan.moreau@adaptcentre.ie?subject=[BrainMEND-tools])
+
+## Acknowledgements
+
+This work was conducted with the financial support of Irish Health Research Board (HRB) BRAINMend project (grant number HRB-JPI-JPND-2017-1) and with the support of the Science Foundation Ireland Research Centre ADAPT (grant number 13/RC/2106\_P2).
+
+The interactive interface is implemented with [Shiny](https://shiny.rstudio.com) and the documentation uses [RMarkdown](https://rmarkdown.rstudio.com/).
+
+![](img/tcd-logo.jpg){#id .class width=40% height=40% align="right" padding=10%}
+![](img/adapt-logo.png){#id .class width=15% height=15% align="right" padding=10%}
+
