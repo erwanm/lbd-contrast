@@ -7,6 +7,7 @@ The approach relies on contrasting different “views” of the data, the data b
 
 - The paper can be found at **TODO link**
 - The code is available at https://github.com/erwanm/lbd-contrast
+- The corresponding user interface tool can be accessed at https://brainmend.adaptcentre.ie/
 
 This repository contains a library of R functions to manipulate the data, apply the new contrast methods described in the paper and evaluate the results. It requires some preprocessed data which can be obtained either by downloading the dataset used in the paper **TODO link** or by running the full preprocessing. 
 
