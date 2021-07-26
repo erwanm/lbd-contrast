@@ -21,12 +21,12 @@ This is the documentation of the companion code for the paper **TODO**, which pr
 For running these experiments two options are proposed: 
 
 - The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option please follow the instructions in [Part 1](./part1-full-replication.html).
-- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option please follow the instructions in this document.
+- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from https://zenodo.org/record/4895190. For this option please follow the instructions in this document.
 
 
 ## Data Requirements for the Short Reproducibility Study
 
-For convenience the fully preprocessed dataset used in the paper is provided here **TODO**. The user should be able to reproduce the results presented in the paper by following the instructions below.
+For convenience the fully preprocessed dataset used in the paper is provided [here](https://zenodo.org/record/4895190). The user should be able to reproduce the results presented in the paper by following the instructions below.
 
 
 ## Software Requirements
