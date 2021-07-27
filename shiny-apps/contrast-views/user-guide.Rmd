@@ -1,0 +1,186 @@
+---
+title: "User Guide: Contrast two Datasets given a Target Concept"
+author: "Erwan Moreau"
+date: "29 November 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(knitr)
+source('../util.R',chdir=TRUE)
+source('../../contrast-experiments.R')
+
+exampleTarget <- 'C0002736' # ALS
+exampleDatasetHigh <- 'KD/by-doc/pmc-articles'
+exampleDatasetLow <- 'KD/by-doc/unfiltered-medline'
+
+#  [1] "concept"         "term"            "group"           "freq.ref"        "jointFreq.ref"   "nbDocs.ref"      "targetFreq.ref" 
+# [8] "pmi.ref"         "rank.ref"        "relRank.ref"     "freq.mask"       "jointFreq.mask"  "nbDocs.mask"     "targetFreq.mask"
+# [15] "pmi.mask"        "rank.mask"       "relRank.mask"    "diffRelRank"     "diffRank"        "diffJointFreq"   "rank"           
+# [22] "relRank"        
+showColumns <- c('concept', 'term', 'group',  'jointFreq.ref',  'jointFreq.mask', 'pmi.ref','pmi.mask','rank.ref','rank.mask','rank')
+```
+
+This document explains how [this Shiny visualization tool](../contrast-views) works. It is recommended to understand the ["Top Associated Concepts with a Target Concept"](../baseline-view/) tool ([see documentation](../baseline-view.user-guide)) before
+starting with this one.
+
+## Summary
+
+This tool is intended to contrast two datasets in order to emphasize how they differ the most. It presents the user with a list of concepts associated with a chosen target concept, ordered according to the difference in association strength between two selected datasets, with the concepts with the highest difference shown at the top. Thus the user is able to visualize the concepts which have a very high association strength in the first dataset but a very low one in the second one. 
+
+This comparison is meant to detect concepts which are susceptible to have a meaningful relationship with the target concept, but this relationship has been "overlooked" in the literature. The method relies on the assumption that concepts relationships which are well studied are strongly associated even if considering only abstracts at the sentence level, which correspond to the most restrictive type of literature data available. By contrast, the full articles by paper are the least retrictive in terms of volume and diversity of relationships captured. Therefore it is assumed that two concepts which have a strong association in the latter (full articles) but are absent or have a weak association in the former (abstracts) are a good candidate as an overlooked relationship: the relationship is not well studied otherwise it would be found in the abstracts, and it is significant otherwise it would not have a strong association in the full articles.
+
+Essentially, this tool attempts to simulate the process of a human expert going through the list of top associated concepts from the full articles (as can be done with the [previous tool](../baseline-view/)) and extracting the relationships considered non-obvious and potentially candidates for further investigation.
+
+The [frequency filters](#frequency-filters) `min joint freq in dataset 1` and `max joint frequency in dataset 2`  play an important role in the selection of the associated concepts shown in the results. Intuitively, the former allows the user to *adjust the generality level* while the latter is used to *adjust the contrast level*. The tool is designed to let the user find the "sweet spot" for these parameters so that the output contains exploitable concepts, i.e. points to relationships which are relevant, non-obvious and good candidates for further study.
+
+
+## Data
+
+This tool uses the same type of data as the ["Top Associated Concepts with a Target Concept"](../baseline-view/) tool, please refer to [its documentation for details about the data](../baseline-view.user-guide/#data)). However, while the previous tool was based on a single dataset, the present one is based on comparing two datasets against each other. The comparison is not symetrical, because the system selects concepts which satisfy these two conditions:
+
+* The concept has a high association strength with the target in the first dataset,
+* The concept has a low association strength or is not associated at all with the target in the second dataset.
+
+The tool is intended to be used with a high-coverage first dataset and a restrictive second dataset. By construction, the data obtained from `abstracts only` contains less but more reliable co-occurrences between concepts, whereas the `articles only` data contains more but less reliable co-occurences and the `abstracts+articles` contains all the co-occurrences. Also by contruction, the level `by sentence` is much more restrictive and more accurate than the level `by paper`, since the former captures only co-occurences in a sentence while the latter also considers co-occurrences of concepts which appear far away from each other in a document.
+
+
+## Target Selection
+
+The user can select a target concept among a predefined list of ND concepts. 
+<!-- The list of available concepts can be filtered by ND group using the checkboxes above the target selection box. The list of available concepts is also organized by ND group, with the group abbreviation shown before the specific concept.
+-->
+
+See the [documentation of the previous tool](../baseline-view/#target-selection) for details.
+
+
+## Ranking Method
+
+The order of the associated concepts in the results table depends on two options: the association measure (MI or PMI), which is explained in [the documentation of the previous tool](../baseline-view.user-guide#association-measure) (PMI, the default, is recommended), and the `method to rank CUIs`, which can be either `Basic Contrast` (the default), `Relative Diff Rank` or `Absolute Diff Rank`.
+
+
+### Basic Contrast
+
+With this option enabled, the results table shows the concepts ordered by their association measure in the first data: first the reference view concepts are ranked, then the concepts which have a joint frequency in the mask view higher than the maximum parameter are filtered out (see [Frequency Filters](#frequency-filters) below). This means that it shows the same list as the [previous tool](../baseline-view/) for the reference view, except that the filtering is based on the mask view. 
+
+This view can be simpler to interpret because it directly follows the order of the top associated concepts in the first dataset, while letting the user analyze the differences between the two datasets. In this view, the `max joint frequency in dataset 2` (see [Frequency Filters](#frequency-filters) below) is a crucial parameter: if set to a very high value, the list contains all the concepts in dataset 1, but if set to a low value (especially at the default 0) the concepts which have a higher frequency in dataset 2 are filtered out. In this case the effect is very similar to using the `Diff relative rank 1 vs 2` method, since it keeps only the concepts which have a low association (or are absent) in dataset 2 at the top of list.
+
+
+### By Difference in Relative/Absolute Rank
+
+In both datasets, the associated concepts are ranked by their association measure (PMI by default) and their rank (relative or absolute) is calculated. Then the concepts are ordered by the difference between their two ranks (dataset 1 minus dataset 2) from lowest difference at the top to highest difference at the bottom of the ranking. 
+
+This method satisfies the main objective since the highest possible difference happens for concepts which have a high association in dataset 1 and a low one in dataset 2. It orders the full list of concepts by how much their rank differs in the two datasets, so even if there is no concept which satisfies the two conditions perfectly the top concepts will be the closest ones to the goal. For example, a concept with a high association in dataset 1 but an average association in dataset 2 appears higher than one with an average rank in both. 
+
+Technical notes: 
+
+- The difference is not calculated based on the association value because these values are not reliably comparable across datasets due to their different size.
+- The absolute rank depends on the number of concepts in the view, whereas the relative rank doesn't since it's normalized by the size of the view. This implies that the relative and absolute versions produce different rankings.
+
+
+## Frequency Filters
+
+The options `min joint freq in dataset 1` and `max joint frequency in dataset 2` provide the user with the ability to adjust the list by filtering out concepts which do not satisfy the two conditions.
+
+
+The minimum frequency in the first dataset is used in the same way as in the previous tool. The user can adjust this parameter to filter out the least frequently associated concepts, which can happen by chance and are often too specific (see also the [documentation of the previous tool](../baseline-view.user-guide/#joint-frequency-thresholding)).
+
+The maximum frequency in the second dataset is proposed in this tool so that the user can also filter out concepts which appear too frequently in the second dataset (since the goal is to find concepts which are poorly or not at all associated with the target in the second dataset). By default the threshold is set to zero, which means that only concepts which don't appear at all in the second dataset are presented. But this threshold can be relaxed by setting a higher value, thus letting concepts which exist in the second dataset appear in the results. The effect differs depending on the [ranking method](#ranking-method):
+
+* With the default `Basic Contrast` method, the `max joint frequency in dataset 2` is the only way to make the second dataset affect which concepts are shown: with a low threshold (especially the default value 0), the concepts which a high association in dataset 2 are filtered out, but with a very high threshold they are shown as well so the contrast between the two datasets is not clearly visible.
+* With the `Diff rank 1 vs 2` method, even a high `max joint frequency in dataset 2` value is unlikely to show any additional concept at the top of the list because their difference in relative rank is not as high as the ones with a lower frequency in dataset 2. However this can happen either if the target concept has few associated concepts, or if the `min joint freq in dataset 1` is set to a high value. In this case which helps finding general/frequent concepts, the `max joint frequency in dataset 2`  value is used to avoid (or not) the concepts which do not have a high difference between the two datasets.
+
+Overall the two thresholds `min joint freq in dataset 1` and `max joint frequency in dataset 2`  play an important role in the selection of the associated concepts shown in the results. Intuitively, the former allows the user to *adjust the generality level* while the latter is used to *adjust the contrast level*. These two thresholds should be adjusted depending on the target concept (in particular its frequency and number of associated concepts) and the desired outcome (level of generality and contrast).
+
+## Filtering by semantic type and other options
+
+Please refer to the [documentation of the previous tool](../baseline-view.user-guide/#filtering-by-semantic-type). You can also check the [usage tips](../baseline-view.user-guide/#usage-tips).
+
+## Examples
+
+In the following examples the default `articles only`,`by paper` and `abstracts only`,`by paper` options are selected as dataset 1 and 2 respectively. The "Amyotrophic Lateral Sclerosis (ALS)" concept is used as target, and the default PMI is used as association measure.
+
+```{r, include=FALSE}
+targetsh<-getAllTargets(exampleDatasetHigh)
+targetsl<-getAllTargets(exampleDatasetLow)
+dh<-loadFullTargetCuiRelations(exampleTarget, exampleDatasetHigh, singleGroupByRow=TRUE)
+dl<-loadFullTargetCuiRelations(exampleTarget, exampleDatasetLow, singleGroupByRow=TRUE)
+sh <- list(viewTotal=getViewTotal(exampleDatasetHigh),targetFreq=targetsh[as.character(targetsh$targetId)==as.character(exampleTarget),'targetFreq'])
+sl <- list(viewTotal=getViewTotal(exampleDatasetLow),targetFreq=targetsl[as.character(targetsl$targetId)==as.character(exampleTarget),'targetFreq'])
+dh <- orderConceptsByAssociation(dh, sh, "pmi")
+dl <- orderConceptsByAssociation(dl, sl, "pmi")
+```
+
+With the default parameters the following top 5 concepts are shown to the user:
+
+```{r, echo=FALSE}
+d <- contrastViews(dh, dl, minJointFreqRef=10, maxJointFreqMask=0, discardRowNotInMaskView=FALSE,methodId='basicContrast',mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
+#d <- mergeRelations(dh, dl,orderByCol='relRank',minJointFreqHigh=10,maxJointFreqLow=0,cols=c('CUI','firstTerm','typeId','coarseCatId','jointFreq','probCuiGivenTarget','probTargetGivenCui','PMI','MI','relRank'), byCols=c('CUI','firstTerm','typeId','coarseCatId'), removeOppositeOrderCUIs=FALSE, orderByRelRank=TRUE)
+kable(head(d[,showColumns], 5),caption="Top 5 concepts for ALS (default parameters)", row.names=FALSE)
+```
+
+<!--
+Some of these concepts are surprising in relation to ALS, while others have an indirect relationship:
+
+* "Biomox" is an [Amoxicillin antibiotic](https://www.rxwiki.com/biomox) (apparently commonly used [with dogs](https://us.virbac.com/products/antibiotics/biomox-amoxicillin-tablets)). Its strong association with ALS in the data would require an investigation. 
+* "Neuronal cytoplasmic inclusion" is a very specific anatomical term which makes sense in relation to ALS.
+* "CACFD1 gene" (Calcium Channel Flower Domain Containing 1) is a gene which could be associated with some form of [myopathy](https://www.genecards.org/cgi-bin/carddisp.pl?gene=CACFD1).
+* "Charcot-Marie-Tooth disease" is the [most commonly inherited neurological disease](https://en.wikipedia.org/wiki/Charcot%E2%80%93Marie%E2%80%93Tooth_disease)
+* "Pallidoluysian degeneration" appears to be related to an [inherited disease which is rare except in Japan](https://en.wikipedia.org/wiki/Dentatorubral%E2%80%93pallidoluysian_atrophy)
+-->
+
+These concepts are quite specific and their quite strong association with ALS is not immediately clear. It is possible that some are explained by chance or by some bias in the literature, but in general an expert would have to perform a deeper analysis in order to understand the nature of the association.
+
+It can be observed that `jointFreq.mask`, the joint frequency in dataset 2, is always 0, which indicates that these concepts do not appear at all together in the second dataset.  As a result their association is is the lowest possible in dataset 2, and since it is high in dataset 1 they obtain a high difference. 
+
+### Ranking Methods and Thresholds
+
+
+With the [ranking method](#ranking-method) `Basic contrast`, results are strongly affected by the `max joint freq in dataset 2` parameter: if the threshold is high then the method simply shows the top concepts in dataset 1, whereas if the threshold is low (especially 0) then it tends to show the same results as the alternative ranking method `Diff rank 1 vs 2`, as shown in the following examples.
+
+
+```{r, echo=FALSE}
+d <- contrastViews(dh, dl, minJointFreqRef=10, maxJointFreqMask=10, discardRowNotInMaskView=FALSE,methodId='basicContrast',mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
+#d <- mergeRelations(dh, dl,orderByCol='relRank',minJointFreqHigh=10,maxJointFreqLow=0,cols=c('CUI','firstTerm','typeId','coarseCatId','jointFreq','probCuiGivenTarget','probTargetGivenCui','PMI','MI','relRank'), byCols=c('CUI','firstTerm','typeId','coarseCatId'), removeOppositeOrderCUIs=FALSE, orderByRelRank=TRUE)
+kable(head(d[,showColumns], 5),caption="Top 5 concepts for ALS, Basic Contrast with max joint freq 2 = 10", row.names=FALSE)
+```
+
+This example where `max joint freq in dataset 2` is set to 10 shows that some concepts have a high association in both datasets, as opposed to the ones obtained with `max joint freq in dataset 2` set to 0 or the `Diff rank 1 vs 2` method (see below). Naturally the goal of the tool is to filter out these concepts, but the `basic contrast` method can be used to observe how such well-studied concepts are progressively discarded when starting from a high `max joint freq in dataset 2` value and then decreasing it.
+
+
+```{r, echo=FALSE}
+d <- contrastViews(dh, dl, minJointFreqRef=10, maxJointFreqMask=0, discardRowNotInMaskView=FALSE,methodId='diffAbsRank',mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
+#d <- mergeRelations(dh, dl,orderByCol='relRank',minJointFreqHigh=10,maxJointFreqLow=0,cols=c('CUI','firstTerm','typeId','coarseCatId','jointFreq','probCuiGivenTarget','probTargetGivenCui','PMI','MI','relRank'), byCols=c('CUI','firstTerm','typeId','coarseCatId'), removeOppositeOrderCUIs=FALSE, orderByRelRank=TRUE)
+kable(head(d[,showColumns], 5),caption="Top 5 concepts for ALS, Absolute Diff Rank with max joint freq = 0", row.names=FALSE)
+```
+
+
+In this example the `max joint freq in dataset 2` threshold is 0 (default) but this is not the reason why the top results are made of concepts which do not appear in the second dataset. Indeed, changing this parameter to a high value (for instance 99999) shows the exact same top concepts. In fact, the `max joint freq in dataset 2` threshold often has little effect with the   `Diff rank 1 vs 2` [ranking method](#ranking-method), unless `the min joint freq in dataset 1` threshold is high or the target concept is not frequent. This is because this ranking method favours concepts which do not appear at all in dataset 2, since these concepts have a very high relative rank difference as long as they are ranked at the top in dataset 1.
+
+
+With the default `Diff rank 1 vs 2` method, one should set a high value for both parameters `min joint freq in dataset 1` and `max joint freq in dataset 2` in order to see some concepts which appear in dataset 2 at the top. The first discards rare concepts in dataset 1, while the second allows frequent concepts in dataset 2. As seen above, without any contraints the top concepts with `Diff rank 1 vs 2` tend to be quite rare and specific. Increasing `min joint freq in dataset 1` removes such specific concepts from the top of the list and replaces them with more frequent and therefore more general concepts. Such concepts are more likely to also appear in dataset 2, as shown in the following example:
+
+```{r, echo=FALSE}
+d <- contrastViews(dh, dl, minJointFreqRef=400, maxJointFreqMask=9999, discardRowNotInMaskView=FALSE,methodId='diffAbsRank',mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
+#d <- mergeRelations(dh, dl,orderByCol='relRank',minJointFreqHigh=10,maxJointFreqLow=0,cols=c('CUI','firstTerm','typeId','coarseCatId','jointFreq','probCuiGivenTarget','probTargetGivenCui','PMI','MI','relRank'), byCols=c('CUI','firstTerm','typeId','coarseCatId'), removeOppositeOrderCUIs=FALSE, orderByRelRank=TRUE)
+kable(head(d[,showColumns], 5),caption="Top 5 concepts for ALS with ranking method 'Diff absolute rank 1 vs 2', 'min joint freq in dataset 1' set to 400 and 'max joint freq in dataset 2' set to 9999", row.names=FALSE)
+```
+
+It can be observed that the difference in relative rank is lower than in the previous examples, due to the removal of the concepts with the highest difference. The top two concepts are still concepts which do not appear in dataset 2, but the third and fourth have a couple co-occurrences. Still their relative rank in dataset 2 (abstracts) is very low as expected (this is why they are ranked at the top), which could be an indication that their association with the target is not established in the literature. Of course, it is also possible that their high association in the full articles is due to some artefact. 
+
+<!--
+Interestingly, these two concepts even have a [negative PMI value](../2010-concept-associations.user-guide/#association-measure) in dataset 2, meanining that the concept and the target tend to "avoid each other" in the abstracts.
+-->
+
+Finally one can use the [semantic filters](../2010-concept-associations.user-guide/#filtering-by-semantic-type) in order to focus on a specific type of concept. The following example is obtained by selecting only the "Genes and Molecular Sequences" in the semantic filter:
+
+
+```{r, echo=FALSE}
+d <- contrastViews(dh, dl, minJointFreqRef=400, maxJointFreqMask=9999, discardRowNotInMaskView=FALSE,methodId='diffAbsRank',mergeByCols=c('concept','term','group'), rankCol='rank', relRankCol='relRank', jointFreqCol='jointFreq')
+kable(head(d[d$group=='GENE',showColumns], 5),caption="Top 5 concepts in the 'Genes and Molecular Sequences' category for ALS (with ranking method 'Diff absolute rank 1 vs 2', 'min joint freq in dataset 1' set to 200 and 'max joint freq in dataset 2' set to 9999)", row.names=FALSE)
+```
+
