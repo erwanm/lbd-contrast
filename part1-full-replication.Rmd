@@ -22,7 +22,7 @@ For running these experiments two options are proposed:
 - The "full replication" offers more flexibility but requires much more computing resources (access to a cluster is recommended). For this option:
     - First follow the instructions in this guide,
     - Then go to [Part 2](./part2-short-reproducibility-study.html).
-- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from **TODO**. For this option you can go directly to [Part 2](./part2-short-reproducibility-study.html).
+- The "short reproducibility study" proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded [here](https://zenodo.org/record/4895190). For this option you can go directly to [Part 2](./part2-short-reproducibility-study.html).
 
 
 ## Data Requirements for Full Replication
