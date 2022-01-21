@@ -452,7 +452,7 @@ summary {
 <li>First follow the instructions in this guide,</li>
 <li>Then go to <a href="./part2-short-reproducibility-study.html">Part 2</a>.</li>
 </ul></li>
-<li>The “short reproducibility study” proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded from <strong>TODO</strong>. For this option you can go directly to <a href="./part2-short-reproducibility-study.html">Part 2</a>.</li>
+<li>The “short reproducibility study” proposes to use the exact same preprocessed dataset as described in the paper which can be downloaded <a href="https://zenodo.org/record/4895190">here</a>. For this option you can go directly to <a href="./part2-short-reproducibility-study.html">Part 2</a>.</li>
 </ul>
 <div id="data-requirements-for-full-replication" class="section level2">
 <h2>Data Requirements for Full Replication</h2>
@@ -507,7 +507,7 @@ summary {
 </ul>
 <pre class="r"><code>system.time(raw&lt;-loadData(verbose=FALSE))</code></pre>
 <pre><code>##    user  system elapsed 
-## 582.982   7.612 604.975</code></pre>
+## 600.158  15.509 661.271</code></pre>
 <ul>
 <li>Note: the PTC concepts are expected to be read as <code>&lt;id&gt;@&lt;type&gt;</code>; the <code>@&lt;type&gt;</code> suffix is removed by default.</li>
 </ul>
@@ -844,76 +844,76 @@ kable(targetPairs)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1110</td>
+<td>783</td>
 <td align="left">ALS</td>
-<td align="left">Autism</td>
-<td align="left">PTC</td>
-<td align="left">by-sent</td>
-<td align="left">abstracts+articles</td>
-<td align="right">2016</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D001321</td>
-<td align="right">23</td>
-</tr>
-<tr class="even">
-<td>1390</td>
-<td align="left">ALS</td>
-<td align="left">Ataxia</td>
-<td align="left">PTC</td>
-<td align="left">by-doc</td>
-<td align="left">unfiltered-medline</td>
-<td align="right">2019</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D001259</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td>1787</td>
-<td align="left">ALS</td>
-<td align="left">Psychosis</td>
-<td align="left">PTC</td>
-<td align="left">by-doc</td>
-<td align="left">abstracts+articles</td>
-<td align="right">2013</td>
-<td align="left">MESH:D000690</td>
-<td align="left">MESH:D011618</td>
-<td align="right">14</td>
-</tr>
-<tr class="even">
-<td>540</td>
-<td align="left">ALS</td>
-<td align="left">Myopathy</td>
+<td align="left">Parkinson</td>
 <td align="left">KD</td>
 <td align="left">by-doc</td>
-<td align="left">abstracts+articles</td>
-<td align="right">1997</td>
+<td align="left">pmc-articles</td>
+<td align="right">2014</td>
 <td align="left">C0002736</td>
-<td align="left">C0026848</td>
-<td align="right">5</td>
+<td align="left">C0030567</td>
+<td align="right">338</td>
 </tr>
-<tr class="odd">
-<td>1352</td>
+<tr class="even">
+<td>1250</td>
 <td align="left">ALS</td>
-<td align="left">Ataxia</td>
+<td align="left">Spinocerebellar</td>
 <td align="left">PTC</td>
 <td align="left">by-doc</td>
 <td align="left">pmc-articles</td>
-<td align="right">2004</td>
+<td align="right">2007</td>
 <td align="left">MESH:D000690</td>
-<td align="left">MESH:D001259</td>
-<td align="right">1</td>
+<td align="left">MESH:D020754</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>718</td>
+<td align="left">ALS</td>
+<td align="left">Myopathy</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="right">2018</td>
+<td align="left">C0002736</td>
+<td align="left">C0026848</td>
+<td align="right">14</td>
 </tr>
 <tr class="even">
-<td>1204</td>
+<td>1823</td>
 <td align="left">ALS</td>
-<td align="left">Extrapyramidal</td>
+<td align="left">Psychosis</td>
 <td align="left">PTC</td>
 <td align="left">by-sent</td>
-<td align="left">abstracts+articles</td>
-<td align="right">2016</td>
+<td align="left">pmc-articles</td>
+<td align="right">2012</td>
 <td align="left">MESH:D000690</td>
-<td align="left">MESH:D001480</td>
-<td align="right">6</td>
+<td align="left">MESH:D011618</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>852</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">abstracts+articles</td>
+<td align="right">1991</td>
+<td align="left">C0002736</td>
+<td align="left">C0030567</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td>940</td>
+<td align="left">ALS</td>
+<td align="left">Parkinson</td>
+<td align="left">KD</td>
+<td align="left">by-sent</td>
+<td align="left">unfiltered-medline</td>
+<td align="right">2011</td>
+<td align="left">C0002736</td>
+<td align="left">C0030567</td>
+<td align="right">116</td>
 </tr>
 </tbody>
 </table>
@@ -1230,7 +1230,7 @@ kable(targetRanges)</code></pre>
 ## [1] &quot;  processing range 1950 - 2005 ...&quot;
 ## [1] &quot;  processing range 1950 - 2008 ...&quot;</code></pre>
 <pre><code>##    user  system elapsed 
-## 443.908   9.223 453.152</code></pre>
+## 453.585  12.041 465.793</code></pre>
 <p><code>aggregated</code> is a list made of 3 dataframes <code>indiv</code>, <code>joint</code> and <code>total</code>.</p>
 </div>
 </div>
@@ -1239,7 +1239,7 @@ kable(targetRanges)</code></pre>
 <p>The following step integrates the 3 dataframes together so that each row contains all the relevant frequencies for the corresponding pair of concepts.</p>
 <pre class="r"><code>system.time(integrated&lt;-integratePairsDataByYearRange(aggregated))</code></pre>
 <pre><code>##    user  system elapsed 
-## 246.584   1.952 248.536</code></pre>
+## 271.632   3.061 274.845</code></pre>
 <pre class="r"><code>kable(integrated[sample(1:nrow(integrated),6),])</code></pre>
 <table>
 <thead>
@@ -1260,88 +1260,88 @@ kable(targetRanges)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>358941</td>
+<td>3142259</td>
 <td align="right">1950</td>
-<td align="right">1986</td>
+<td align="right">2005</td>
 <td align="left">PTC</td>
 <td align="left">unfiltered-medline</td>
 <td align="left">by-doc</td>
-<td align="left">MESH:D010300</td>
-<td align="left">632</td>
-<td align="right">1</td>
-<td align="right">730</td>
-<td align="right">6776</td>
-<td align="right">7323895</td>
+<td align="left">MESH:D011471</td>
+<td align="left">MESH:D001480</td>
+<td align="right">7</td>
+<td align="right">11082</td>
+<td align="right">37962</td>
+<td align="right">16414155</td>
 </tr>
 <tr class="even">
-<td>1544289</td>
+<td>2060338</td>
 <td align="right">1950</td>
-<td align="right">2002</td>
+<td align="right">2003</td>
 <td align="left">KD</td>
 <td align="left">abstracts+articles</td>
 <td align="left">by-doc</td>
-<td align="left">C1414830</td>
-<td align="left">C0033975</td>
+<td align="left">C5196192</td>
+<td align="left">C0026848</td>
 <td align="right">1</td>
-<td align="right">20105</td>
-<td align="right">631</td>
-<td align="right">14568669</td>
+<td align="right">8335</td>
+<td align="right">2743</td>
+<td align="right">15154912</td>
 </tr>
 <tr class="odd">
-<td>1269407</td>
+<td>3986821</td>
 <td align="right">1950</td>
-<td align="right">2001</td>
-<td align="left">KD</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-sent</td>
-<td align="left">C0033975</td>
-<td align="left">C0014136</td>
-<td align="right">20</td>
-<td align="right">33870</td>
-<td align="right">28327</td>
-<td align="right">52473612</td>
+<td align="right">2008</td>
+<td align="left">PTC</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">MESH:D020754</td>
+<td align="left">MESH:C057580</td>
+<td align="right">2</td>
+<td align="right">1282</td>
+<td align="right">4004</td>
+<td align="right">18561886</td>
 </tr>
 <tr class="even">
-<td>2474725</td>
+<td>2118240</td>
 <td align="right">1950</td>
 <td align="right">2003</td>
+<td align="left">KD</td>
+<td align="left">pmc-articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0087012</td>
+<td align="left">C0007592</td>
+<td align="right">1</td>
+<td align="right">1084</td>
+<td align="right">16</td>
+<td align="right">114625</td>
+</tr>
+<tr class="odd">
+<td>230874</td>
+<td align="right">1950</td>
+<td align="right">1984</td>
 <td align="left">PTC</td>
 <td align="left">unfiltered-medline</td>
 <td align="left">by-sent</td>
-<td align="left">MESH:D010300</td>
-<td align="left">MESH:D000362</td>
-<td align="right">13</td>
-<td align="right">26321</td>
-<td align="right">46918</td>
-<td align="right">44183926</td>
+<td align="left">MESH:D011605</td>
+<td align="left">MESH:D001321</td>
+<td align="right">25</td>
+<td align="right">3143</td>
+<td align="right">4936</td>
+<td align="right">9359504</td>
 </tr>
-<tr class="odd">
-<td>2800809</td>
+<tr class="even">
+<td>2888896</td>
 <td align="right">1950</td>
 <td align="right">2005</td>
 <td align="left">KD</td>
 <td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">C0026848</td>
-<td align="left">C0009148</td>
-<td align="right">3</td>
-<td align="right">9458</td>
-<td align="right">9050</td>
-<td align="right">16413397</td>
-</tr>
-<tr class="even">
-<td>1089185</td>
-<td align="right">1950</td>
-<td align="right">2001</td>
-<td align="left">KD</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">C0949989</td>
+<td align="left">by-sent</td>
+<td align="left">C0025329</td>
 <td align="left">C0005586</td>
-<td align="right">1</td>
-<td align="right">5576</td>
-<td align="right">326</td>
-<td align="right">14007444</td>
+<td align="right">9</td>
+<td align="right">17130</td>
+<td align="right">20703</td>
+<td align="right">67934927</td>
 </tr>
 </tbody>
 </table>
@@ -1370,94 +1370,94 @@ kable(targetRanges)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2436392</td>
-<td align="left">Psychosis</td>
-<td align="left">C0033975</td>
-<td align="right">1950</td>
-<td align="right">1999</td>
-<td align="left">KD</td>
-<td align="left">abstracts+articles</td>
-<td align="left">by-doc</td>
-<td align="left">C0025029</td>
-<td align="right">2</td>
-<td align="right">17191</td>
-<td align="right">1285</td>
-<td align="right">12931136</td>
-</tr>
-<tr class="even">
-<td>1614299</td>
-<td align="left">Myopathy</td>
-<td align="left">C0026848</td>
-<td align="right">1950</td>
-<td align="right">2008</td>
-<td align="left">KD</td>
-<td align="left">pmc-articles</td>
-<td align="left">by-doc</td>
-<td align="left">C3714686</td>
-<td align="right">2</td>
-<td align="right">599</td>
-<td align="right">20</td>
-<td align="right">242049</td>
-</tr>
-<tr class="odd">
-<td>1173273</td>
-<td align="left">Extrapyramidal</td>
-<td align="left">C0015371</td>
-<td align="right">1950</td>
-<td align="right">1986</td>
-<td align="left">KD</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">C0206518</td>
-<td align="right">1</td>
-<td align="right">445</td>
-<td align="right">697</td>
-<td align="right">7323947</td>
-</tr>
-<tr class="even">
-<td>3444597</td>
-<td align="left">Myopathy</td>
-<td align="left">MESH:D009135</td>
-<td align="right">1950</td>
-<td align="right">2003</td>
-<td align="left">PTC</td>
-<td align="left">unfiltered-medline</td>
-<td align="left">by-doc</td>
-<td align="left">MESH:D011051</td>
-<td align="right">20</td>
-<td align="right">21595</td>
-<td align="right">9917</td>
-<td align="right">15136941</td>
-</tr>
-<tr class="odd">
-<td>117678</td>
+<td>242877</td>
 <td align="left">ALS</td>
 <td align="left">C0002736</td>
 <td align="right">1950</td>
-<td align="right">2002</td>
+<td align="right">2008</td>
 <td align="left">KD</td>
 <td align="left">abstracts+articles</td>
-<td align="left">by-sent</td>
-<td align="left">C0032529</td>
-<td align="right">27</td>
-<td align="right">15547</td>
-<td align="right">92004</td>
-<td align="right">58392840</td>
+<td align="left">by-doc</td>
+<td align="left">C0046846</td>
+<td align="right">1</td>
+<td align="right">10673</td>
+<td align="right">49</td>
+<td align="right">18598106</td>
 </tr>
 <tr class="even">
-<td>3083945</td>
-<td align="left">Bipolar</td>
-<td align="left">MESH:D001714</td>
+<td>1853092</td>
+<td align="left">Parkinson</td>
+<td align="left">C0030567</td>
+<td align="right">1950</td>
+<td align="right">2003</td>
+<td align="left">KD</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-doc</td>
+<td align="left">C0042010</td>
+<td align="right">2</td>
+<td align="right">22510</td>
+<td align="right">3603</td>
+<td align="right">15154912</td>
+</tr>
+<tr class="odd">
+<td>2883794</td>
+<td align="left">Ataxia</td>
+<td align="left">MESH:D001259</td>
 <td align="right">1950</td>
 <td align="right">2008</td>
 <td align="left">PTC</td>
 <td align="left">pmc-articles</td>
 <td align="left">by-doc</td>
-<td align="left">MESH:D034062</td>
-<td align="right">4</td>
-<td align="right">2243</td>
-<td align="right">128</td>
+<td align="left">160070</td>
+<td align="right">1</td>
+<td align="right">1855</td>
+<td align="right">9</td>
 <td align="right">227002</td>
+</tr>
+<tr class="even">
+<td>3648974</td>
+<td align="left">Myopathy</td>
+<td align="left">MESH:D009135</td>
+<td align="right">1950</td>
+<td align="right">2005</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">9306</td>
+<td align="right">1</td>
+<td align="right">24245</td>
+<td align="right">121</td>
+<td align="right">16414155</td>
+</tr>
+<tr class="odd">
+<td>3509575</td>
+<td align="left">Myopathy</td>
+<td align="left">MESH:D009135</td>
+<td align="right">1950</td>
+<td align="right">1996</td>
+<td align="left">PTC</td>
+<td align="left">unfiltered-medline</td>
+<td align="left">by-doc</td>
+<td align="left">16000</td>
+<td align="right">5</td>
+<td align="right">14167</td>
+<td align="right">690</td>
+<td align="right">11494760</td>
+</tr>
+<tr class="even">
+<td>377192</td>
+<td align="left">Ataxia</td>
+<td align="left">C0004134</td>
+<td align="right">1950</td>
+<td align="right">1996</td>
+<td align="left">KD</td>
+<td align="left">abstracts+articles</td>
+<td align="left">by-sent</td>
+<td align="left">C0239882</td>
+<td align="right">9</td>
+<td align="right">4100</td>
+<td align="right">91</td>
+<td align="right">37341866</td>
 </tr>
 </tbody>
 </table>
