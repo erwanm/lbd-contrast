@@ -1,7 +1,7 @@
 ---
 title: "BrainMEND Literature-Based Discovery tools"
 author: "Erwan Moreau"
-date: "July 2021"
+date: "July 2021, January 2022"
 output: html_document
 ---
 
@@ -10,12 +10,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+## Medline impactful discoveries (January 2022)
 
+This tool proposes an interactive interface to explore the discoveries extracted from [Medline](https://www.nlm.nih.gov/medline/index.html) (MeSH descriptors) using the method introduced in **[paper pending]**.
 
+- Go to the tool: [Medline impactful discoveries](medline-discoveries/)
+- The corresponding implementation is available in [this github repository](https://github.com/erwanm/medline-discoveries) with a detailed documentation.
+- The full dataset can be downloaded from **[TODO]**.
 
-## Overview
+## A contrastive approach for LBD (July 2021)
 
-The tools below propose an interactive interface to explore relations between some neurodegenerative concepts extracted from the biomedical literature. The tools are prototypes for a new literature-based discovery method presented in **[pending]**. 
+The tools below propose an interactive interface to explore relations between some neurodegenerative concepts extracted from the biomedical literature. The tools are prototypes for a new literature-based discovery method presented in [this paper](https://doi.org/10.1101/2021.09.22.461375). 
 
 - [Associated concepts by ND target](baseline-view/) ([documentation](baseline-view.user-guide/))
 - [Contrast two Datasets given a Target Concept](contrast-views/) ([documentation](contrast-views.user-guide/))
